@@ -9,6 +9,7 @@ $consulta = mysqli_query($conexion,$query);
 $array = mysqli_fetch_assoc($consulta);
 $id_docente= $array['id'];
 
+
 $query2 = "INSERT into marcacion(fecha,hora_inicio,hola_fin,docente_id, dia_id) VALUES (now(),
  CURRENT_TIME(), CURRENT_TIME(), '$id_docente', WEEKDAY(now()))";
 $consulta = mysqli_query($conexion,$query2);
