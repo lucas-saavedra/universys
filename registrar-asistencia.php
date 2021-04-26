@@ -19,8 +19,8 @@ $array = mysqli_fetch_assoc($consulta);
 $id_docente = $array['id'];
 
 
-$query2 = "INSERT into marcacion(fecha,hora_registro,docente_id, dia_id,detalle_jornada_id) VALUES (now(),
- CURRENT_TIME(), '$id_docente', WEEKDAY(now()), $det_jornada_id )";
+$query2 = "INSERT into marcacion(fecha,hora_registro,docente_id, dia_id,detalle_jornada_id, estado) VALUES (now(),
+ CURRENT_TIME(), '$id_docente', WEEKDAY(now()), $det_jornada_id, 'entrada')";
 
 if (mysqli_query($conexion, $query2)) {
         $last_id = mysqli_insert_id($conexion);
