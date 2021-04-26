@@ -22,3 +22,5 @@ CREATE TRIGGER `chrono_trigger` BEFORE INSERT ON `marcacion`
     	set new.estado = 'salida';
     end if;
 END
+
+select m1.hora_registro, m2.hora_registro, m2.docente_id, m2.detalle_jornada_id from (select * from marcacion where estado ='entrada') as m1 inner join (select * from marcacion where estado ='salida') as m2 on m1.fecha=m2.fecha and m1.docente_id=m2.docente_id and m1.detalle_jornada_id = m2.detalle_jornada_id
