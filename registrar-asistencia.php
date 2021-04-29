@@ -4,12 +4,20 @@ session_start();
 
 $usuario_id = $_SESSION['usuario_id'];
 
-$det_jornada = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
+$det_jornada_actual = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
 jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE 
 now() >= fecha_inicio and
 now() <=fecha_fin and
-WEEKDAY(now()) = detalle_jornada.dia";
-$consulta = mysqli_query($conexion, $det_jornada);
+WEEKDAY(now()) = detalle_jornada.dia AND 
+'10:00:00' >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') AND 
+'10:00:00' <= ADDTIME(detalle_jornada.hora_inicio, '00:15:00')";
+
+$consulta = mysqli_query($conexion, $det_jornada_actual);
+if (mysqli_num_rows($consulta) == 0){
+        echo 'Actualmente no tiene horarios asignados';
+        exit();
+}
+
 $array = mysqli_fetch_assoc($consulta);
 $det_jornada_id = $array['det_jornada_id'];
 
@@ -19,8 +27,8 @@ $array = mysqli_fetch_assoc($consulta);
 $id_docente = $array['id'];
 
 
-$query2 = "INSERT into marcacion(fecha,hora_registro,docente_id, dia_id,detalle_jornada_id, estado) VALUES (now(),
- CURRENT_TIME(), '$id_docente', WEEKDAY(now()), $det_jornada_id, 'entrada')";
+$query2 = "INSERT into marcacion(fecha, hora_registro, docente_id, dia_id, estado) VALUES (now(),
+ CURRENT_TIME(), '$id_docente', WEEKDAY(now()), 'entrada')";
 
 if (mysqli_query($conexion, $query2)) {
         $last_id = mysqli_insert_id($conexion);
@@ -28,6 +36,9 @@ if (mysqli_query($conexion, $query2)) {
 } else {
         echo "Error: " . $query2 . "<br>" . mysqli_error($conexion);
 }
+
+$marcaciones_entrada = mysqli_query($conexion, 
+"SELECT * FROM marcaciones where estado='entrada' and docente_id=$id_docente")
 
 /* $q= 'SELECT TIMEDIFF(marcacion.hora_inicio,detalle_jornada.hora_fin) as cont FROM marcacion,detalle_jornada';
 $consulta = mysqli_query($conexion,$q);

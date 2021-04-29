@@ -11,7 +11,7 @@ INNER JOIN cargo on detalle_jornada.cargo_id = cargo.id
 WHERE now() >= fecha_inicio 
 AND now() <=fecha_fin 
 AND WEEKDAY(now()) = detalle_jornada.dia
-AND '11:14:00' >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') 
+AND '11:14:00' >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00')
 AND '11:14:00' <= ADDTIME(detalle_jornada.hora_fin, '00:15:00')
 
 CREATE TRIGGER `chrono_trigger` BEFORE INSERT ON `marcacion`
@@ -24,3 +24,20 @@ CREATE TRIGGER `chrono_trigger` BEFORE INSERT ON `marcacion`
 END
 
 select m1.hora_registro, m2.hora_registro, m2.docente_id, m2.detalle_jornada_id from (select * from marcacion where estado ='entrada') as m1 inner join (select * from marcacion where estado ='salida') as m2 on m1.fecha=m2.fecha and m1.docente_id=m2.docente_id and m1.detalle_jornada_id = m2.detalle_jornada_id
+
+
+BEGIN
+    select count(*) into @contador from marcacion GROUP by docente_id having docente_id=new.docente_id;
+
+    if (mod(@contador+1, 2) = 0) THEN
+        SELECT detalle_jornada.id into @det_actual, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE  now() >= fecha_inicio and now() <=fecha_fin and WEEKDAY(now()) = detalle_jornada.dia AND CURRENT_TIME() >= ADDTIME(detalle_jornada.hora_fin, '-00:15:00') AND  CURRENT_TIME() <= ADDTIME(detalle_jornada.hora_fin, '00:15:00');
+
+        set new.detalle_jornada_id = @det_actual;
+    	set new.estado = 'salida';
+    else
+       SELECT detalle_jornada.id into @det_actual, detalle_jornada.hora_inicio,detalle_jornadahora_fin FROM jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE  now() >=fecha_inicio and now() <=fecha_fin and WEEKDAY(now()) = detalle_jornada.dia AND CURRENT_TIME() >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') AND  CURRENT_TIME() <= ADDTIME(detalle_jornada.hora_inicio, '00:15:00');
+
+        set new.detalle_jornada_id = @det_actual;
+    	set new.estado = 'entrada';
+    end if;
+END
