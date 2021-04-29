@@ -27,17 +27,14 @@ select m1.hora_registro, m2.hora_registro, m2.docente_id, m2.detalle_jornada_id 
 
 
 BEGIN
-    select count(*) into @contador from marcacion GROUP by docente_id having docente_id=new.docente_id;
+	
+    select hora_inicio into @hora_jornada from detalle_jornada where id=new.det_jornada_id;
 
-    if (mod(@contador+1, 2) = 0) THEN
-        SELECT detalle_jornada.id into @det_actual, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE  now() >= fecha_inicio and now() <=fecha_fin and WEEKDAY(now()) = detalle_jornada.dia AND CURRENT_TIME() >= ADDTIME(detalle_jornada.hora_fin, '-00:15:00') AND  CURRENT_TIME() <= ADDTIME(detalle_jornada.hora_fin, '00:15:00');
+    select CONVERT(ABS(TIMEDIFF(new.hora_inicio, @hora_jornada)), TIME) into @diferencia
 
-        set new.detalle_jornada_id = @det_actual;
-    	set new.estado = 'salida';
-    else
-       SELECT detalle_jornada.id into @det_actual, detalle_jornada.hora_inicio,detalle_jornadahora_fin FROM jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE  now() >=fecha_inicio and now() <=fecha_fin and WEEKDAY(now()) = detalle_jornada.dia AND CURRENT_TIME() >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') AND  CURRENT_TIME() <= ADDTIME(detalle_jornada.hora_inicio, '00:15:00');
-
-        set new.detalle_jornada_id = @det_actual;
-    	set new.estado = 'entrada';
+    if (@diferencia <= "00:15:00") THEN
+    	set new.estado_asistencia = 'tarde';
+    else if (@diferencia)
+        set new.estado_asistencia = 'falta';
     end if;
 END
