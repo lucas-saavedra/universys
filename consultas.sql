@@ -30,11 +30,14 @@ BEGIN
 	
     select hora_inicio into @hora_jornada from detalle_jornada where id=new.det_jornada_id;
 
-    select CONVERT(ABS(TIMEDIFF(new.hora_inicio, @hora_jornada)), TIME) into @diferencia
-
-    if (@diferencia <= "00:15:00") THEN
-    	set new.estado_asistencia = 'tarde';
-    else if (@diferencia)
-        set new.estado_asistencia = 'falta';
-    end if;
+    select  ADDTIME(@hora_jornada, '00:10:00') >= new.hora_inicio into @diferencia;
+        
+        
+if (@hora_jornada >=  new.hora_inicio) THEN
+    set new.estado_asistencia = 'presente';
+elseif ((@hora_jornada <  new.hora_inicio) and (@diferencia)) THEN 
+    set new.estado_asistencia = 'tarde';
+else
+    set new.estado_asistencia = 'falta';
+end if;
 END

@@ -85,6 +85,8 @@
             <div class="col">
                 <form action="registrar-asistencia.php" method = "POST">
                     <button class="btn btn-danger" type="submit">Registrar asistencia</button>
+                        <label for="appt">Select a time:</label>
+                        <input type="time" id="time" name="appt">
                 </form>
             </div>
         </div>

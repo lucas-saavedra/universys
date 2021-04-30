@@ -1,7 +1,7 @@
 <?php
 require 'database.php';
 session_start();
-
+$time= $_POST['appt'];
 $usuario_id = $_SESSION['usuario_id'];
 
 // $det_jornada_actual = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
@@ -28,7 +28,7 @@ $id_docente = $array['id'];
 
 
 $query2 = "INSERT into marcacion(fecha, hora_registro, docente_id, dia_id, estado) VALUES (now(),
- '11:10:00', '$id_docente', WEEKDAY(now()), 'entrada')";
+ '$time', '$id_docente', WEEKDAY(now()), 'entrada')";
 
 
 if (mysqli_query($conexion, $query2)) {
@@ -42,12 +42,14 @@ if (mysqli_query($conexion, $query2)) {
 
         if ($marcacion_insertada['estado'] == 'entrada'){
                 $det_jornada_actual_query = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
-                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE 
+                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada 
+                inner join cargo on cargo.id = detalle_jornada.cargo_id WHERE 
+                docente_id = $id_docente and
                 now() >= fecha_inicio and
                 now() <=fecha_fin and
                 WEEKDAY(now()) = detalle_jornada.dia AND 
                 '$hora_registro' >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') AND 
-                '$hora_registro' <= ADDTIME(detalle_jornada.hora_inicio, '00:15:00')"; 
+                '$hora_registro' <= ADDTIME(detalle_jornada.hora_inicio, '00:30:00')"; 
 
                 $det_jornada_actual = mysqli_query($conexion,$det_jornada_actual_query);
                 $det_jornada_id = mysqli_fetch_assoc($det_jornada_actual)['det_jornada_id'];
@@ -58,7 +60,9 @@ if (mysqli_query($conexion, $query2)) {
         }
         else{
                 $det_jornada_actual_query = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
-                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada WHERE 
+                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada 
+                inner join cargo on cargo.id = detalle_jornada.cargo_id WHERE 
+                docente_id = $id_docente and 
                 now() >= fecha_inicio and
                 now() <=fecha_fin and
                 WEEKDAY(now()) = detalle_jornada.dia AND 
