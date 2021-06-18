@@ -343,3 +343,89 @@ create table planilla_productividad_no_docente (
     PRIMARY key (id),
     FOREIGN KEY (mes_id) REFERENCES mes(id)
 );
+
+/* Carga de archivo */
+
+INSERT INTO anio_plan (id, nombre) VALUES
+(1, '1ro'),
+(2, '2do'),
+(3, '3ro');
+
+INSERT INTO area(nombre) VALUES 
+('Personal'),('Coordinacion'),('Alumnado'),('Extension'),('Ordenanza'),('Prensa'),('Mesa Entrada')
+,('Biblioteca'),('Informatica'),('Director Carrera'),('Mesa Envios');
+
+INSERT INTO periodo(nombre) VALUES ('1er Cuatrimestre'),('2do Cuatrimestre'),('Anual');
+
+INSERT INTO carrera(nombre) VALUES ('Analisis de Sistemas'),('Prod. Agropecuaria'),('Gestion Ambiental');
+
+
+INSERT INTO `catedra` (`nombre`, `carrera_id`, `anio_plan_id`, `periodo_id`) VALUES 
+/*---------------- Analisis de sistemas--------------- */
+/* 1er año */
+( 'Lógica y Álgebra', '1', '1', '3'),
+( 'Cálculo Diferencial e Integral', '1', '1', '3'),
+( 'Sistemas y Organizaciones', '1', '1', '3'),
+( 'Derechos Humanos y Tecnología', '1', '1', '1'),
+( 'Fundamentos De Computación', '1', '1', '1'),
+/* 2do año */
+
+( 'Matemática Discreta', '1', '2', '3'),
+( 'Ec. Diferenciales y Calc. Multivariado', '1', '2', '2'),
+( 'Arquitectura De Computadoras', '1', '2', '1'),
+
+/* 3er año */
+( 'Probabilidad y Estadística', '1', '3', '3'),
+( 'Paradigmas y Lenguajes', '1', '3', '2'),
+( 'Ética Profesional', '1', '3', '1'),
+/*---------- Gestion Ambiental--------------- */
+/* 1er año */
+( 'Inglés Técnico I', '3', '1', '3'),
+( 'Química General', '3', '1', '1'),
+( 'Biología', '3', '1', '2'),
+
+/* 2do año */
+
+( 'Inglés Técnico II', '3', '2', '3'),
+( 'Derecho Ambiental', '3', '2', '2'),
+( 'Informática II', '3', '2', '1'),
+
+/* 3er año */
+( 'Tratamiento de Residuos Sólidos', '3', '3', '3'),
+( 'Efluentes Líquidos', '3', '3', '2'),
+( 'Gestión Recurso Suelo', '3', '3', '1'),
+
+/*---------- Produccion Agropecuaria--------------- */
+/* 1er año */
+( 'Inglés Técnico I', '2', '1', '3'),
+( 'Administración Agropecuaria I', '2', '1', '1'),
+( 'Anatomía Animal', '2', '1', '2'),
+
+/* 2do año */
+
+( 'Inglés Técnico II', '2', '2', '3'),
+( 'Microbiología', '2', '2', '2'),
+( 'Fisiología Vegetal', '2', '2', '1'),
+
+/* 3er año */
+( 'Práctica Profesional', '2', '3', '3'),
+( 'Ética y Deontología Profesional', '2', '3', '2'),
+( 'Cultivo Extensivo', '2', '3', '1');
+
+
+INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES 
+
+('Nayra Asensio','nayra@gmail.com','1234'),
+('Roman Morano','roman@gmail.com','1234'),
+('Ion Machado','ion@gmail.com','1234'),
+('Andoni Roig','andoni@gmail.com','1234'),
+('Samuel Vicente','samuel@gmail.com','1234'),
+('Enriqueta Galan','enriqueta@gmail.com','1234'),
+('Pilar Fernandez','pilar@gmail.com','1234');
+
+INSERT INTO `docente`(`persona_id`) VALUES ('1'),('2'),('3'),('6'),('7');
+INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
+
+
+
+
