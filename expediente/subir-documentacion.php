@@ -55,6 +55,21 @@ $agentes = get_agentes($conexion)
                         <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <div class="col-sm-4 d-flex justify-content-around align-items-center">
+                        <div class="form-check">
+                            <input class="form-check-input check-agente" type="radio" name="filtro-agente" id="check-docente">
+                            <label class="form-check-label" for="check-docente">
+                                Docente
+                            </label>
+                        </div>         
+                        <div class="form-check">
+                            <input class="form-check-input check-agente" type="radio" name="filtro-agente" id="check-no-docente">
+                            <label class="form-check-label" for="check-no-docente">
+                                No docente
+                            </label>
+                        </div>         
+                    </div>
                 </div>
 
                 <div class="mb-3 row">
@@ -91,5 +106,45 @@ $agentes = get_agentes($conexion)
         </div>
     </div>
 </div>
+
+<script>
+
+    const agentes = <?=json_encode($agentes)?>
+
+    document.addEventListener('change', e => {
+        if (e.target.matches('.check-agente')){
+            let result = agentes
+            if (e.target.checked && e.target.matches('#check-docente')){
+                result = agentes.filter(_a => _a.docente_id !== null)
+            }
+
+            if (e.target.checked && e.target.matches('#check-no-docente')){
+                result = agentes.filter(_a => _a.no_docente_id !== null)
+            }
+
+            const $select = document.querySelector('select[name="agente_id"]')
+
+            const $frag = document.createDocumentFragment()
+
+            const options = result.map(r => {
+                const $option = document.createElement('option')
+                $option.value = r.id
+                $option.text = r.nombre
+
+                return $option
+            })
+
+            options.unshift(document.createElement('option'))
+
+            options.forEach(o => $frag.appendChild(o))
+
+            $select.textContent = ''
+            $select.appendChild($frag)
+
+        }
+
+    })
+
+</script>
 
 <?php include("../footer.html"); ?>
