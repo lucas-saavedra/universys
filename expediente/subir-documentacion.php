@@ -2,25 +2,51 @@
 require_once('../dataBase.php');
 include ("./consultas.php");
 
+function subir_archivo($file, $nombre){
+    $target_dir = "../uploads/";
+
+    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+    $file_name = "$nombre.$extension";
+
+    $target_file = $target_dir . $file_name;
+    $result = move_uploaded_file($file["tmp_name"], $target_file);
+
+    if ($result) return $file_name;
+
+    return "";
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    mysqli_autocommit($conexion, FALSE);
     $sql = "INSERT INTO documentacion_justificada 
     (persona_id, tipo_justificacion_id, fecha_recepcion, descripcion) 
     VALUES (?,?,?,?)";
 
     $stmt = mysqli_prepare($conexion, $sql);
-
     mysqli_stmt_bind_param($stmt,"ssss",$_POST['agente_id'],$_POST['tipo_just_id'],$_POST['fecha_rec'], $_POST['desc']);
-
     mysqli_stmt_execute($stmt);
+    $error = mysqli_error($conexion);
+    if ($error) return;
 
-    $sql_error = mysqli_error($conexion);
+    $doc_creada_id = mysqli_insert_id($conexion);
+
+    $archivo_subido = subir_archivo($_FILES['archivo'], $doc_creada_id);
+
+    if ($archivo_subido){
+        mysqli_query($conexion, "UPDATE documentacion_justificada SET archivo='$archivo_subido' WHERE id=$doc_creada_id");
+        mysqli_commit($conexion);
+    }
+    else{
+        mysqli_rollback($conexion);
+        $error = "Error al subir el archivo";
+    }
 }
 
 include ("../header.html");
 include ("./navbar.php");
 
-$agentes = get_agentes($conexion)
-
+$agentes = get_agentes($conexion);
 ?>
 
 <div class="container">
@@ -29,14 +55,14 @@ $agentes = get_agentes($conexion)
             <h3>Subir documentación</h3>
         </div>
     </div>
-    <?php if (!empty($sql_error)): ?>
+    <?php if (!empty($error)): ?>
         <div class="alert alert-danger" role="alert">
-            <b>Ha ocurrido un error: </b><?=$sql_error?>
+            <b>Ha ocurrido un error: </b><?=$error?>
         </div>
     <?php endif; ?>
     <div class="row mt-4">
         <div class="col-md-8">
-            <form action="subir-documentacion.php" method="POST" id="form-doc">
+            <form action="subir-documentacion.php" method="POST" enctype="multipart/form-data" id="form-doc">
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
                     <div class="col-sm-10">
@@ -75,7 +101,7 @@ $agentes = get_agentes($conexion)
                 <div class="mb-3 row">
                     <label for="" class="col-md-2 form-label">Archivo</label>
                     <div class="col-md-10">
-                        <input class="form-control-file" type="file">
+                        <input class="form-control-file" type="file" name="archivo" >
                     </div>
                 </div>
 
@@ -112,36 +138,35 @@ $agentes = get_agentes($conexion)
     const agentes = <?=json_encode($agentes)?>
 
     document.addEventListener('change', e => {
-        if (e.target.matches('.check-agente')){
-            let result = agentes
-            if (e.target.checked && e.target.matches('#check-docente')){
-                result = agentes.filter(_a => _a.docente_id !== null)
-            }
-
-            if (e.target.checked && e.target.matches('#check-no-docente')){
-                result = agentes.filter(_a => _a.no_docente_id !== null)
-            }
-
-            const $select = document.querySelector('select[name="agente_id"]')
-
-            const $frag = document.createDocumentFragment()
-
-            const options = result.map(r => {
-                const $option = document.createElement('option')
-                $option.value = r.id
-                $option.text = r.nombre
-
-                return $option
-            })
-
-            options.unshift(document.createElement('option'))
-
-            options.forEach(o => $frag.appendChild(o))
-
-            $select.textContent = ''
-            $select.appendChild($frag)
-
+        if (!e.target.matches('.check-agente')) return;
+        
+        let result = agentes
+        if (e.target.checked && e.target.matches('#check-docente')){
+            result = agentes.filter(_a => _a.docente_id !== null)
         }
+
+        if (e.target.checked && e.target.matches('#check-no-docente')){
+            result = agentes.filter(_a => _a.no_docente_id !== null)
+        }
+
+        const $select = document.querySelector('select[name="agente_id"]')
+
+        const $frag = document.createDocumentFragment()
+
+        const options = result.map(r => {
+            const $option = document.createElement('option')
+            $option.value = r.id
+            $option.text = r.nombre
+
+            return $option
+        })
+
+        options.unshift(document.createElement('option'))
+
+        options.forEach(o => $frag.appendChild(o))
+
+        $select.textContent = ''
+        $select.appendChild($frag)
 
     })
 
