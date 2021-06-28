@@ -28,8 +28,24 @@ create table no_docente (
 create table tipo_jornada (
 	id int AUTO_INCREMENT,
     nombre varchar(50),
+    pertenece varchar(20) NOT NULL,
     PRIMARY key (id)
 );
+
+--
+-- Volcado de datos para la tabla `tipo_jornada`
+--
+
+INSERT INTO `tipo_jornada` (`id`, `nombre`, `pertenece`) VALUES
+(1, '1er Cuatrimestre', 'docente'),
+(2, '2do Cuatrimestre', 'docente'),
+(3, 'Anual', 'docente'),
+(4, 'Mesa de Examen', 'docente'),
+(5, 'Mañana', 'no_docente'),
+(6, 'Tarde', 'no_docente'),
+(7, 'Noche', 'no_docente');
+
+
 
 create table jornada (
 	id int AUTO_INCREMENT,
