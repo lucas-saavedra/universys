@@ -297,6 +297,23 @@ create table inasistencia_sin_aviso_no_docente (
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
 
+create table mes (
+	id int AUTO_INCREMENT,
+    nombre varchar(50),
+    PRIMARY key (id)
+);
+
+create table planilla_productividad_docente (
+	id int AUTO_INCREMENT,
+    mes_id int,
+    anio int,
+    observaciones varchar(50),
+    confirmado boolean,
+    PRIMARY key (id),
+    FOREIGN KEY (mes_id) REFERENCES mes(id)
+);
+
+
 create table expediente_planilla_docente (
 	id int AUTO_INCREMENT,
     planilla_productividad_docente_id int,
@@ -305,6 +322,16 @@ create table expediente_planilla_docente (
     PRIMARY key (id),
     FOREIGN KEY (planilla_productividad_docente_id) REFERENCES planilla_productividad_docente(id),
     FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id)
+);
+
+create table planilla_productividad_no_docente (
+	id int AUTO_INCREMENT,
+    mes_id int,
+    anio int,
+    observaciones varchar(50),
+    confirmado boolean,
+    PRIMARY key (id),
+    FOREIGN KEY (mes_id) REFERENCES mes(id)
 );
 
 create table expediente_planilla_no_docente (
@@ -317,32 +344,7 @@ create table expediente_planilla_no_docente (
     FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id)
 );
 
-create table mes (
-	id int AUTO_INCREMENT,
-    nombre varchar(50),
-    PRIMARY key (id)
-);
 
-
-create table planilla_productividad_docente (
-	id int AUTO_INCREMENT,
-    mes_id int,
-    anio int,
-    observaciones varchar(50),
-    confirmado boolean,
-    PRIMARY key (id),
-    FOREIGN KEY (mes_id) REFERENCES mes(id)
-);
-
-create table planilla_productividad_no_docente (
-	id int AUTO_INCREMENT,
-    mes_id int,
-    anio int,
-    observaciones varchar(50),
-    confirmado boolean,
-    PRIMARY key (id),
-    FOREIGN KEY (mes_id) REFERENCES mes(id)
-);
 
 /* Carga de archivo */
 
@@ -427,5 +429,8 @@ INSERT INTO `docente`(`persona_id`) VALUES ('1'),('2'),('3'),('6'),('7');
 INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
 
 
-
-
+INSERT INTO tipo_justificacion (descripcion) VALUES 
+('LIS'), 
+('Certificado de justificacion'), 
+('LIS + Certificado'), 
+('Justificación sin certificado');
