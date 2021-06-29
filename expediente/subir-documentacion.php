@@ -17,30 +17,40 @@ function subir_archivo($file, $nombre){
     return "";
 }
 
+function subir_documentacion($bd){
+    mysqli_query($bd, 'START TRANSACTION');
+    try{
+        $sql_insert = "INSERT INTO documentacion_justificada 
+        (persona_id, tipo_justificacion_id, fecha_recepcion, descripcion) VALUES 
+        ({$_POST['agente_id']},{$_POST['tipo_just_id']},'{$_POST['fecha_rec']}', '{$_POST['desc']}')";
+
+        if (!$result = mysqli_query($bd, $sql_insert)) throw new Exception(mysqli_error($bd));
+
+        $doc_creada_id = mysqli_insert_id($bd);
+
+        $archivo_subido = subir_archivo($_FILES['archivo'], $doc_creada_id);
+
+        if (!$archivo_subido) throw new Exception("Ha ocurrido un error al subir el archivo.");
+
+        mysqli_query($bd, "UPDATE documentacion_justificada SET archivo='{$archivo_subido}' WHERE id={$doc_creada_id}");
+
+        mysqli_commit($bd);
+    }
+    catch (Exception $e){
+        $msg['content'] = $e->getMessage();
+        $msg['type'] = 'warning';
+        mysqli_rollback($bd);
+        return $msg;
+    }
+
+    $msg['content'] = "Creada documentacion de ID: {$doc_creada_id} con archivo: {$archivo_subido}";
+    $msg['type'] = 'success';
+
+    return $msg;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-    mysqli_autocommit($conexion, FALSE);
-    $sql = "INSERT INTO documentacion_justificada 
-    (persona_id, tipo_justificacion_id, fecha_recepcion, descripcion) 
-    VALUES (?,?,?,?)";
-
-    $stmt = mysqli_prepare($conexion, $sql);
-    mysqli_stmt_bind_param($stmt,"ssss",$_POST['agente_id'],$_POST['tipo_just_id'],$_POST['fecha_rec'], $_POST['desc']);
-    mysqli_stmt_execute($stmt);
-    $error = mysqli_error($conexion);
-    if ($error) return;
-
-    $doc_creada_id = mysqli_insert_id($conexion);
-
-    $archivo_subido = subir_archivo($_FILES['archivo'], $doc_creada_id);
-
-    if ($archivo_subido){
-        mysqli_query($conexion, "UPDATE documentacion_justificada SET archivo='$archivo_subido' WHERE id=$doc_creada_id");
-        mysqli_commit($conexion);
-    }
-    else{
-        mysqli_rollback($conexion);
-        $error = "Error al subir el archivo";
-    }
+    $msg = subir_documentacion($conexion);
 }
 
 include ("../header.html");
@@ -55,9 +65,13 @@ $agentes = get_agentes($conexion);
             <h3>Subir documentación</h3>
         </div>
     </div>
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger" role="alert">
-            <b>Ha ocurrido un error: </b><?=$error?>
+    <?php if (isset($msg['content'])): ?>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-<?=$msg['type']?>" role="alert">
+                    <?=$msg['content']?>
+                </div>
+            </div>
         </div>
     <?php endif; ?>
     <div class="row mt-4">
