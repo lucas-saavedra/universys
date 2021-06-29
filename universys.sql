@@ -28,8 +28,24 @@ create table no_docente (
 create table tipo_jornada (
 	id int AUTO_INCREMENT,
     nombre varchar(50),
+    pertenece varchar(20) NOT NULL,
     PRIMARY key (id)
 );
+
+--
+-- Volcado de datos para la tabla `tipo_jornada`
+--
+
+INSERT INTO `tipo_jornada` (`id`, `nombre`, `pertenece`) VALUES
+(1, '1er Cuatrimestre', 'docente'),
+(2, '2do Cuatrimestre', 'docente'),
+(3, 'Anual', 'docente'),
+(4, 'Mesa de Examen', 'docente'),
+(5, 'Mañana', 'no_docente'),
+(6, 'Tarde', 'no_docente'),
+(7, 'Noche', 'no_docente');
+
+
 
 create table jornada (
 	id int AUTO_INCREMENT,
@@ -205,7 +221,7 @@ create table tipo_inasistencia (
 
 create table codigo (
 	id int AUTO_INCREMENT,
-    nombre int,
+    nombre varchar(100),
     descripcion varchar(100),
     referencia varchar(100),
     es_docente boolean,
@@ -434,3 +450,23 @@ INSERT INTO tipo_justificacion (descripcion) VALUES
 ('Certificado de justificacion'), 
 ('LIS + Certificado'), 
 ('Justificación sin certificado');
+
+INSERT INTO tipo_inasistencia(nombre) VALUES
+('Licencia'),
+('Justificación'),
+('Inasistencia Común');
+
+INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_no_docente`, `tipo_inasistencia_id`, `con_descuento`, `requiere_aviso`, `requiere_doc`) VALUES 
+('Falta C/Aviso', NULL, '4', '1', '1', '3', '1', '1', '0');
+
+INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_no_docente`, `tipo_inasistencia_id`, `con_descuento`, `requiere_aviso`, `requiere_doc`) VALUES
+-- Falta común
+('Falta C/Aviso', 'Falta con aviso', '4', '1', '0', '3', '0', '1', '0'),
+('Falta S/Aviso', 'Falta sin aviso', '5','1','1','3', '1', '0','0'),
+('Inasis. Docente Injustificada', 'Inasistencia docente injustificada', '6','1','0','3', '1', '1','0'),
+('Imprevisto', 'Falta imprevista', 'I','0','1','3', '0', '1','0'),
+-- Licencia
+('Lic. Extraordinaria', 'Licencia Extraordinaria', '2','1','1','1', '0', '1','1'),
+('Maternidad', 'Licencia por Maternidad', '12','1','1','1', '0', '1','1'),
+-- Justificación
+('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1');
