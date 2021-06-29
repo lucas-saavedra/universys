@@ -1,5 +1,11 @@
-<?php include ("../header.html");?>
-<?php include ("./navbar.php");?>
+<?php 
+include ("../header.html");
+include ("./navbar.php");
+require_once('../dataBase.php');
+include ("./consultas.php");
+
+$agentes = get_agentes($conexion);
+?>
 <div class="container">
     <div class="row mt-4">
         <div class="col">
@@ -9,18 +15,37 @@
     <div class="row mt-4">
         <div class="col-md-8">
             <form action="">
-                <div class="mb-3 row">
-                    <label for="" class="col-sm-2 form-label">Agente</label>
-                    <div class="col-sm-10">
-                        <select class="form-control form-control-sm" required>
-                            <option selected></option>
-                            <?php foreach (['Francisca Abreu', 'Jone Sancho', 'Fidel López'] as $idx => $name):?>
-                                <option value="<?=$idx?>">
-                                    <?=$name?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                <div class="card mb-3">
+                    <div class="card-body p-3">
+                        <div class="mb-3 row filtro-agente">
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-docente">
+                                    <label class="form-check-label" for="check-docente">
+                                        Docente
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="check-no-docente">
+                                    <label class="form-check-label" for="check-no-docente">
+                                        No docente
+                                    </label>   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="" class="col-sm-2 form-label">Agente</label>
+                            <div class="col-sm-10">
+                                <select class="form-control form-control-sm" name="agente_id" required>
+                                </select>
+                            </div>
+                        </div>                    
                     </div>
+                </div>
+                        </div>                    
                 </div>
 
                 <div class="mb-3 row">
@@ -122,4 +147,9 @@
 </div>
 </div>
 
+
+<script src="filtro_agentes.js"></script>
+<script>
+    filtro_agentes(<?=json_encode($agentes)?>);
+</script>
 <?php include("../footer.html"); ?>

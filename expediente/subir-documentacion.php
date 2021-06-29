@@ -69,6 +69,25 @@ $agentes = get_agentes($conexion);
                         <input type="datetime-local" class="form-control" name="fecha_rec" required/>
                     </div>
                 </div>
+                <div class="mb-3 row filtro-agente">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="check-docente">
+                            <label class="form-check-label" for="check-docente">
+                                Docente
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="check-no-docente">
+                            <label class="form-check-label" for="check-no-docente">
+                                No docente
+                            </label>   
+                        </div>
+                    </div>
+                </div>
                 <div class="mb-5 row">
                     <label for="" class="col-sm-2 form-label">Agente</label>
                     <div class="col-sm-6">
@@ -80,21 +99,6 @@ $agentes = get_agentes($conexion);
                             </option>
                         <?php endforeach; ?>
                         </select>
-                    </div>
-
-                    <div class="col-sm-4 d-flex justify-content-around align-items-center">
-                        <div class="form-check">
-                            <input class="form-check-input check-agente" type="radio" name="filtro-agente" id="check-docente">
-                            <label class="form-check-label" for="check-docente">
-                                Docente
-                            </label>
-                        </div>         
-                        <div class="form-check">
-                            <input class="form-check-input check-agente" type="radio" name="filtro-agente" id="check-no-docente">
-                            <label class="form-check-label" for="check-no-docente">
-                                No docente
-                            </label>
-                        </div>         
                     </div>
                 </div>
 
@@ -133,43 +137,8 @@ $agentes = get_agentes($conexion);
     </div>
 </div>
 
+<script src="filtro_agentes.js"></script>
 <script>
-
-    const agentes = <?=json_encode($agentes)?>
-
-    document.addEventListener('change', e => {
-        if (!e.target.matches('.check-agente')) return;
-        
-        let result = agentes
-        if (e.target.checked && e.target.matches('#check-docente')){
-            result = agentes.filter(_a => _a.docente_id !== null)
-        }
-
-        if (e.target.checked && e.target.matches('#check-no-docente')){
-            result = agentes.filter(_a => _a.no_docente_id !== null)
-        }
-
-        const $select = document.querySelector('select[name="agente_id"]')
-
-        const $frag = document.createDocumentFragment()
-
-        const options = result.map(r => {
-            const $option = document.createElement('option')
-            $option.value = r.id
-            $option.text = r.nombre
-
-            return $option
-        })
-
-        options.unshift(document.createElement('option'))
-
-        options.forEach(o => $frag.appendChild(o))
-
-        $select.textContent = ''
-        $select.appendChild($frag)
-
-    })
-
+    filtro_agentes(<?=json_encode($agentes)?>);
 </script>
-
 <?php include("../footer.html"); ?>
