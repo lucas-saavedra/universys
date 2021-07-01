@@ -36,4 +36,11 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+    function get_expdte($bd, $id){
+        $sql_expdte = "SELECT e.*, p.nombre as nom_agente FROM expediente as e 
+        INNER JOIN persona as p ON e.persona_id=p.id and e.id={$id}";
+
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));
+    }
+
 ?>

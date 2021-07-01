@@ -6,25 +6,75 @@ include ("./consultas.php");
 
 
 if (isset($_GET['id']) && $id = intval($_GET['id'])){
-    $sql_expdte = "SELECT e.*, p.nombre as nom_agente FROM expediente as e 
-    INNER JOIN persona as p ON e.persona_id=p.id and e.id={$id}";
-    $expdte = mysqli_fetch_assoc(mysqli_query($conexion, $sql_expdte));
+    $expdte = get_expdte($conexion, $id);
 }
 
 if (!isset($expdte)) header("Location:crear-expediente.php");
+
+
+function get_campos_modificados($array1, $array2){
+    $campos = array_keys($array2);
+    $modificaciones = [];
+
+    foreach ($campos as $campo) {
+        if ($array1[$campo] != $array2[$campo]){
+            if ($array2[$campo] === ""){
+                $modificaciones[$campo] = "{$campo}=NULL";
+                continue;
+            }
+            $modificaciones[$campo] = "{$campo}='{$array2[$campo]}'";
+        }
+    }
+
+    return $modificaciones;
+}
+
+function modificar_expdte($bd, $expdte){
+    $modificaciones = get_campos_modificados($expdte, $_POST);
+
+    if (empty($modificaciones)) return;
+    
+    $update_string = implode(', ', $modificaciones);
+
+    $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
+
+    if ($result = mysqli_query($bd, $sql_update_expdte)){
+        return ["content" => "El expediente ha sido modificado con exito", "type" => "success"];
+    }
+
+    $error = mysqli_error($bd);
+    return ["content" => "Ha ocurrido un error: {$error}", "type" => "warning"];
+
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+
+    $msg = modificar_expdte($conexion, $expdte);
+    $expdte = get_expdte($conexion, $expdte['id']);
+}
 
 ?>
 
 <div class="container">
     <div class="row my-4">
         <div class="col">
-            <h3>Agregar documentación a expediente</h3>
+            <h3>Modificar expediente</h3>
         </div>
     </div>
+    <?php if (isset($msg['content'])): ?>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-<?=$msg['type']?>" role="alert">
+                    <?=$msg['content']?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
     <div class="row">
         <div class="col-md-8">
-            <form action="<?="agregar-doc-expediente.php?id={$id}"?>" method="POST">
+            <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
                 <div class="jumbotron p-4 d-flex justify-content-between">
                     <h4 class="m-0">Expediente ID: <?=$id?> - Agente: <?=$expdte['nom_agente']?></h4>
                 </div>
