@@ -39,6 +39,20 @@ if (!isset($expdte)) header("Location:crear-expediente.php");
                     </div>
                 </div>
                 <div class="mb-3 row">
+                    <label for="" class="col-sm-2 form-label">Documentación</label>
+                    <div class="col-sm-10">
+                        <select class="form-control form-control-sm" name="doc_justificada_id">
+                            <option value="" <?=!$expdte['doc_justificada_id'] ? 'selected': ''?>></option>
+
+                            <?php foreach(get_docs_sin_expdte($conexion, $expdte) as $doc): ?>
+                                <option value="<?=$doc['id']?>" <?=$doc['id'] === $expdte['doc_justificada_id'] ? 'selected': ''?>>
+                                    <?="{$doc['id']} / {$doc['fecha_recepcion']} - {$doc['nom_tipo_just']}"?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Código</label>
                     <div class="col-sm-7">
                         <select class="form-control" name="codigo_id" required>
