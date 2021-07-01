@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     </div>
 
     <?php include("./includes/msg-box.php"); ?>
-    
+
     <div class="row mt-4">
         <div class="col-md-8">
             <form action="crear-expediente.php" method="POST">
@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 </div>
 
 
-<script src="filtro_agentes.js"></script>
+<script src="./js/filtro_agentes.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
 </script>

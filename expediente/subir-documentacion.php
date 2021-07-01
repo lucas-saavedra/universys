@@ -65,7 +65,7 @@ $agentes = get_agentes($conexion);
         </div>
     </div>
     <?php include("./includes/msg-box.php"); ?>
-    
+
     <div class="row mt-4">
         <div class="col-md-8">
             <form action="subir-documentacion.php" method="POST" enctype="multipart/form-data" id="form-doc">
@@ -143,7 +143,7 @@ $agentes = get_agentes($conexion);
     </div>
 </div>
 
-<script src="filtro_agentes.js"></script>
+<script src="./js/filtro_agentes.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
 </script>
