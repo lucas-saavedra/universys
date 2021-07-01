@@ -1,6 +1,8 @@
 <?php 
 require_once('../dataBase.php');
-include ("./consultas.php");
+include ("../header.html");
+include ("./includes/navbar.php");
+include ("./includes/consultas.php");
 
 function subir_archivo($file, $nombre){
     $target_dir = "../uploads/";
@@ -52,9 +54,6 @@ function subir_documentacion($bd){
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $msg = subir_documentacion($conexion);
 }
-
-include ("../header.html");
-include ("./navbar.php");
 
 $agentes = get_agentes($conexion);
 ?>

@@ -1,8 +1,8 @@
 <?php 
 require_once('../dataBase.php');
 include ("../header.html");
-include ("./navbar.php");
-include ("./consultas.php");
+include ("./includes/navbar.php");
+include ("./includes/consultas.php");
 
 
 if (isset($_GET['id']) && $id = intval($_GET['id'])){
