@@ -8,11 +8,18 @@
 
             const $check_doc = document.getElementById('check-docente')
             const $check_no_doc = document.getElementById('check-no-docente')
-
-            const filter_doc = a => $check_doc.checked ? a.docente_id !== null : a.docente_id === null
-            const filter_no_doc = a => $check_no_doc.checked ? a.no_docente_id !== null : a.no_docente_id === null
-
-            result = agentes.filter(_a => filter_doc(_a) && filter_no_doc(_a))
+            
+            result = agentes.filter(a => {
+                if ($check_doc.checked && $check_no_doc.checked) 
+                    return a.docente_id !== null && a.no_docente_id !== null;
+                
+                if ($check_doc.checked) 
+                    return a.docente_id !== null;
+                if ($check_no_doc.checked) 
+                    return a.no_docente_id !== null;
+                
+                return false;
+            })
 
             const $select = document.querySelector('select[name="agente_id"]')
 
