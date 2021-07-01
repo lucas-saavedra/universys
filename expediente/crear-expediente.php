@@ -1,7 +1,7 @@
 <?php 
+require_once('../dataBase.php');
 include ("../header.html");
 include ("./navbar.php");
-require_once('../dataBase.php');
 include ("./consultas.php");
 
 $agentes = get_agentes($conexion);
@@ -88,7 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <div class="mb-3 row filtro-agente">
                             <div class="col-auto">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="on" id="check-docente" name="check-docente">
+                                    <input class="form-check-input" type="checkbox" value="on" id="check-docente"
+                                        name="check-docente">
                                     <label class="form-check-label" for="check-docente">
                                         Docente
                                     </label>
@@ -97,10 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                             </div>
                             <div class="col-auto">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="on" id="check-no-docente" name="check-no-docente">
+                                    <input class="form-check-input" type="checkbox" value="on" id="check-no-docente"
+                                        name="check-no-docente">
                                     <label class="form-check-label" for="check-no-docente">
                                         No docente
-                                    </label>   
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 <select class="form-control form-control-sm" name="agente_id" required>
                                 </select>
                             </div>
-                        </div>                    
+                        </div>
                     </div>
                 </div>
 
@@ -164,12 +166,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
                     </div>
                 </div>
-
+            </form>
         </div>
-
-        </form>
+        <div class="col-md-4">
+            <ul class="list-group list-group-horizontal">
+                <?php foreach (mysqli_fetch_all(mysqli_query($conexion, 'SELECT id FROM expediente'), MYSQLI_ASSOC) as $expdte):?>
+                    <li class="list-group-item">
+                        <a href="modificar-expediente.php?id=<?=$expdte['id']?>">
+                            <?=$expdte['id']?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
-</div>
+
+
 </div>
 
 
