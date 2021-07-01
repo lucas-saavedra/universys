@@ -62,15 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             <h3>Modificar expediente</h3>
         </div>
     </div>
-    <?php if (isset($msg['content'])): ?>
-        <div class="row">
-            <div class="col">
-                <div class="alert alert-<?=$msg['type']?>" role="alert">
-                    <?=$msg['content']?>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
+    <?php include("./includes/msg-box.php"); ?>
 
     <div class="row">
         <div class="col-md-8">

@@ -64,15 +64,8 @@ $agentes = get_agentes($conexion);
             <h3>Subir documentación</h3>
         </div>
     </div>
-    <?php if (isset($msg['content'])): ?>
-        <div class="row">
-            <div class="col">
-                <div class="alert alert-<?=$msg['type']?>" role="alert">
-                    <?=$msg['content']?>
-                </div>
-            </div>
-        </div>
-    <?php endif; ?>
+    <?php include("./includes/msg-box.php"); ?>
+    
     <div class="row mt-4">
         <div class="col-md-8">
             <form action="subir-documentacion.php" method="POST" enctype="multipart/form-data" id="form-doc">
