@@ -12,17 +12,18 @@ if (isset($_GET['id']) && $id = intval($_GET['id'])){
 if (!isset($expdte)) header("Location:crear-expediente.php");
 
 
-function get_campos_modificados($array1, $array2){
+function get_campos_modificados($array1, $array2, $convertir=array()){
     $campos = array_keys($array2);
     $modificaciones = [];
 
     foreach ($campos as $campo) {
+        $converted = empty($convertir[$campo]) ? $campo: $convertir[$campo];
         if ($array1[$campo] != $array2[$campo]){
             if ($array2[$campo] === ""){
                 $modificaciones[$campo] = "{$campo}=NULL";
                 continue;
             }
-            $modificaciones[$campo] = "{$campo}='{$array2[$campo]}'";
+            $modificaciones[$campo] = "{$converted}='{$array2[$campo]}'";
         }
     }
 
@@ -30,20 +31,33 @@ function get_campos_modificados($array1, $array2){
 }
 
 function modificar_expdte($bd, $expdte){
-    $modificaciones = get_campos_modificados($expdte, $_POST);
+    $modifs_en_expdte = get_campos_modificados($expdte, $_POST['expdte']);
 
-    if (empty($modificaciones)) return;
+    $campos_aviso = ["aviso_fecha" => "fecha_recepcion", "aviso_desc" =>"descripcion"];
+    $modifs_en_aviso = get_campos_modificados($expdte, $_POST['aviso'], $campos_aviso);
     
-    $update_string = implode(', ', $modificaciones);
 
-    $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
+    if (!empty($modifs_en_aviso)){
+        $update_string = implode(', ', $modifs_en_aviso);
+        $sql_update_aviso = "UPDATE aviso SET {$update_string} WHERE id={$expdte['aviso_id']}";
 
-    if ($result = mysqli_query($bd, $sql_update_expdte)){
-        return ["content" => "El expediente ha sido modificado con exito", "type" => "success"];
+        if (!$result = mysqli_query($bd, $sql_update_aviso)){
+            $error = mysqli_error($bd);
+            return ["content" => "Error al modificar aviso: {$error}", "type" => "warning"];
+        }
     }
 
-    $error = mysqli_error($bd);
-    return ["content" => "Ha ocurrido un error: {$error}", "type" => "warning"];
+    if (!empty($modifs_en_expdte)){
+        $update_string = implode(', ', $modifs_en_expdte);
+        $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
+
+        if (!$result = mysqli_query($bd, $sql_update_expdte)){
+            $error = mysqli_error($bd);
+            return ["content" => "Error al modificar expediente: {$error}", "type" => "warning"];
+        }
+    }
+
+    return ["content" => "El expediente ha sido modificado con exito", "type" => "success"];
 
 }
 
@@ -73,17 +87,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="">Fecha de inicio</label>
-                        <input type="date" class="form-control" name="fecha_inicio" value="<?=$expdte['fecha_inicio']?>" required>
+                        <input type="date" class="form-control" name="expdte[fecha_inicio]" value="<?=$expdte['fecha_inicio']?>" required>
                     </div>
                     <div class="col-md-6">
                         <label for="">Fecha de fin</label>
-                        <input type="date" class="form-control" name="fecha_fin" value="<?=$expdte['fecha_fin']?>" required>
+                        <input type="date" class="form-control" name="expdte[fecha_fin]" value="<?=$expdte['fecha_fin']?>" required>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <h6 class="card-header">Datos del aviso</h6>
+                    <div class="card-body">
+                        <div class="mb-3 row">
+                            <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
+                            <div class="col-sm-10">
+                                <input type="datetime-local" class="form-control" name="aviso[aviso_fecha]" 
+                                value="<?=$expdte['aviso_fecha']?>" required />
+                            </div>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <label for="" class="col-sm-2 form-label">Descripción</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" name="aviso[aviso_desc]"><?=$expdte['aviso_desc']?></textarea>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Documentación</label>
                     <div class="col-sm-10">
-                        <select class="form-control form-control-sm" name="doc_justificada_id">
+                        <select class="form-control form-control-sm" name="expdte[doc_justificada_id]">
                             <option value="" <?=!$expdte['doc_justificada_id'] ? 'selected': ''?>></option>
 
                             <?php foreach(get_docs_sin_expdte($conexion, $expdte) as $doc): ?>
@@ -97,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Código</label>
                     <div class="col-sm-7">
-                        <select class="form-control" name="codigo_id" required>
+                        <select class="form-control" name="expdte[codigo_id]" required>
                             <?php if (!$expdte['codigo_id']): ?>
                                 <option value="" selected disabled>Seleccione un código</option>
                             <?php endif; ?>
