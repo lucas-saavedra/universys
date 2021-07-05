@@ -108,7 +108,8 @@ create table jornada_docente (
     catedra_id int,
     PRIMARY key (id),
     FOREIGN KEY (docente_id) REFERENCES docente(id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id),
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (catedra_id) REFERENCES catedra(id)
 );
 
@@ -428,4 +429,13 @@ INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
 
 
 
+
+/* --------------VISTAS----------- */
+
+CREATE VIEW docente_nombre AS
+SELECT docente.id,nombre FROM docente left join persona on docente.id = persona.id;
+
+CREATE VIEW v_jornada AS
+SELECT jornada.id, jornada.fecha_inicio, jornada.fecha_fin, tipo_jornada.nombre, jornada.descripcion FROM jornada 
+left join  tipo_jornada on jornada.tipo_jornada_id = tipo_jornada.id
 
