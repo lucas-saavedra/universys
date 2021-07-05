@@ -3,9 +3,9 @@ require_once('../dataBase.php');
 include ("../header.html");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
+include("./includes/asignar-planilla-prod.php");
 
 $agentes = get_agentes($conexion);
-
 
 function crear_expediente($bd){
 
@@ -14,14 +14,14 @@ function crear_expediente($bd){
         $sql_aviso = "INSERT INTO aviso (fecha_recepcion, descripcion) VALUES 
         ('{$_POST['aviso_fecha']}', '{$_POST['aviso_desc']}')";
 
-        if (!$result = mysqli_query($bd, $sql_aviso)) throw new Exception();
+        if (!$result = mysqli_query($bd, $sql_aviso)) throw new Exception(mysqli_error($bd));
         
         $id_aviso = mysqli_insert_id($bd);
 
         $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id) VALUES
         ({$_POST['agente_id']}, '{$_POST['fecha_inicio']}', '{$_POST['fecha_fin']}', {$id_aviso}, {$_POST['codigo_id']})";
     
-        if (!$result = mysqli_query($bd, $sql_expdte)) throw new Exception();
+        if (!$result = mysqli_query($bd, $sql_expdte)) throw new Exception(mysqli_error($bd));
         
         $id_expdte = mysqli_insert_id($bd);
 
@@ -31,7 +31,7 @@ function crear_expediente($bd){
             $sql_expdte_doc = "INSERT INTO expediente_docente (expediente_id, docente_id) VALUES 
             ($id_expdte, $id_docente)";
 
-            if (!$result = mysqli_query($bd, $sql_expdte_doc)) throw new Exception();
+            if (!$result = mysqli_query($bd, $sql_expdte_doc)) throw new Exception(mysqli_error($bd));
             
         }
 
@@ -41,14 +41,16 @@ function crear_expediente($bd){
             $sql_expdte_no_doc = "INSERT INTO expediente_no_docente (expediente_id, no_docente_id) VALUES 
             ($id_expdte, $id_no_docente)";
 
-            if (!$result = mysqli_query($bd, $sql_expdte_no_doc)) throw new Exception();
+            if (!$result = mysqli_query($bd, $sql_expdte_no_doc)) throw new Exception(mysqli_error($bd));
             
         }
+
+        asignar_expdte_a_planillas_prod($bd, $id_expdte);
 
         mysqli_commit($bd);
     }
     catch (Exception $e){
-        $msg['content'] = mysqli_error($bd);
+        $msg['content'] = $e->getMessage();
         $msg['type'] = 'warning';
         mysqli_rollback($bd);
         return $msg;
@@ -163,7 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
             </form>
         </div>
         <div class="col-md-4">
-            <ul class="list-group list-group-horizontal">
+            <ul class="list-group list-group-horizontal flex-wrap">
                 <?php foreach (mysqli_fetch_all(mysqli_query($conexion, 'SELECT id FROM expediente'), MYSQLI_ASSOC) as $expdte):?>
                     <li class="list-group-item">
                         <a href="modificar-expediente.php?id=<?=$expdte['id']?>">

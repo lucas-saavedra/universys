@@ -47,4 +47,14 @@
         return mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));
     }
 
+    function get_p_prod_docente($bd, $anio, $mes){
+        $sql_planilla = "SELECT * FROM planilla_productividad_docente where anio={$anio} and mes_id={$mes}";
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql_planilla));
+    }
+
+    function get_p_prod_no_docente($bd, $anio, $mes){
+        $sql_planilla = "SELECT * FROM planilla_productividad_no_docente where anio={$anio} and mes_id={$mes}";
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql_planilla));
+    }
+
 ?>
