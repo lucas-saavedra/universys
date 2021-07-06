@@ -67,7 +67,7 @@ create table jornada_no_docente (
     PRIMARY key (id),
     FOREIGN KEY (area_id) REFERENCES area(id),
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id) ON DELETE CASCADE,
 );
 
 create table carrera (

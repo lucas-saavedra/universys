@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    listar_jorn_docentes();
+    listar_jorn_no_docentes();
     let editar = false;
-    $('#search').keyup(function (e) {
+    /* $('#search').keyup(function (e) {
         if ($('#search').val()) {
             let search = $('#search').val();
             $.ajax({
@@ -30,30 +30,31 @@ $(document).ready(function () {
                 }
             });
         }
-    });
+    }); */
    
-    $(document).on('click', '.jorn-docente-item', function () {
+    $(document).on('click', '.jorn-no-docente-item', function () {
         let element = $(this)[0].parentElement.parentElement;
-        let jornada_doc_id = $(element).attr('jornada_docente_id');
-        console.log(jornada_doc_id);
-        $.post('/universys/jornada/backend/listarJornadaDocente.php', {
-            jornada_doc_id
+        let jornada_no_doc_id = $(element).attr('jornada_no_docente_id');
+        console.log(jornada_no_doc_id);
+        $.post('/universys/jornada/backend/listarJornadaNoDocente.php', {
+            jornada_no_doc_id
         }, function (response) {
             const jd = JSON.parse(response);
+            console.log(jd);
             $('#jornadaId').val(jd[0].jornada_id);
-            $('#jornadaDocenteId').val(jd[0].jornada_doc_id);
+            $('#jornadaNoDocenteId').val(jd[0].jornada_no_doc_id);
             $('#descripcion').val(jd[0].descripcion);
-            $('#docenteId').val(jd[0].docente_id);
+            $('#noDocenteId').val(jd[0].no_docente_id);
             $('#fechaInicio').val(jd[0].fecha_fin);
             $('#fechaFin').val(jd[0].fecha_inicio);
+            $('#areaId').val(jd[0].area_id);
             $('#tipoJornadaId').val(jd[0].tipo_jornada_id);
-            obtener_catedra(jd[0].catedra_id);
-            editar = true;
+            editar = true; 
         })
 
     })
 
-    $(document).on('click', '.jorn-docente-borrar', function () {
+    $(document).on('click', '.jorn-no-docente-borrar', function () {
         if (confirm('¿Seguro que desea eliminar esta jornada?')) {
             let element = $(this)[0].parentElement.parentElement;
             let jornada_id = $(element).attr('jornada_id');
@@ -61,7 +62,7 @@ $(document).ready(function () {
             $.post('/universys/jornada/backend/borrar-jornada.php', {
                 jornada_id
             }, function (response) {
-                listar_jorn_docentes();
+                listar_jorn_no_docentes();
                 const msg = JSON.parse(response);
                 $('#notif').html(`
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -77,20 +78,20 @@ $(document).ready(function () {
         }
     })
 
-    $('#jornadaDocente').submit(function (e) {
-        const jornadaDocente = {
+    $('#jornadaNoDocente').submit(function (e) {
+        const jornadaNoDocente = {
             jornadaId:  $('#jornadaId').val(),
-            jornadaDocenteId:  $('#jornadaDocenteId').val(),
-            catedraId: $('#catedraIdInput').val(),
-            docenteId: $('#docenteId').val(),
+            jornadaNoDocenteId:  $('#jornadaNoDocenteId').val(),
+            areaId: $('#areaId').val(),
+            noDocenteId: $('#noDocenteId').val(),
             tipoJornadaId: $('#tipoJornadaId').val(),
             fechaInicio: $('#fechaInicio').val(),
             fechaFin: $('#fechaFin').val(),
             descripcion: $('#descripcion').val()
         };
-        let url = editar === false ? '/universys/jornada/backend/insertar-jornada-docente.php' : '/universys/jornada/backend/upd-jornada.php'; 
-        $.post(url, jornadaDocente, function (response) {
-            listar_jorn_docentes();
+        let url = editar === false ? '/universys/jornada/backend/insertar-jornada-no-docente.php' : '/universys/jornada/backend/upd-jornada-nd.php'; 
+         $.post(url, jornadaNoDocente, function (response) {
+            listar_jorn_no_docentes();
             const msg = JSON.parse(response);
             let template =' ';
                 template += ` 
@@ -102,18 +103,18 @@ $(document).ready(function () {
                 </div>  `;
             
             $('#notif').html(template);
-            $('#jornadaDocente').trigger('reset');
-        });
+            $('#jornadaNoDocente').trigger('reset');
+        }); 
         e.preventDefault();
     });
     
-    $(document).on('click', '.catedra', function () {
+  /*   $(document).on('click', '.catedra', function () {
         let element = $(this)[0].parentElement.parentElement;
         let catedraId = $(element).attr('catedraId');
         obtener_catedra(catedraId);
     })
-
-    function obtener_catedra(catedraId) {
+ */
+ /*    function obtener_catedra(catedraId) {
         $.post('/universys/jornada/backend/catedra.php', {
             catedraId
         }, function (response) {
@@ -121,32 +122,33 @@ $(document).ready(function () {
             $('#catedra').val(catedra.nombre + ', ' + catedra.anio + ' Año, ' + catedra.carrera);
             $('#catedraIdInput').val(catedra.id);
         })
-    };
-    function listar_jorn_docentes() {
+    }; */
+    function listar_jorn_no_docentes() {
         $.ajax({
-            url: '/universys/jornada/backend/listarJornadaDocente.php',
+            url: '/universys/jornada/backend/listarJornadaNoDocente.php',
             type: 'GET',
             success: function (response) {
-                let jorndocs = JSON.parse(response);
+                let jorn_no_docs = JSON.parse(response);
                 let template = " "
-                jorndocs.forEach(jorndoc => {
+                jorn_no_docs.forEach(jnd => {
                     template += ` 
-        <tr jornada_id=${jorndoc.jornada_id} jornada_docente_id=${jorndoc.jornada_doc_id}>  
-         <td> ${jorndoc.jornada_doc_id}  </td>
-         <td>   ${jorndoc.docente} </td>
-         <td>   ${jorndoc.catedra} </td>
-         <td>   ${jorndoc.fecha_inicio} </td>
-         <td>   ${jorndoc.fecha_fin} </td>
-         <td>   ${jorndoc.tipo_jornada} </td>
-         <td>   ${jorndoc.descripcion} </td>
-         <td> <button class=" jorn-docente-item btn btn-info"><i class="fas fa-pen"></i></button>
-         <button class=" jorn-docente-borrar btn btn-danger"><i class="fas fa-trash"></i></button></td>
+        <tr jornada_id='${jnd.jornada_id}' jornada_no_docente_id='${jnd.jornada_no_doc_id}'>  
+         <td>   ${jnd.jornada_no_doc_id}  </td>   
+         <td>   ${jnd.no_docente}  </td>
+         <td>   ${jnd.area}  </td>  
+         <td>   ${jnd.fecha_inicio}  </td>   
+         <td>   ${jnd.fecha_fin}  </td>   
+         <td>   ${jnd.tipo_jornada}  </td>   
+         <td>   ${jnd.descripcion}  </td>   
+       
+         <td> <button class=" jorn-no-docente-item btn btn-info"><i class="fas fa-pen"></i></button>
+         <button class=" jorn-no-docente-borrar btn btn-danger"><i class="fas fa-trash"></i></button></td>
             
         </tr>
 
         `
                 })
-                $('#lista_jorn_docente').html(template);
+                $('#lista_jorn_no_docente').html(template);
 
             }
         });

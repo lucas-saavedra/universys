@@ -10,6 +10,7 @@ $query = "SELECT
       c.nombre as catedra,
       j.fecha_inicio,
       j.fecha_fin,
+      j.tipo_jornada_id,
       j.nombre as tipo_jornada,
       j.descripcion
       FROM `jornada_docente` as jd
@@ -37,6 +38,7 @@ while ($row = mysqli_fetch_array($result)) {
     'fecha_inicio' => $row['fecha_inicio'],
     'fecha_fin' => $row['fecha_fin'],
     'tipo_jornada' => $row['tipo_jornada'],
+    'tipo_jornada_id' => $row['tipo_jornada_id'],
     'descripcion' => $row['descripcion']
   );
 }

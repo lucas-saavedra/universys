@@ -1,7 +1,7 @@
 <?php
 include('../includes/db.php');
 
-    $jornadaId =  $_POST["jornadaId"];
+  $jornadaId =  $_POST["jornadaId"];
   $jornadaDocenteId =  $_POST["jornadaDocenteId"];
   $catedraId =  $_POST["catedraId"];
   $docenteId =  $_POST["docenteId"];

@@ -6,16 +6,13 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1>UNIVERSYS</h1>
-
+            <h1>JORNADA DOCENTE</h1>
             <div id='notif'>
             </div>
             <form action="" id="jornadaDocente" method="POST">
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="">Seleccione al docente</label>
-
-
                         <select class="form-control" id="docenteId" required>
                         <option  selected value="" disabled >Seleccione el docente</option>
                             <?php foreach (get_docentes($conexion) as $docentes) : ?>
@@ -27,7 +24,6 @@
 
                     </div>
                 </div>
-
                 <div class="form-row d-flex flex-nowrap">
                     <div class="form-group col-md-11 col-lg-11 ">
                         <input class="form-control"  type="text" value="" required id="catedra" placeholder="Click aquí para seleccionar la catedra" aria-label="">
@@ -55,15 +51,13 @@
                         <label for="">Tipo de jornada</label>
                         <select required class="form-control" id="tipoJornadaId">
                             <option  selected value="" disabled >Seleccione la jornada</option>
-                            <?php
-                            $query2 = "SELECT * FROM tipo_jornada WHERE pertenece = 'docente'";
-                            $tipo_jornada = mysqli_query($conexion, $query2);
-                            while ($row2 = mysqli_fetch_array($tipo_jornada)) { ?>
-                                <option value=' <?php echo $row2['id'] ?>'> <?php echo $row2['nombre'] ?> </option>
-                            <?php } ?>
+                            <?php foreach (get_tipo_jornadas_docentes($conexion) as $tipo_jornada) : ?>
+                                <option value="<?= $tipo_jornada['id'] ?>">
+                                    <?= "{$tipo_jornada['nombre']}" ?>
+                                </option>
+                            <?php endforeach; ?>     
                         </select>
                     </div>
-
                 </div>
                 <div class="form-group">
                     <label for="">Descripcion de la jornada</label>
@@ -71,7 +65,6 @@
                         <textarea id='descripcion' required name="detalle" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
                     </div>
                 </div>
-
                 <div class="form-group col-md-12 d-flex justify-content-around">
                     <button type="submit" class="btn btn-primary">Aceptar</button>
                     <button type="reset" class="btn btn-secondary">Cancelar</button>
