@@ -40,8 +40,8 @@
         $sql_expdte = "SELECT e.*, p.nombre as nom_agente, DATE_FORMAT(av.fecha_recepcion, '%Y-%m-%dT%T') as aviso_fecha, 
         av.descripcion as aviso_desc 
         FROM expediente as e 
-        INNER JOIN aviso as av ON e.aviso_id=av.id
-        INNER JOIN persona as p ON e.persona_id=p.id
+        LEFT JOIN aviso as av ON e.aviso_id=av.id
+        LEFT JOIN persona as p ON e.persona_id=p.id
         WHERE e.id={$id}";
         
         return mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));
