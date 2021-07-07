@@ -152,6 +152,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 </div>
             </form>
         </div>
+
+        <div class="col-md-4">
+            <?php foreach(get_p_prod_asociadas($conexion, $expdte['id']) as $nombre => $planillas): ?>
+                <?php if (empty($planillas)) continue; ?>
+                <div class="card border-primary mb-3">
+                    <div class="card-header"><?="P.Productividad $nombre"?></div>
+                    <div class="card-body">
+                        <?php foreach ($planillas as list($mes, $anio)):?>
+                            <span class="badge badge-info"><?="$mes - $anio"?></span>
+                        <?php endforeach; ?>
+                    </div>
+
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 

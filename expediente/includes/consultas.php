@@ -57,4 +57,21 @@
         return mysqli_fetch_assoc(mysqli_query($bd, $sql_planilla));
     }
 
+    function get_p_prod_asociadas($bd, $id_expdte){
+        $sql_docente = "SELECT pp.mes_id, pp.anio FROM expediente_planilla_docente as ep 
+        LEFT JOIN expediente_docente as ed ON ep.expediente_docente_id=ed.id
+        LEFT JOIN planilla_productividad_docente as pp ON ep.planilla_productividad_docente_id=pp.id
+        WHERE ed.expediente_id={$id_expdte}";
+
+        $sql_no_docente = "SELECT pp.mes_id, pp.anio FROM expediente_planilla_no_docente as ep 
+        LEFT JOIN expediente_no_docente as ed ON ep.expediente_no_docente_id=ed.id
+        LEFT JOIN planilla_productividad_no_docente as pp ON ep.planilla_productividad_no_docente_id=pp.id
+        WHERE ed.expediente_id={$id_expdte}";
+
+        return [
+            'Docente' => mysqli_fetch_all(mysqli_query($bd, $sql_docente), MYSQLI_NUM),
+            'No docente' => mysqli_fetch_all(mysqli_query($bd, $sql_no_docente), MYSQLI_NUM),
+        ];
+    }
+
 ?>
