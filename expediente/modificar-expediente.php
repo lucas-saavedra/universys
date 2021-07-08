@@ -61,10 +61,32 @@ function modificar_expdte($bd, $expdte){
 
 }
 
+function confirmar_expdte($bd, $id_expdte){
+    mysqli_query($bd, 'START TRANSACTION');
+
+    try{
+        $sql = "UPDATE expediente SET confirmado=1 WHERE id={$id_expdte}";
+
+        if (!$result = mysqli_query($bd, $sql)) throw new Exception(mysqli_error($bd));
+
+        mysqli_commit($bd);
+    }
+    catch (Exception $e){
+        mysqli_rollback($bd);
+        return ['content' => $e->getMessage(), 'type'=>'warning'];
+    }
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-    $msg = modificar_expdte($conexion, $expdte);
+    if (isset($_POST['action']) && $_POST['action'] === 'confirmar'){
+        $msg = confirmar_expdte($conexion, $expdte['id']);
+    }
+    else{
+        $msg = modificar_expdte($conexion, $expdte);
+    }
+
     $expdte = get_expdte($conexion, $expdte['id']);
 }
 
@@ -80,10 +102,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     <div class="row">
         <div class="col-md-8">
-            <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
-                <div class="jumbotron p-4 d-flex justify-content-between">
-                    <h4 class="m-0">Expediente ID: <?=$id?> - Agente: <?=$expdte['nom_agente']?></h4>
+            <div class="jumbotron p-4 d-flex justify-content-between mb-3">
+                <h4 class="m-0">
+                    <span>
+                        Expediente ID: <?=$id?>
+                        <?php if ($expdte['confirmado']): ?>
+                            <span class="badge badge-info">Confirmado</span>
+                        <?php endif; ?>
+                    </span>
+                     - 
+                    <span>
+                        Agente: <?=$expdte['nom_agente']?>
+                    </span>
+                </h4>
+            </div>
+            <?php if (!$expdte['confirmado']): ?>
+                <div class="row mb-3">
+                    <div class="col">
+                        <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
+                            <input type="hidden" value="confirmar" name="action">
+                            <div class="alert alert-info">
+                                <i class="fa fa-info fa-lg mr-2"></i>
+                                El expediente no está confirmado. Confirme para validar el código <button class="btn btn-primary ml-2">Confirmar expediente</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+            <?php endif; ?>
+            <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="">Fecha de inicio</label>
