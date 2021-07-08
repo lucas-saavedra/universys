@@ -3,7 +3,8 @@ require_once('../dataBase.php');
 include ("../header.html");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
-include("./includes/asignar-planilla-prod.php");
+include ("./includes/asignar-planilla-prod.php");
+include ("./includes/validaciones.php");
 
 $agentes = get_agentes($conexion);
 
@@ -45,13 +46,14 @@ function crear_expediente($bd){
             
         }
 
+        validar_aviso($bd, $id_expdte);
         asignar_expdte_a_planillas_prod($bd, $id_expdte);
 
         mysqli_commit($bd);
     }
     catch (Exception $e){
         $msg['content'] = $e->getMessage();
-        $msg['type'] = 'warning';
+        $msg['type'] = 'danger';
         mysqli_rollback($bd);
         return $msg;
     }

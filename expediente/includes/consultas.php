@@ -38,10 +38,11 @@
 
     function get_expdte($bd, $id){
         $sql_expdte = "SELECT e.*, p.nombre as nom_agente, DATE_FORMAT(av.fecha_recepcion, '%Y-%m-%dT%T') as aviso_fecha, 
-        av.descripcion as aviso_desc 
+        av.descripcion as aviso_desc, av.validez as aviso_validez, doc.entrega_en_termino as doc_validez
         FROM expediente as e 
         LEFT JOIN aviso as av ON e.aviso_id=av.id
         LEFT JOIN persona as p ON e.persona_id=p.id
+        LEFT JOIN documentacion_justificada as doc ON e.doc_justificada_id=doc.id
         WHERE e.id={$id}";
         
         return mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));

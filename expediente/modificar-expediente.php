@@ -3,6 +3,7 @@ require_once('../dataBase.php');
 include ("../header.html");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
+include ("./includes/validaciones.php");
 
 
 if (isset($_GET['id']) && $id = intval($_GET['id'])){
@@ -35,28 +36,42 @@ function modificar_expdte($bd, $expdte){
 
     $campos_aviso = ["aviso_fecha" => "fecha_recepcion", "aviso_desc" =>"descripcion"];
     $modifs_en_aviso = get_campos_modificados($expdte, $_POST['aviso'], $campos_aviso);
+
+    mysqli_query($bd, 'START TRANSACTION');
+
+    try {
+        if (!empty($modifs_en_aviso)){
+            $update_string = implode(', ', $modifs_en_aviso);
+            $sql_update_aviso = "UPDATE aviso SET {$update_string} WHERE id={$expdte['aviso_id']}";
     
-
-    if (!empty($modifs_en_aviso)){
-        $update_string = implode(', ', $modifs_en_aviso);
-        $sql_update_aviso = "UPDATE aviso SET {$update_string} WHERE id={$expdte['aviso_id']}";
-
-        if (!$result = mysqli_query($bd, $sql_update_aviso)){
-            $error = mysqli_error($bd);
-            return ["content" => "Error al modificar aviso: {$error}", "type" => "warning"];
+            if (!$result = mysqli_query($bd, $sql_update_aviso)){
+                $error = mysqli_error($bd);
+                throw new Exception("Error al modificar aviso: {$error}");
+            }
+    
+            validar_aviso($bd, $expdte['id']);
         }
-    }
-
-    if (!empty($modifs_en_expdte)){
-        $update_string = implode(', ', $modifs_en_expdte);
-        $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
-
-        if (!$result = mysqli_query($bd, $sql_update_expdte)){
-            $error = mysqli_error($bd);
-            return ["content" => "Error al modificar expediente: {$error}", "type" => "warning"];
+    
+        if (!empty($modifs_en_expdte)){
+            $update_string = implode(', ', $modifs_en_expdte);
+            $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
+    
+            if (!$result = mysqli_query($bd, $sql_update_expdte)){
+                $error = mysqli_error($bd);
+                throw new Exception("Error al modificar expediente: {$error}");
+            }
+    
+            if (isset($modifs_en_expdte['doc_justificada_id'])){
+                validar_documentacion($bd, $expdte['id']);
+            }
         }
+        mysqli_commit($bd);
     }
-
+    catch (Exception $e){
+        mysqli_rollback($bd);
+        return ['content' => $e->getMessage(), 'type' => 'danger'];
+    }
+    
     return ["content" => "El expediente ha sido modificado con exito", "type" => "success"];
 
 }
@@ -73,7 +88,7 @@ function confirmar_expdte($bd, $id_expdte){
     }
     catch (Exception $e){
         mysqli_rollback($bd);
-        return ['content' => $e->getMessage(), 'type'=>'warning'];
+        return ['content' => $e->getMessage(), 'type'=>'danger'];
     }
 }
 
@@ -141,7 +156,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                     </div>
                 </div>
                 <div class="card mb-3">
-                    <h6 class="card-header">Datos del aviso</h6>
+                    <h5 class="card-header">
+                        Aviso
+                        <?php if ($expdte['aviso_validez']): ?>
+                            <span class="badge badge-success">
+                                Válido
+                            </span>
+                        <?php else: ?>
+                            <span class="badge badge-danger">
+                                No válido
+                            </span>
+                        <?php endif; ?>
+                    </h5>
                     <div class="card-body">
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
@@ -161,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 </div>
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Documentación</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-8">
                         <select class="form-control form-control-sm" name="expdte[doc_justificada_id]">
                             <option value="" <?=!$expdte['doc_justificada_id'] ? 'selected': ''?>></option>
 
@@ -171,6 +197,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                    </div>
+                    <div class="col-sm-2 d-flex align-items-center">
+                        <h5 class="m-0">
+                            <?php if ($expdte['doc_validez']): ?>
+                                <span class="badge badge-success">Válida</span>
+                            <?php else: ?>
+                                <span class="badge badge-danger">No válida</span>
+                            <?php endif; ?>
+                        </h5>
                     </div>
                 </div>
                 <div class="mb-3 row">
