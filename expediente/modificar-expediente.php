@@ -134,7 +134,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <div class="container">
     <div class="row my-4">
         <div class="col">
-            <h3>Modificar expediente</h3>
+            <h3>
+                Modificar expediente (ID: <?=$id?>)
+                <?php if ($expdte['confirmado']): ?>
+                    <span class="badge badge-info">Confirmado</span>
+                <?php endif; ?>
+                <?php if ($expdte['expdte_docente_id']): ?>
+                    <span class="badge badge-secondary">Docente</span>
+                <?php endif; ?>
+                <?php if ($expdte['expdte_no_docente_id']): ?>
+                    <span class="badge badge-secondary">No docente</span>
+                <?php endif; ?>
+            </h3>
         </div>
     </div>
     <?php include("./includes/msg-box.php"); ?>
@@ -143,16 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         <div class="col-md-8">
             <div class="jumbotron p-4 d-flex justify-content-between mb-3">
                 <h4 class="m-0">
-                    <span>
-                        Expediente ID: <?=$id?>
-                        <?php if ($expdte['confirmado']): ?>
-                            <span class="badge badge-info">Confirmado</span>
-                        <?php endif; ?>
-                    </span>
-                     - 
-                    <span>
-                        Agente: <?=$expdte['nom_agente']?>
-                    </span>
+                    Agente: <?=$expdte['nom_agente']?>
                 </h4>
             </div>
             <?php if (!$expdte['confirmado']): ?>
