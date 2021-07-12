@@ -34,13 +34,7 @@ function crear_p_prod($bd, $anio, $mes, $tipo){
 
 function asignar_expdte_a_planillas_prod($bd, $id_expdte){
 
-    $sql_expdte = "SELECT fecha_inicio, fecha_fin, ed.id as expdte_docente_id, e_nd.id as expdte_no_docente_id 
-    FROM expediente as e 
-    LEFT JOIN expediente_docente as ed on e.id = ed.expediente_id 
-    LEFT JOIN expediente_no_docente as e_nd on e.id=e_nd.expediente_id
-    WHERE e.id={$id_expdte}";
-
-    $expdte = mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));
+    $expdte = get_expdte($bd, $id_expdte);
     $meses = get_meses_entre_fechas(strtotime($expdte['fecha_inicio']), strtotime($expdte['fecha_fin']));
 
     if (!empty($expdte['expdte_docente_id'])){

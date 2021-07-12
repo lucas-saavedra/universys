@@ -4,6 +4,7 @@ include ("../header.html");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/validaciones.php");
+include ("./includes/asignar-planilla-prod.php");
 
 
 if (isset($_GET['id']) && $id = intval($_GET['id'])){
@@ -24,7 +25,7 @@ function get_campos_modificados($array1, $array2, $convertir=array()){
                 $modificaciones[$campo] = "{$campo}=NULL";
                 continue;
             }
-            $modificaciones[$campo] = "{$converted}='{$array2[$campo]}'";
+            $modificaciones[$converted] = "{$converted}='{$array2[$campo]}'";
         }
     }
 
@@ -48,8 +49,6 @@ function modificar_expdte($bd, $expdte){
                 $error = mysqli_error($bd);
                 throw new Exception("Error al modificar aviso: {$error}");
             }
-    
-            validar_aviso($bd, $expdte['id']);
         }
     
         if (!empty($modifs_en_expdte)){
@@ -60,10 +59,20 @@ function modificar_expdte($bd, $expdte){
                 $error = mysqli_error($bd);
                 throw new Exception("Error al modificar expediente: {$error}");
             }
-    
-            if (isset($modifs_en_expdte['doc_justificada_id'])){
-                validar_documentacion($bd, $expdte['id']);
-            }
+        }
+        
+        $modificacion_fechas_expdte = isset($modifs_en_expdte['fecha_inicio']) || isset($modifs_en_expdte['fecha_fin']);
+
+        if (isset($modifs_en_aviso['fecha_recepcion']) || $modificacion_fechas_expdte){
+            validar_aviso($bd, $expdte['id']);
+        }
+
+        if (isset($modifs_en_expdte['doc_justificada_id']) || $modificacion_fechas_expdte){
+            validar_documentacion($bd, $expdte['id']);
+        }
+
+        if ($modificacion_fechas_expdte){
+            on_update_fechas_expdte($bd, $expdte['id']);
         }
         mysqli_commit($bd);
     }
@@ -74,6 +83,21 @@ function modificar_expdte($bd, $expdte){
     
     return ["content" => "El expediente ha sido modificado con exito", "type" => "success"];
 
+}
+
+function on_update_fechas_expdte($bd, $id_expdte){
+    $expdte = get_expdte($bd, $id_expdte);
+
+    if (isset($expdte['expdte_docente_id'])){
+        $sql_delete = "DELETE FROM expediente_planilla_docente WHERE expediente_docente_id={$expdte['expdte_docente_id']}";
+        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
+    }
+    if (isset($expdte['expdte_no_docente_id'])){
+        $sql_delete = "DELETE FROM expediente_planilla_no_docente WHERE expediente_no_docente_id={$expdte['expdte_no_docente_id']}";
+        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
+    }
+
+    asignar_expdte_a_planillas_prod($bd, $id_expdte);
 }
 
 function confirmar_expdte($bd, $id_expdte){
