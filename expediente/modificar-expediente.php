@@ -62,13 +62,21 @@ function modificar_expdte($bd, $expdte){
         }
         
         $modificacion_fechas_expdte = isset($modifs_en_expdte['fecha_inicio']) || isset($modifs_en_expdte['fecha_fin']);
+        $aviso_revalidado = false;
+        $doc_revalidada = false;
 
         if (isset($modifs_en_aviso['fecha_recepcion']) || $modificacion_fechas_expdte){
             validar_aviso($bd, $expdte['id']);
+            $aviso_revalidado = true;
         }
 
         if (isset($modifs_en_expdte['doc_justificada_id']) || $modificacion_fechas_expdte){
             validar_documentacion($bd, $expdte['id']);
+            $doc_revalidada = true;
+        }
+
+        if (isset($modifs_en_expdte['confirmado']) || isset($modifs_en_expdte['codigo_id']) || $aviso_revalidado || $doc_revalidada){
+            validar_codigo($bd, $expdte['id']);
         }
 
         if ($modificacion_fechas_expdte){
@@ -100,31 +108,9 @@ function on_update_fechas_expdte($bd, $id_expdte){
     asignar_expdte_a_planillas_prod($bd, $id_expdte);
 }
 
-function confirmar_expdte($bd, $id_expdte){
-    mysqli_query($bd, 'START TRANSACTION');
-
-    try{
-        $sql = "UPDATE expediente SET confirmado=1 WHERE id={$id_expdte}";
-
-        if (!$result = mysqli_query($bd, $sql)) throw new Exception(mysqli_error($bd));
-
-        mysqli_commit($bd);
-    }
-    catch (Exception $e){
-        mysqli_rollback($bd);
-        return ['content' => $e->getMessage(), 'type'=>'danger'];
-    }
-}
-
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
-    if (isset($_POST['action']) && $_POST['action'] === 'confirmar'){
-        $msg = confirmar_expdte($conexion, $expdte['id']);
-    }
-    else{
-        $msg = modificar_expdte($conexion, $expdte);
-    }
+    $msg = modificar_expdte($conexion, $expdte);
 
     $expdte = get_expdte($conexion, $expdte['id']);
 }
@@ -157,20 +143,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                     Agente: <?=$expdte['nom_agente']?>
                 </h4>
             </div>
-            <?php if (!$expdte['confirmado']): ?>
-                <div class="row mb-3">
-                    <div class="col">
-                        <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
-                            <input type="hidden" value="confirmar" name="action">
+            <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
+                <?php if (!$expdte['confirmado']): ?>
+                    <div class="row mb-3">
+                        <div class="col">
                             <div class="alert alert-info">
                                 <i class="fa fa-info fa-lg mr-2"></i>
-                                El expediente no está confirmado. Confirme para validar el código <button class="btn btn-primary ml-2">Confirmar expediente</button>
+                                El expediente no está confirmado. Confirme para validar el código 
+                                <button type="submit" value="1" name="expdte[confirmado]" class="btn btn-primary ml-2">Confirmar</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                </div>
-            <?php endif; ?>
-            <form action="<?="modificar-expediente.php?id={$id}"?>" method="POST">
+                <?php endif; ?>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="">Fecha de inicio</label>
@@ -254,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                 <div class="mb-3 row">
                     <div class="col text-center">
-                        <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+                        <button type="submit" class="btn btn-primary btn-lg">Modificar</button>
                     </div>
                 </div>
             </form>

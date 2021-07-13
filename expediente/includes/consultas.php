@@ -16,11 +16,10 @@
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
-    function get_codigos_inasis($bd){
-        $sql = "SELECT id, nombre, referencia FROM codigo";
-        $result = mysqli_query($bd, $sql);
-
-        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    function get_codigos_inasis($bd, $id=null){
+        $where = is_null($id) ? "": "WHERE id={$id}";
+        $sql = "SELECT * FROM codigo $where";
+        return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
     function get_docs_sin_expdte($bd, $expdte){

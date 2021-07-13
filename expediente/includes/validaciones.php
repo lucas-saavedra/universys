@@ -2,6 +2,22 @@
 
 include_once('./includes/consultas.php');
 
+function validar_codigo($bd, $id_expdte){
+    $expdte = get_expdte($bd, $id_expdte);
+
+    if (!$expdte['confirmado']) return;
+
+    $codigo = get_codigos_inasis($bd, $expdte['codigo_id'])[0];
+
+    if ($codigo['requiere_aviso'] && !$expdte['aviso_validez']){
+        throw new Exception('Error al validar código: El codigo requiere un aviso válido.');
+    }
+
+    if ($codigo['requiere_doc'] && !$expdte['doc_validez']){
+        throw new Exception('Error al validar código: El codigo requiere una documentación válida.');
+    }
+}
+
 // Para validar aviso y documentacion tomo solo las fechas, no las horas y minutos
 
 function validar_aviso($bd, $id_expdte){
