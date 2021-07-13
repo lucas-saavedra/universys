@@ -260,6 +260,8 @@ create table expediente (
     FOREIGN KEY (persona_id) REFERENCES persona(id)
 );
 
+alter table expediente add constraint chk_fecha_inicio_menor check (fecha_inicio <= fecha_fin);
+
 create table expediente_docente (
 	id int AUTO_INCREMENT,
     expediente_id int,
