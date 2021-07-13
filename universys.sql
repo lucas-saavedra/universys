@@ -470,3 +470,6 @@ INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_n
 ('Maternidad', 'Licencia por Maternidad', '12','1','1','1', '0', '1','1'),
 -- Justificación
 ('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1');
+
+insert into mes(nombre) values 
+('Enero'),('Febrero'), ('Marzo'), ('Abril'), ('Mayo'), ('Junio'), ('Julio'), ('Agosto'), ('Septiembre'), ('Octubre'), ('Noviembre'), ('Diciembre');
