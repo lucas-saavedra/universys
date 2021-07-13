@@ -209,7 +209,7 @@ create table aviso (
 	id int AUTO_INCREMENT,
     descripcion varchar(100),
     validez boolean,
-    fecha_recepcion DATE,
+    fecha_recepcion DATETIME,
     PRIMARY key (id)
 );
 
