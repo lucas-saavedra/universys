@@ -7,7 +7,7 @@ function validar_codigo($bd, $id_expdte){
 
     if (!$expdte['confirmado']) return;
 
-    $codigo = get_codigos_inasis($bd, $expdte['codigo_id'])[0];
+    $codigo = get_codigos_inasis($bd, "id={$expdte['codigo_id']}")[0];
 
     if ($codigo['requiere_aviso'] && !$expdte['aviso_validez']){
         throw new Exception('Error al validar código: El codigo requiere un aviso válido.');

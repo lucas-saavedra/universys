@@ -115,6 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $expdte = get_expdte($conexion, $expdte['id']);
 }
 
+$filtros = [];
+if (!is_null($expdte['expdte_docente_id'])) $filtros[] = "es_docente=1";
+if (!is_null($expdte['expdte_no_docente_id'])) $filtros[] = "es_no_docente=1";
+
+$codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
 ?>
 
 <div class="container">
@@ -226,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                                 <option value="" selected disabled>Seleccione un código</option>
                             <?php endif; ?>
 
-                            <?php foreach (get_codigos_inasis($conexion) as $codigo):?>
+                            <?php foreach ($codigos as $codigo):?>
                                 <option value="<?=$codigo['id']?>" <?=$codigo['id'] === $expdte['codigo_id'] ? 'selected': ''?>>
                                     <?="{$codigo['referencia']} - {$codigo['nombre']}"?>
                                 </option>

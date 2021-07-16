@@ -16,9 +16,8 @@
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
-    function get_codigos_inasis($bd, $id=null){
-        $where = is_null($id) ? "": "WHERE id={$id}";
-        $sql = "SELECT * FROM codigo $where";
+    function get_codigos_inasis($bd, $where=1){
+        $sql = "SELECT * FROM codigo WHERE $where";
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 

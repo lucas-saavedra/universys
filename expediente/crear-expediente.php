@@ -7,6 +7,7 @@ include ("./includes/asignar-planilla-prod.php");
 include ("./includes/validaciones.php");
 
 $agentes = get_agentes($conexion);
+$codigos = get_codigos_inasis($conexion);
 
 function crear_expediente($bd){
 
@@ -108,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                             <label for="" class="col-sm-2 form-label">Agente</label>
                             <div class="col-sm-10">
                                 <select class="form-control form-control-sm" name="agente_id" required>
+                                    <option value="" selected disabled>Seleccione un tipo de agente</option>
                                 </select>
                             </div>
                         </div>
@@ -148,12 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                     <label for="" class="col-sm-2 form-label">Código</label>
                     <div class="col-sm-7">
                         <select class="form-control" name="codigo_id" required>
-                            <option selected></option>
-                            <?php foreach (get_codigos_inasis($conexion) as $codigo):?>
-                                <option value="<?=$codigo['id']?>">
-                                    <?="{$codigo['referencia']} - {$codigo['nombre']}"?>
-                                </option>
-                            <?php endforeach; ?>
+                            <option value="" selected disabled>Seleccione un tipo de agente</option>
                         </select>
                     </div>
 
@@ -186,5 +183,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 <script src="./js/filtro_agentes.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
+    filtro_codigos(<?=json_encode($codigos, JSON_NUMERIC_CHECK )?>);
 </script>
 <?php include("../footer.html"); ?>
