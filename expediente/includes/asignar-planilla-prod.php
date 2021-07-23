@@ -1,11 +1,14 @@
 <?php  
 
 function get_meses_entre_fechas( $start, $end ){
+    $start = strtotime($start);
+    $end = strtotime($end);
+
     $current = $start;
     $meses = array();
 
     while($current <= $end){
-        $meses[] = [date("Y", $current), date("m", $current)];
+        $meses[] = [date("Y", $current), date("n", $current)];
         $next = date('Y-M-01', $current) . "+1 month";
         $current = strtotime($next);
     }
@@ -35,7 +38,7 @@ function crear_p_prod($bd, $anio, $mes, $tipo){
 function asignar_expdte_a_planillas_prod($bd, $id_expdte){
 
     $expdte = get_expdte($bd, $id_expdte);
-    $meses = get_meses_entre_fechas(strtotime($expdte['fecha_inicio']), strtotime($expdte['fecha_fin']));
+    $meses = get_meses_entre_fechas($expdte['fecha_inicio'], $expdte['fecha_fin']);
 
     if (!empty($expdte['expdte_docente_id'])){
         foreach ($meses as list($anio, $mes)) {
