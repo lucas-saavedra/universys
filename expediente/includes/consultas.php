@@ -76,4 +76,9 @@
         ];
     }
 
+    function get_codigo_cupos($bd, $id_codigo){
+        $sql = "SELECT cantidad_max_dias, rango FROM cupo WHERE codigo_id={$id_codigo}";
+        return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
+    }
+
 ?>
