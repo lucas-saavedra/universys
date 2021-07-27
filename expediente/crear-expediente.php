@@ -159,6 +159,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                 </div>
 
+                <div class="row" >
+                    <div class="col" id="info-cupo"></div>
+                </div>
+
                 <div class="mb-3 row">
                     <div class="col text-center">
                         <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
@@ -184,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 
 <script src="./js/filtro_agentes.js"></script>
+<script src="./js/verificar_cupo.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
     filtro_codigos(<?=json_encode($codigos, JSON_NUMERIC_CHECK )?>);

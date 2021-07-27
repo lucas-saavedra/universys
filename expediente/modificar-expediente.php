@@ -169,6 +169,8 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
                         <label for="">Fecha de fin</label>
                         <input type="date" class="form-control" name="expdte[fecha_fin]" value="<?=$expdte['fecha_fin']?>" required>
                     </div>
+                    <input type="hidden" name="expdte[id]" value="<?=$expdte['id']?>">
+                    <input type="hidden" name="expdte[persona_id]" value="<?=$expdte['persona_id']?>">
                 </div>
                 <div class="card mb-3">
                     <h5 class="card-header">
@@ -241,6 +243,10 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
 
                 </div>
 
+                <div class="row" >
+                    <div class="col" id="info-cupo"></div>
+                </div>
+
                 <div class="mb-3 row">
                     <div class="col text-center">
                         <button type="submit" class="btn btn-primary btn-lg">Modificar</button>
@@ -266,4 +272,5 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
     </div>
 </div>
 
+<script src="./js/verificar_cupo.js"></script>
 <?php include("../footer.html"); ?>

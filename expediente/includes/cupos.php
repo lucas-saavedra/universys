@@ -1,14 +1,23 @@
 <?php
 
-function verificar_cupo_codigo($bd, $id_expdte){
-    $expdte = get_expdte($bd, $id_expdte);
+include_once('./includes/consultas.php');
+include_once('./includes/asignar-planilla-prod.php');
+
+function verificar_cupo_codigo($bd, $expdte){
     $cupos = get_codigo_cupos($bd, $expdte['codigo_id']);
 
+    $expdte_en_bd = isset($expdte['id']);
+
+    $filter_ignore = $expdte_en_bd ? "id!={$expdte['id']}" : "1";
+    
     // Expedientes de la persona en los q se usa el codigo.
     $sql = "SELECT id,fecha_inicio,fecha_fin FROM expediente 
-    WHERE persona_id={$expdte['persona_id']} AND codigo_id={$expdte['codigo_id']}";
+    WHERE persona_id={$expdte['persona_id']} AND codigo_id={$expdte['codigo_id']} AND {$filter_ignore}";
 
     $expdtes_codigo = mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
+
+    $expdtes_codigo[] = $expdte; 
+
     // $expdtes_codigo = array_map(
     //     function($v){return ['fecha_inicio'=>$v[0], 'fecha_fin'=>$v[1]];},
     //     [
@@ -63,9 +72,6 @@ function verificar_cupo_codigo($bd, $id_expdte){
             $sumador_usos($fi, $ff, $usos);
         }
 
-        print_r($usos);
-        echo '<br>';
-
         list($cupo_superado, $rango_afectado) = $verificar_cupo($usos, $rango, $cupo['cantidad_max_dias'], $anios_expdte);
 
         if ($cupo_superado){
@@ -78,14 +84,13 @@ function verificar_cupo_codigo($bd, $id_expdte){
 
             return [
                 'cupo_superado' => true,
-                'msg' => "Se superó el cupo máximo de días 
-                        ({$cupo['cantidad_max_dias']} cada {$rango['cantidad']} {$rango['tiempo']}) para el código. 
-                        Entre el {$start} y el {$end} se usó un total de {$total_usos} días.",
+                'msg' => "Se superó el cupo máximo de días ({$cupo['cantidad_max_dias']} cada {$rango['cantidad']} {$rango['tiempo']}) para utilizar el código seleccionado. Entre el {$start} y el {$end} se usó un total de {$total_usos} días.",
+                'msg_type' => 'warning'
             ];
         }
     }
 
-    return ['cupo_superado'=> false, 'msg'=> 'El cupo para este código aun no ha sido superado.'];
+    return ['cupo_superado'=> false, 'msg'=> 'El cupo para este código aun no ha sido superado.', 'msg_type'=> 'success'];
 
 }
 
