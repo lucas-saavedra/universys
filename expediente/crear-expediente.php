@@ -11,24 +11,27 @@ $codigos = get_codigos_inasis($conexion);
 
 function crear_expediente($bd){
 
+    $expdte = $_POST['expdte'];
+    $aviso = $_POST['aviso'];
+
     mysqli_query($bd, 'START TRANSACTION');
     try{
         $sql_aviso = "INSERT INTO aviso (fecha_recepcion, descripcion) VALUES 
-        ('{$_POST['aviso_fecha']}', '{$_POST['aviso_desc']}')";
+        ('{$aviso['aviso_fecha']}', '{$aviso['aviso_desc']}')";
 
         if (!$result = mysqli_query($bd, $sql_aviso)) throw new Exception(mysqli_error($bd));
         
         $id_aviso = mysqli_insert_id($bd);
 
         $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id) VALUES
-        ({$_POST['agente_id']}, '{$_POST['fecha_inicio']}', '{$_POST['fecha_fin']}', {$id_aviso}, {$_POST['codigo_id']})";
+        ({$expdte['persona_id']}, '{$expdte['fecha_inicio']}', '{$expdte['fecha_fin']}', {$id_aviso}, {$expdte['codigo_id']})";
     
         if (!$result = mysqli_query($bd, $sql_expdte)) throw new Exception(mysqli_error($bd));
         
         $id_expdte = mysqli_insert_id($bd);
 
-        if (isset($_POST['check-docente'])){
-            $result = mysqli_query($bd, "SELECT id FROM docente WHERE persona_id={$_POST['agente_id']}");
+        if (isset($expdte['check-docente'])){
+            $result = mysqli_query($bd, "SELECT id FROM docente WHERE persona_id={$expdte['persona_id']}");
             $id_docente = mysqli_fetch_row($result)[0];
             $sql_expdte_doc = "INSERT INTO expediente_docente (expediente_id, docente_id) VALUES 
             ($id_expdte, $id_docente)";
@@ -37,8 +40,8 @@ function crear_expediente($bd){
             
         }
 
-        if (isset($_POST['check-no-docente'])){
-            $result = mysqli_query($bd, "SELECT id FROM no_docente WHERE persona_id={$_POST['agente_id']}");
+        if (isset($expdte['check-no-docente'])){
+            $result = mysqli_query($bd, "SELECT id FROM no_docente WHERE persona_id={$expdte['persona_id']}");
             $id_no_docente = mysqli_fetch_row($result)[0];
             $sql_expdte_no_doc = "INSERT INTO expediente_no_docente (expediente_id, no_docente_id) VALUES 
             ($id_expdte, $id_no_docente)";
@@ -88,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                             <div class="col-auto">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="on" id="check-docente"
-                                        name="check-docente">
+                                        name="expdte[check-docente]">
                                     <label class="form-check-label" for="check-docente">
                                         Docente
                                     </label>
@@ -98,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                             <div class="col-auto">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="on" id="check-no-docente"
-                                        name="check-no-docente">
+                                        name="expdte[check-no-docente]">
                                     <label class="form-check-label" for="check-no-docente">
                                         No docente
                                     </label>
@@ -108,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Agente</label>
                             <div class="col-sm-10">
-                                <select class="form-control form-control-sm" name="agente_id" required>
+                                <select class="form-control form-control-sm" name="expdte[persona_id]" required>
                                     <option value="" selected disabled>Seleccione un tipo de agente</option>
                                 </select>
                             </div>
@@ -119,11 +122,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="mb-3 row">
                     <div class="col-md-6">
                         <label for="">Fecha de inicio</label>
-                        <input type="date" class="form-control" name="fecha_inicio" required>
+                        <input type="date" class="form-control" name="expdte[fecha_inicio]" required>
                     </div>
                     <div class="col-md-6">
                         <label for="">Fecha de fin</label>
-                        <input type="date" class="form-control" name="fecha_fin" required>
+                        <input type="date" class="form-control" name="expdte[fecha_fin]" required>
                     </div>
                 </div>
 
@@ -133,14 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
                             <div class="col-sm-10">
-                                <input type="datetime-local" class="form-control" name="aviso_fecha" required />
+                                <input type="datetime-local" class="form-control" name="aviso[aviso_fecha]" required />
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Descripción</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" name="aviso_desc"></textarea>
+                                <textarea class="form-control" name="aviso[aviso_desc]"></textarea>
                             </div>
                         </div>
                     </div>
@@ -149,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Código</label>
                     <div class="col-sm-7">
-                        <select class="form-control" name="codigo_id" required>
+                        <select class="form-control" name="expdte[codigo_id]" required>
                             <option value="" selected disabled>Seleccione un tipo de agente</option>
                         </select>
                     </div>

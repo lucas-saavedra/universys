@@ -20,7 +20,7 @@ const filtro_agentes = agentes => {
             return false;
         })
 
-        const $select = document.querySelector('select[name="agente_id"]')
+        const $select = document.querySelector('select[name="expdte[persona_id]"]')
 
         const $frag = document.createDocumentFragment()
 
@@ -47,7 +47,7 @@ const filtro_codigos = codigos => {
 
         if (!e.target.matches('.filtro-agente input[type="checkbox"]')) return;
 
-        const $select = document.querySelector('form select[name="codigo_id"]')
+        const $select = document.querySelector('select[name="expdte[codigo_id]"]')
 
         const result = codigos.filter(c => {
             if ($check_doc.checked && $check_no_doc.checked) return c.es_docente && c.es_no_docente;
