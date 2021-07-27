@@ -17,7 +17,7 @@
 <div class="form-row">
     <div class="collapse col-md-12" id="collapseExample">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-sm">
                 <thead class="thead-light">
                     <tr>
                         <th scope="col">Catedra</th>
@@ -27,7 +27,7 @@
                         <th scope="col " class="d-flex justify-content-end">Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="container">
+                <tbody id="container_catedra">
 
                     <!-- AJAX AQUI CATEDRAs -->
 

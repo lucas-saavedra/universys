@@ -2,7 +2,6 @@
   include('../includes/db.php');
 
   $tipo_agente = $_POST['tipo_agente'];
-
   $json = array();
   if (!empty($_POST['agente_id'])) {
     $agente_id = $_POST['agente_id'];

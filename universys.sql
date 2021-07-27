@@ -50,7 +50,7 @@ create table detalle_jornada (
     dia int,
     descripcion varchar(100),
     PRIMARY key (id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)  ON DELETE CASCADE
 );
 
 create table area (
@@ -113,13 +113,38 @@ create table jornada_docente (
     FOREIGN KEY (catedra_id) REFERENCES catedra(id)
 );
 
+create table llamado (
+	id int AUTO_INCREMENT,
+    nombre varchar(50),
+    PRIMARY key (id)
+);
+INSERT INTO llamado (id, nombre) VALUES
+(1, '1er Llamado'),
+(2, '2do Llamado'),
+(3, '3er Llamado'),
+(4, '4to Llamado');
+create table mesa_examen (
+	id int AUTO_INCREMENT,
+    carrera_id int,
+    llamado_id int,
+    jornada_id int,
+    PRIMARY key (id),
+    FOREIGN KEY (carrera_id) REFERENCES carrera(id),
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY (llamado_id) REFERENCES llamado(id)
+);
 create table jornada_docente_mesa (
 	id int AUTO_INCREMENT,
     docente_id int,
     det_jornada_id int,
+    mesa_examen_id int,
     PRIMARY key (id),
     FOREIGN KEY (docente_id) REFERENCES docente(id),
+    FOREIGN KEY (mesa_examen_id) REFERENCES mesa_examen(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (det_jornada_id) REFERENCES detalle_jornada(id)
+    
 );
 create table marcacion_docente (
 	id int AUTO_INCREMENT,
@@ -429,13 +454,43 @@ INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
 
 
 
+CREATE TABLE dia ( id INT NOT NULL , nombre VARCHAR(20) NOT NULL , PRIMARY KEY (`id`));
+INSERT INTO dia (id, `nombre`) VALUES 
+('0', 'Lunes'),('1', 'Martes'),('2', 'Miércoles'),
+('3', 'Jueves'),('4', 'Viernes'),('5', 'Sábado'),
+('6', 'Domingo');
 
 /* --------------VISTAS----------- */
 
 CREATE VIEW docente_nombre AS
-SELECT docente.id,nombre FROM docente left join persona on docente.id = persona.id;
+select `universys`.`docente`.`id` AS `id`,`universys`.`persona`.`nombre` AS `nombre` from 
+(`universys`.`docente` left join `universys`.`persona` on(`universys`.`docente`.`persona_id` = `universys`.`persona`.`id`))
+
+CREATE VIEW agente_nombre AS
+select `universys`.`no_docente`.`id` AS `id`,`universys`.`persona`.`nombre` AS `nombre` 
+from (`universys`.`no_docente` left join `universys`.`persona` 
+on(`universys`.`no_docente`.`persona_id` = `universys`.`persona`.`id`))
+
 
 CREATE VIEW v_jornada AS
-SELECT jornada.id, jornada.fecha_inicio, jornada.fecha_fin, tipo_jornada.nombre, jornada.descripcion FROM jornada 
-left join  tipo_jornada on jornada.tipo_jornada_id = tipo_jornada.id
+select `universys`.`jornada`.`id` AS `id`,`universys`.`tipo_jornada`.`id` AS `tipo_jornada_id`,`universys`.`jornada`.
+`fecha_inicio` AS `fecha_inicio`,`universys`.`jornada`.`fecha_fin` AS `fecha_fin`,`universys`.`tipo_jornada`.`nombre` AS `nombre`,
+`universys`.`jornada`.`descripcion` AS `descripcion`,`universys`.`tipo_jornada`.`pertenece` AS `pertenece` 
+from (`universys`.`jornada` left join 
+`universys`.`tipo_jornada` on(`universys`.`jornada`.`tipo_jornada_id` = `universys`.`tipo_jornada`.`id`))
 
+CREATE VIEW mesa_examen_jornada AS
+SELECT 
+ mesa_examen.id as id,
+ mesa_examen.jornada_id AS jornada_id,
+ carrera.nombre as carrera_nombre,
+ carrera.id as carreraId,
+ llamado.id as llamadoId ,
+ llamado.nombre as llamado_nombre,
+ v_jornada.fecha_inicio,
+ v_jornada.fecha_fin,
+v_jornada.descripcion
+ FROM  mesa_examen
+ LEFT JOIN carrera on mesa_examen.carrera_id =  carrera.id
+ LEFT JOIN llamado on mesa_examen.llamado_id =  llamado.id
+LEFT JOIN v_jornada on mesa_examen.jornada_id =  v_jornada.id

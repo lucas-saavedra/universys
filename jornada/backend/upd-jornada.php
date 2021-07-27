@@ -38,10 +38,11 @@ $json = array();
     mysqli_commit($conexion);
   } catch (Exception $e) {
     $json[] = array(
-        'name' => 'Upps, algo falló con la jornada:  <strong>[ '.$jornada_agente_id.' ]</strong>',
-        'type' => 'warning'
-      );
-  } 
+    'name' => $e->getMessage(),
+    'type' => 'warning',
+    'success' => false );
+    mysqli_rollback($conexion);
+}
 
   $json[] = array(
     'name' => 'La jornada docente <strong>[ '.$jornada_agente_id.' ]</strong> ha sido actualizada',
@@ -50,5 +51,3 @@ $json = array();
   );
   $jsonstring = json_encode($json[0]);
   echo $jsonstring;
-
-?>

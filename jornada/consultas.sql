@@ -13,3 +13,30 @@ LEFT JOIN docente_nombre on jd.docente_id = docente_nombre.id
 LEFT JOIN catedra as c on c.id = catedra_id
 LEFT OUTER JOIN v_jornada as j on jd.jornada_id=j.id
 
+
+SELECT 
+ jdm.id as jornada_agente_id,
+ jdm.docente_id as agente_id ,
+ docente_nombre.nombre as docente,
+ mesa_examen.id
+from jornada_docente_mesa as jdm 
+LEFT JOIN jornada_docente_mesa on mesa_examen.id =  jdm.mesa_examen_id
+LEFT JOIN docente_nombre on jdm.docente_id = docente_nombre.id;
+
+
+
+
+
+
+
+
+SELECT 
+ jdm.id as jornada_agente_id,
+ jdm.docente_id as agente_id ,
+ docente_nombre.nombre as docente,
+detalle_jornada.jornada_id ,detalle_jornada.id as det_jorn_id, hora_inicio,hora_fin, dia.nombre
+from jornada_docente_mesa as jdm
+LEFT JOIN  mesa_examen_jornada on mesa_examen_jornada.id=  jdm.mesa_examen_id
+LEFT JOIN docente_nombre on jdm.docente_id = docente_nombre.id
+left JOIN detalle_jornada on mesa_examen_jornada.jornadaId = detalle_jornada.jornada_id
+left join dia on detalle_jornada.dia = dia.id
