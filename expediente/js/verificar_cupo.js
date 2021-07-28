@@ -16,6 +16,18 @@ d.addEventListener('change', async e => {
     const $infoDiv = d.getElementById('info-cupo')
     const json = await response.json()
 
+    const $checkCupo = d.getElementById('check-cupo')
+    const $inputCupo = d.querySelector('[name="expdte[cupo_superado]"]')
+
+    if (json.cupo_superado) {
+        $checkCupo.checked = true
+        $inputCupo.value = 1
+    }
+    else {
+        $checkCupo.checked = false
+        $inputCupo.value = 0
+    }
+
     $infoDiv.innerHTML = `
         <div class="col alert alert-${json.msg_type}">
             ${json.msg}

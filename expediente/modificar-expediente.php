@@ -240,7 +240,15 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
                             <?php endforeach; ?>
                         </select>
                     </div>
-
+                    <div class="col-sm-3 d-flex align-items-center">
+                        <div class="form-check">
+                            <input type="hidden" name="expdte[cupo_superado]" value="<?=$expdte['cupo_superado']?>">
+                            <input class="form-check-input" type="checkbox" id="check-cupo" disabled <?=$expdte['cupo_superado'] ? 'checked': ''?>>
+                            <label class="form-check-label">
+                                Cupo superado
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row" >

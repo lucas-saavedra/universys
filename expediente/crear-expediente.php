@@ -23,8 +23,8 @@ function crear_expediente($bd){
         
         $id_aviso = mysqli_insert_id($bd);
 
-        $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id) VALUES
-        ({$expdte['persona_id']}, '{$expdte['fecha_inicio']}', '{$expdte['fecha_fin']}', {$id_aviso}, {$expdte['codigo_id']})";
+        $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id, cupo_superado) VALUES
+        ({$expdte['persona_id']}, '{$expdte['fecha_inicio']}', '{$expdte['fecha_fin']}', {$id_aviso}, {$expdte['codigo_id']}, {$expdte['cupo_superado']})";
     
         if (!$result = mysqli_query($bd, $sql_expdte)) throw new Exception(mysqli_error($bd));
         
@@ -156,7 +156,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                             <option value="" selected disabled>Seleccione un tipo de agente</option>
                         </select>
                     </div>
-
+                    <div class="col-sm-3 d-flex align-items-center">
+                        <div class="form-check">
+                            <input type="hidden" name="expdte[cupo_superado]" value="0" />
+                            <input class="form-check-input" type="checkbox" id="check-cupo" disabled />
+                            <label class="form-check-label">
+                                Cupo superado
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row" >
