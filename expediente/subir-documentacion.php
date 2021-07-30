@@ -7,6 +7,8 @@ include ("./includes/consultas.php");
 function subir_archivo($file, $nombre){
     $target_dir = "../uploads/";
 
+    if (!is_dir($target_dir)) mkdir($target_dir);
+
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
     $file_name = "$nombre.$extension";
