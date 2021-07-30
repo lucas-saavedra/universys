@@ -30,9 +30,9 @@ function verificar_cupo_codigo($bd, $expdte){
     //     ]
     // );
     foreach ($cupos as $cupo) {
-        $rango = get_datos_rango($cupo['rango']);
+        $rango = ['cantidad' => $cupo['longitud'], 'tiempo' => $cupo['tipo']];
 
-        if ($rango['tiempo'] == 'm'){
+        if ($rango['tiempo'] == 'Mes'){
             $rango_cupo = get_rango_cupo_por_mes($expdte, $rango);
 
             $contador_keys = array_map(
@@ -45,7 +45,7 @@ function verificar_cupo_codigo($bd, $expdte){
             $sumador_usos = 'sum_usos_por_mes';
             $verificar_cupo = 'verificar_cupo_mes';
         }
-        else if ($rango['tiempo'] == 'a'){
+        else if ($rango['tiempo'] == 'Año'){
             $rango_cupo = get_rango_cupo_por_anio($expdte, $rango);
             $contador_keys = $rango_cupo['anios_totales'];
             $sumador_usos = 'sum_usos_por_anio';
@@ -84,7 +84,7 @@ function verificar_cupo_codigo($bd, $expdte){
 
             return [
                 'cupo_superado' => true,
-                'msg' => "Se superó el cupo máximo de días ({$cupo['cantidad_max_dias']} cada {$rango['cantidad']} {$rango['tiempo']}) para utilizar el código seleccionado. Entre el {$start} y el {$end} se usó un total de {$total_usos} días.",
+                'msg' => "Se superó el cupo máximo de días (Hasta {$cupo['cantidad_max_dias']} en un rango de tipo {$rango['tiempo']} y longitud {$rango['cantidad']}) para utilizar el código seleccionado. Entre el {$start} y el {$end} se usó un total de {$total_usos} días.",
                 'msg_type' => 'warning'
             ];
         }
@@ -216,16 +216,6 @@ function get_anios_entre_fechas($start, $end){
     $start = strtotime($start);
     $end = strtotime($end);
     return range(date('Y', $start), date('Y',$end));
-}
-
-function get_datos_rango($rango){
-    $regex = '/(\d+) (a|m)/i';
-    $matches = [];
-    preg_match_all($regex, $rango, $matches, PREG_PATTERN_ORDER);
-
-    if (empty($matches)) throw new Exception("El formato del rango '{$rango}' es invalido");
-
-    return ['cantidad' => $matches[1][0], 'tiempo' => $matches[2][0]];
 }
 
 ?>

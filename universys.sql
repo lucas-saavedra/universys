@@ -236,9 +236,10 @@ create table codigo (
 
 create table cupo (
 	id int AUTO_INCREMENT,
-    codigo_id int,
-    cantidad_max_dias int,
-    rango varchar(20),
+    codigo_id int not null,
+    longitud int not null,
+    tipo enum('Año', 'Mes'),
+    cantidad_max_dias int not null,
     PRIMARY key (id),
     FOREIGN KEY (codigo_id) REFERENCES codigo(id)
 );
