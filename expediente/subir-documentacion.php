@@ -97,7 +97,7 @@ $agentes = get_agentes($conexion);
                 <div class="mb-5 row">
                     <label for="" class="col-sm-2 form-label">Agente</label>
                     <div class="col-sm-6">
-                        <select class="form-control" name="agente_id" required>
+                        <select id="select-agente" class="form-control" name="agente_id" required>
                         <option selected></option>
                         <?php foreach ($agentes as $agente):?>
                             <option value="<?=$agente['id']?>">

@@ -20,7 +20,7 @@ const filtro_agentes = agentes => {
             return false;
         })
 
-        const $select = document.querySelector('select[name="expdte[persona_id]"]')
+        const $select = document.getElementById('select-agente')
 
         const $frag = document.createDocumentFragment()
 

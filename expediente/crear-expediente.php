@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Agente</label>
                             <div class="col-sm-10">
-                                <select class="form-control form-control-sm" name="expdte[persona_id]" required>
+                                <select id="select-agente" class="form-control form-control-sm" name="expdte[persona_id]" required>
                                     <option value="" selected disabled>Seleccione un tipo de agente</option>
                                 </select>
                             </div>
