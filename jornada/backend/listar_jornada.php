@@ -24,7 +24,6 @@ if ($tipo_agente == 'docente') {
     LEFT OUTER JOIN v_jornada as j on jd.jornada_id=j.id";
 
 
-
   if (isset($_POST['filtroFechaInicio']) && isset($_POST['filtroFechaFin'])) {
     $filtroFechaInicio = $_POST['filtroFechaInicio'];
     $filtroFechaFin = $_POST['filtroFechaFin'];
@@ -90,7 +89,6 @@ if ($tipo_agente == 'docente') {
       );
     }
 
-
     $json[] = array(
       'jornada_agente_id' => $row['jornada_agente_id'],
       'agente_id' => $row['agente_id'],
@@ -107,6 +105,8 @@ if ($tipo_agente == 'docente') {
     );
   }
 }
+
+
 
 $jsonstring = json_encode($json);
 echo $jsonstring;

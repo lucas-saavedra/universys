@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            
+
             <form action="" id="horario" method="POST">
 
 
@@ -29,11 +29,15 @@
                     </div>
                 </div>
                 <?php include_once("includes/i_agregar_horario.php");  ?>
-
-                <div class="form-group col-md-12 d-flex justify-content-around">
-                    <button type="submit" class="btn btn-primary">Aceptar</button>
-                    <button type="reset" class="btn btn-secondary">Cancelar</button>
+                <div class="form-row justify-content-center">
+                    <div class="form-group col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block" name="enviar">Aceptar</button>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <button type="reset" class="btn btn-secondary btn-lg btn-block" data-dismiss="modal">Resetear</button>
+                    </div>
                 </div>
+              
             </form>
         </div>
 

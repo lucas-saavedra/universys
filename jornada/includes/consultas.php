@@ -48,13 +48,7 @@ function get_dia($conexion)
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function get_jornadas_horarios($conexion, $jornada_id)
-{
-  $sql =  "SELECT detalle_jornada.jornada_id ,detalle_jornada.id as det_jorn_id, hora_inicio,hora_fin, dia.nombre,descripcion  
-  from  detalle_jornada left join dia on detalle_jornada.dia = dia.id where jornada_id ='$jornada_id' order by detalle_jornada.dia";
-  $result = mysqli_query($conexion, $sql);
-  return mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
+
 
 function obtener_jornadas($conexion, $fecha_inicio, $fecha_fin, $tipo_jornada_id)
 {
@@ -107,13 +101,8 @@ function get_docentes($conexion)
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function get_jornadas_mesa($conexion)
-{
 
-  $sql = " SELECT * FROM `mesa_examen_jornada` ";
-  $result = mysqli_query($conexion, $sql);
-  return mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
+
 function get_agentes_mesa($conexion, $mesa_id,$horario_id)
 {
   $sql = "SELECT jdm.id as jornada_agente_id, 

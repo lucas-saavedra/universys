@@ -2,7 +2,6 @@
 include('../includes/db.php');
 
 $jornadaId =  $_POST["jornadaId"];
-
 $id_agente =  $_POST["id_agente"];
 $fechaInicio =  $_POST["fechaInicio"];
 $fechaFin = $_POST["fechaFin"];
@@ -49,5 +48,6 @@ $json = array();
     'type' => 'info',
     'success' => true
   );
+  
   $jsonstring = json_encode($json[0]);
   echo $jsonstring;

@@ -179,7 +179,6 @@ $(document).ready(function () {
         $('#modal_jornadas').modal('show');
 
     });
-
     $(document).on('click', '.horario_item', function () {
         let element = $(this)[0].parentElement.parentElement;
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
@@ -199,7 +198,7 @@ $(document).ready(function () {
         let element = $(this)[0].parentElement.parentElement;
         let horario_id = $(element).attr('horario_id');
         if (confirm('¿Seguro que desea eliminar este horario?')) {
-            $.post('/universys/jornada/backend/borrar-horario.php', {
+            $.post('/universys/jornada/backend/borrar-jornada.php', {
                 horario_id
             }, function (response) {
                 const msg = JSON.parse(response);
@@ -223,8 +222,6 @@ $(document).ready(function () {
             $('#dia_id').val(det_horario[0].dia_id);
 
         })
-
-
     };
 
     $(document).on('click', '.jornada-horario', function () {
@@ -538,12 +535,7 @@ $(document).ready(function () {
         )
     }
 
-    $(document).on('click', '.test', function () {
-        let element = $(this)[0].parentElement;
-        let id_tiempo_inicio = $(element).attr('id_tiempo_inicio');
-        console.log(element);
-        console.log(id_tiempo_inicio);
-    })
+    
 
     $(document).on('click', '.horario_mesa_i_add_agente', function () {
         let element = $(this)[0].parentElement;
@@ -579,22 +571,21 @@ $(document).ready(function () {
             mesa_id: $('#mesa_id').val(),
             docentes_mesa_id: selected_agente
         }
-        console.log(agentes);
+
         $.post(
-            '/universys/jornada/backend/test.php',
+            '/universys/jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
-                console.log(response);
                 const msg = JSON.parse(response);
                 notif(msg);
-
                 if (msg.success === true) {
                     $('#formAddAgente').trigger('reset');
                     $('#add_agente').modal('hide');
                     editar = false;
                 }
-
+                listar_jornadas_mesa();
             })
+
 
     })
 
@@ -607,7 +598,6 @@ $(document).ready(function () {
         $('#mesa_horario_fin').val($(element).attr('hora_fin'));
         $('#upd_mesa_dia').val($(element).attr('dia'));
 
-
     })
     $('#upd_mesa_horario').submit(function (e) {
         dia_hora = {
@@ -616,14 +606,16 @@ $(document).ready(function () {
             fin: $('#mesa_horario_fin').val(),
             dia: $('#upd_mesa_dia').val()
         }
+
         e.preventDefault();
         $.post('/universys/jornada/backend/upd-horario.php',
             dia_hora,
             function (response) {
-                console.log(response)
+
                 const msg = JSON.parse(response);
-               notif(msg);
+                notif(msg);
                 if (msg.success === true) {
+
                     $('#upd_mesa_horario').trigger('reset');
                     $('#upd_detalle_mesa').modal('hide');
                     editar = false;
@@ -632,25 +624,23 @@ $(document).ready(function () {
 
 
             })
-
-
-
+        listar_jornadas_mesa();
     })
 
     $(document).on('click', '.borrar_agente_mesa', function () {
         if (confirm('¿Seguro que desea eliminar este agente?')) {
             let element = $(this)[0];
             let jornada_agente_mesa_id = $(element).attr('jornada_agente_mesa_id');
-
-            console.log(jornada_agente_mesa_id);
             $.post('/universys/jornada/backend/borrar-jornada.php', {
                 jornada_agente_mesa_id
             }, function (response) {
-                console.log(response)
                 const msg = JSON.parse(response);
                 notif(msg);
+                listar_jornadas_mesa();
             })
+
         }
+
     })
 
 
@@ -659,42 +649,128 @@ $(document).ready(function () {
             let element = $(this)[0].parentElement.parentElement;
             let jornada_id = $(element).attr('jornada_id');
             let mesa_id = $(element).attr('mesa_id');
-            console.log(jornada_id, mesa_id);
+
             $.post('/universys/jornada/backend/borrar-jornada.php', {
                 jornada_id,
                 mesa_id
             }, function (response) {
-                console.log(response)
+
                 const msg = JSON.parse(response);
                 notif(msg);
+                listar_jornadas_mesa()
             })
+
         }
+
     })
 
 
-    $('#jornada_mesa').submit(function (e) {
-        let tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        var selected_dias = [];
-        var array_dias = [];
-        let dia;
-        let inicio = document.getElementsByName('inicio[]');
-        let fin = document.getElementsByName('fin[]');
-        $('.checkbox_dias input:checked').each(function () {
-            selected_dias.push(Number($(this).val()));
-        });
+    /*  $('#jornada_mesa').submit(function (e) {
+         var selected_dias = [];
+         var array_dias = [];
+         let dia;
+         let inicio = document.getElementsByName('inicio[]');
+         let fin = document.getElementsByName('fin[]');
+          $('.checkbox_dias input:checked').each(function () {
+             selected_dias.push(Number($(this).val()));
+         }); 
 
-        for (var i = 0; i < selected_dias.length; i++) {
-            dia = {
-                dia_id: selected_dias[i],
-                hora_inicio: inicio[selected_dias[i]].value,
-                hora_fin: fin[selected_dias[i]].value,
-            };
-            array_dias.push(dia);
+          for (var i = 0; i < selected_dias.length; i++) {
+             dia = {
+                 dia_id: selected_dias[i],
+                 hora_inicio: inicio[selected_dias[i]].value,
+                 hora_fin: fin[selected_dias[i]].value,
+             };
+             array_dias.push(dia);
+         } 
+
+         e.preventDefault();
+         const jornada_mesa = {
+             tipo_agente: tipo_agente,
+             fechaInicioMesa: $('#fechaInicioMesa').val(),
+             fechaFinMesa: $('#fechaFinMesa').val(),
+             descripcion: $('#descripcion_mesa').val(),
+             llamado_id: $('#llamado_id').val(),
+             carrera_id: $('#carrera_id').val(),
+             dia_id: selected_dias,
+             hora_inicio_mesa: $('#hora_inicio_mesa').val(),
+             hora_fin_mesa: $('#hora_fin_mesa').val(),
+             dias_horas: array_dias,
+
+         }
+         console.log(jornada_mesa);
+         $.post(
+             '/universys/jornada/backend/test.php',
+             jornada_mesa,
+             function (response) {
+
+                 const msg = JSON.parse(response);
+                 notif(msg);
+                 
+                 if (msg.success === true) {
+                     $('#horario').trigger('reset');
+                     editar = false;
+                 }
+             })
+     }) */
+
+    $(document).on('click', '.jornada_item_mesa', function () {
+        let element = $(this)[0].parentElement.parentElement;
+        let jornada_id = $(element).attr('jornada_id');
+        let mesa_id = $(element).attr('mesa_id');
+        editar = true;
+        $.post(
+            '/universys/jornada/backend/upd_jornada_mesa.php', {
+                jornada_id
+            },
+            function (response) {
+                const jornada_mesa = JSON.parse(response);
+                $('#fechaInicioMesaUpdt').val(jornada_mesa.fecha_inicio);
+                $('#fechaFinMesaUpdt').val(jornada_mesa.fecha_fin);
+                $('#descripcion_mesa_updt').val(jornada_mesa.descripcion);
+                $('#llamado_id_updt').val(jornada_mesa.llamado_id);
+                $('#carrera_id_updt').val(jornada_mesa.carrera_id);
+                $('#mesa_examen_id').val(jornada_mesa.id);
+                $('#jornada_id_mesa').val(jornada_mesa.jornada_id);
+
+            })
+
+        $('#upd_jornada_mesa').modal('show');
+        listar_jornadas_mesa();
+    });
+
+    $('#act_jornada_mesa').submit(function (e) {
+        e.preventDefault();
+        const jornada_mesa_upd = {
+            fechaInicioMesa: $('#fechaInicioMesaUpdt').val(),
+            fechaFinMesa: $('#fechaFinMesaUpdt').val(),
+            descripcion: $('#descripcion_mesa_updt').val(),
+            llamado_id: $('#llamado_id_updt').val(),
+            carrera_id: $('#carrera_id_updt').val(),
+            mesa_examen_id: $('#mesa_examen_id').val(),
+            jornada_id_mesa: $('#jornada_id_mesa').val(),
+
         }
 
+        $.post(
+            '/universys/jornada/backend/upd_jornada_mesa.php',
+            jornada_mesa_upd,
+            function (response) {
+                const msg = JSON.parse(response);
+                notif(msg);
+                if (msg.success === true) {
+                    $('#upd_jornada_mesa').modal('hide');
+                    editar = false;
+                }
+                listar_jornadas_mesa();
+            })
+
+    })
+
+    $('#jornada_mesa').submit(function (e) {
         e.preventDefault();
+        var selected_dias = [0, 1, 2, 3, 4, 5, 6];
         const jornada_mesa = {
-            tipo_agente: tipo_agente,
             fechaInicioMesa: $('#fechaInicioMesa').val(),
             fechaFinMesa: $('#fechaFinMesa').val(),
             descripcion: $('#descripcion_mesa').val(),
@@ -703,24 +779,123 @@ $(document).ready(function () {
             dia_id: selected_dias,
             hora_inicio_mesa: $('#hora_inicio_mesa').val(),
             hora_fin_mesa: $('#hora_fin_mesa').val(),
-            dias_horas: array_dias,
-
-
         }
-        console.log(jornada_mesa);
         $.post(
-            '/universys/jornada/backend/test.php',
+            '/universys/jornada/backend/insertar-jornada-docente-mesa.php',
             jornada_mesa,
             function (response) {
-
                 const msg = JSON.parse(response);
+
                 notif(msg);
-                
+                 listar_jornadas_mesa(); 
                 if (msg.success === true) {
-                    $('#horario').trigger('reset');
+                    $('#jornada_mesa').trigger('reset');
                     editar = false;
                 }
             })
+
+    })
+     listar_jornadas_mesa(); 
+
+    function listar_jornadas_mesa(filtros) {
+        let template = '';
+        $.post(
+            '/universys/jornada/backend/listar_jornada_mesa.php',
+           filtros,
+            function (response) {
+                let jm = JSON.parse(response);
+                if (jm == '') {
+                    template = "Nada por aquí..."
+                } else {
+                    for (mesa of jm) {
+                        template += `
+                        
+                        <tr jornada_id="${mesa.jornada_id}" mesa_id="${mesa.id}" class="table-secondary">
+                        <td>  ${mesa.jornada_id     }</td>
+                        <td>  ${mesa.carrera_nombre }</td>
+                        <td>  ${mesa.llamado_nombre }</td>
+                        <td>  ${mesa.fecha_inicio   }</td>
+                        <td>  ${mesa.fecha_fin      }</td>
+                        <td>  ${mesa.descripcion    }</td>
+                        <td> <button class="jornada_item_mesa btn btn-info" type="button" data-toggle="modal" data-target="#upd_jornada_mesa"><i class="fas fa-pen"></i></button>
+                            <button class="jornada_mesa_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                            <td colspan="6">
+                                <table class="table mb-0">
+                                    <thead class="table-borderless">
+                                        <tr>
+                                            <th scope="col">Dia</th>
+                                            <th scope="col">Hora Inicio</th>
+                                            <th scope="col">Hora Fin</th>
+                                            <th scope="col">Docentes</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                    `;
+
+                        for (horarios of mesa.detalle_mesa) {
+
+                            template += `
+
+                            <div>
+                            <tr>
+                                <td>${horarios.nombre} </td>
+                                <td>${horarios.hora_inicio}</td>
+                                <td>${horarios.hora_fin}</td>
+                                <td class="align-middle">
+                                `;
+                            horarios.docentes.forEach(agente => {
+                                template += `
+                                <button class=" btn badge badge-warning borrar_agente_mesa" jornada_agente_mesa_id="${agente.jornada_agente_id}">
+                                ${agente.docente}
+                                <i class=" fas fa-trash"></i>
+                                </button>
+                                `;
+                            })
+                            template += `
+                                 </td>
+                                    <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}" dia="${horarios.nombre}">
+                                        <button type="button" class="horario_mesa_i btn" data-bs-toggle="modal"><i class=" fas fa-pen"></i></button>
+                                        <button type="button" class="horario_mesa_i_add_agente btn" data-toggle="modal" data-target="#add_agente"><i class="fas fa-user-plus"></i> </button>
+                                </td>
+                            </tr>
+
+                            </div>`;
+
+                        }
+
+                        template += `            
+                         </tbody>
+                        </table>
+                    </td>
+                    </tr>`;
+                    }
+
+                }
+
+
+
+                $('#listar_jornadas_mesa').html(template);
+            }
+
+        )
+    }
+    
+    $('#filtroJornadaMesa').submit(function (e) {
+        e.preventDefault();
+        let filtrosMesa = {
+            filtroFechaFin: $('#filtroFechaFin').val(),
+            filtroFechaInicio: $('#filtroFechaInicio').val(),
+            filtroCarreraId: $('#filtroCarreraId').val(),
+            filtroLlamadoId: $('#filtroLlamadoId').val(),
+        };
+        listar_jornadas_mesa(filtrosMesa);
     })
 
+    $(document).on('click', '.filtro_reset_mesa', function () {
+        listar_jornadas_mesa(); 
+    })
 })

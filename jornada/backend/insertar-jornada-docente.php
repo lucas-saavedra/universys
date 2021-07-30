@@ -76,7 +76,6 @@ include('../includes/db.php');
   }
 
 
-  
   $jsonstring = json_encode($json[0]);
   echo $jsonstring;
 

@@ -5,7 +5,6 @@
 }
 ?>
 
-
 <div class="jumbotron jumbotron-fluid">
   <div class="container-fluid">
     <h1 class="display-4">¡Bienvenido! AGENTE_NOMBRE</h1>
@@ -17,7 +16,7 @@
         <div class="card text-center" style="width: 15rem;">
           <div class="card-body">
             <h5 class="card-title">Jornadas</h5>
-            <button type="button" class="btn jornadaModal" data-toggle="modal" data-target="#modal_jornadas"  ><i class="fas fa-calendar-alt fa-7x"></i></button>
+            <button type="button" class="btn jornadaModal" data-toggle="modal" data-target="#modal_jornadas"><i class="fas fa-calendar-alt fa-7x"></i></button>
           </div>
         </div>
         <div class="card text-center" style="width: 15rem;">
@@ -58,11 +57,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <?php  include("jornada.php");  ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <?php include("jornada.php");  ?>
       </div>
     </div>
   </div>
@@ -80,13 +75,9 @@
         </button>
       </div>
       <div class="modal-body">
-        <?php  include("horario.php");  ?>
-
+        <?php include("horario.php");  ?>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
+     
     </div>
   </div>
 </div>

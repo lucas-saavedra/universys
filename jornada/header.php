@@ -30,28 +30,6 @@
             <li class="nav-item active">
               <a class="nav-link" href="/universys/jornada/agente.php">Inicio <span class="sr-only">(current)</span></a>
             </li>
-
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Crear jornada
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/universys/jornada/jornada.php?id=<?php echo 'docente'  ?> ">Docente</a>
-                <a class="dropdown-item" href="/universys/jornada/jornada.php?id=<?php echo 'no_docente'  ?> ">No Docente</a>
-                <a class="dropdown-item" href="/universys/jornada/jornada.php?id=<?php echo 'mesa_examen'  ?> ">Mesa de Examen</a>
-              </div>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Agregar horarios
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/universys/jornada/horario.php?id=<?php echo 'docente'  ?> ">Docente</a>
-                <a class="dropdown-item" href="#">No Docente</a>
-                <a class="dropdown-item" href="#">Mesa de Examen</a>
-              </div>
-            </li>
-
           </ul>
           <span class="navbar-text">
             Usted está trabajando con el tipo de agente: <?php echo $_SESSION['tipo_agente'] ?>

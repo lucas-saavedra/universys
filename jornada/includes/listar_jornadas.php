@@ -4,12 +4,12 @@
     <div class="row collapse show multi-collapse" id='toggle_jornadas'>
         <div class="col">
             <div class="card">
-            <div class="card-header">
-                   <!--  <h4 class="py-2 text-center">Jornadas agregadas</h4> -->
+                <div class="card-header">
+
                     <h5 class="card-title text-center">Filtros de busqueda</h5>
                 </div>
                 <div class="card-body">
-                   
+
                     <form action="" method="POST" id="filtroJornada">
 
                         <div class="form-row">
@@ -49,10 +49,7 @@
             </div>
 
 
-            <div class="custom-control custom-switch" style="height: 25px;">
-                <div class="col-sm-10">
-                </div>
-            </div>
+
 
 
             <div class="card">
