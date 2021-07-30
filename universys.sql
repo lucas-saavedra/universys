@@ -458,9 +458,6 @@ INSERT INTO tipo_inasistencia(nombre) VALUES
 ('Justificación'),
 ('Inasistencia Común');
 
-INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_no_docente`, `tipo_inasistencia_id`, `con_descuento`, `requiere_aviso`, `requiere_doc`) VALUES 
-('Falta C/Aviso', NULL, '4', '1', '1', '3', '1', '1', '0');
-
 INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_no_docente`, `tipo_inasistencia_id`, `con_descuento`, `requiere_aviso`, `requiere_doc`) VALUES
 -- Falta común
 ('Falta C/Aviso', 'Falta con aviso', '4', '1', '0', '3', '0', '1', '0'),
