@@ -254,6 +254,7 @@ $(document).ready(function () {
     });
 
     function obtener_jornada(jornada_agente_id, tipo_agente) {
+        tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post('/universys/jornada/backend/listar_jornada.php', {
             jornada_agente_id,
             tipo_agente
@@ -263,7 +264,6 @@ $(document).ready(function () {
             $('#jornadaId').val(jd[0].jornada_id);
             $('#jornada_agente_id').val(jd[0].jornada_agente_id);
             $('#descripcion').val(jd[0].descripcion);
-
             $('#fechaInicio').val(jd[0].fecha_fin);
             $('#fechaFin').val(jd[0].fecha_inicio);
             $('#tipoJornadaId').val(jd[0].tipo_jornada_id);
@@ -330,6 +330,7 @@ $(document).ready(function () {
                 if (msg.success === true) {
                     $('#horario').trigger('reset');
                     editar = false;
+                    $('#modal_horarios').modal('hide');
                 }
 
             });
@@ -344,39 +345,34 @@ $(document).ready(function () {
             },
             function (response) {
                 let jornadas = JSON.parse(response);
+                console.log(response)
                 let template = " "
-
                 if (jornadas == '') {
                     template = "Nada por aquí..."
                 } else {
 
                     jornadas.forEach(jornada => {
                         if (tipo_agente == 'docente') {
-                            template += `
-                            <option id="item_jornada" value=${jornada.jornada_id} 
-                            jornada_agente_id=${jornada.jornada_agente_id}> <td> 
-                            ${jornada.catedra} | 
-                            ${jornada.tipo_jornada} | 
-                            ${jornada.descripcion} |  
-                            ${jornada.fecha_inicio} => 
-                            ${jornada.fecha_fin}
-                            </option> `;
-
-                        } else if (tipo_agente == 'docente') {
-                            template += ` 
-                            <option id="item_jornada" value=${jornada.jornada_id} 
-                            jornada_agente_id=${jornada.jornada_agente_id}> <td> 
-                            ${jornada.area} | 
-                            ${jornada.tipo_jornada} | 
-                            ${jornada.descripcion} |  
-                            ${jornada.fecha_inicio} => 
-                            ${jornada.fecha_fin}
-                            </option> `;
+                            area = jornada.catedra;
+                        } else {
+                            area = jornada.area;
                         }
+
+                        template += `
+                        <option selected value="" disabled>Escoja una jornada</option>
+                        <option id="item_jornada" value=${jornada.jornada_id} 
+                        jornada_agente_id=${jornada.jornada_agente_id}> <td>
+                        ${jornada.area} | 
+                        ${jornada.tipo_jornada} | 
+                        ${jornada.descripcion} |  
+                        ${jornada.fecha_inicio} => 
+                        ${jornada.fecha_fin}
+                        </option> `;
+
+
                     })
                 }
                 $('#jornada_agente').html(template);
-
             }
         )
 
@@ -386,10 +382,12 @@ $(document).ready(function () {
 
     $('#filtroJornada').submit(function (e) {
         e.preventDefault();
+     
         let filtros = {
             filtroFechaFin: $('#filtroFechaFin').val(),
             filtroFechaInicio: $('#filtroFechaInicio').val(),
             filtroTipoJornadaId: $('#filtroTipoJornadaId').val(),
+            tipo_agente : tipo_agente
         };
         listar_jornadas(filtros)
     })
@@ -400,24 +398,32 @@ $(document).ready(function () {
 
 
     function listar_jornadas(filtros) {
-        let tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        filtros.tipo_agente = tipo_agente;
+
         var template = " ";
         $.post(
             '/universys/jornada/backend/listar_jornada.php',
             filtros,
             function (response) {
-
                 let j = JSON.parse(response);
                 if (j == '') {
                     template = "Nada por aquí..."
                 } else {
                     for (jornada of j) {
+                        if (tipo_agente == 'docente') {
+                            agente_nombre = jornada.docente;
+                            area = jornada.catedra;
+                        } else {
+                            if (tipo_agente == 'no_docente') {
+                                agente_nombre = jornada.no_docente;
+                                area = jornada.area;
+                            }
+                        }
                         template += `
+                            
                             <tr jornada_id=${jornada.jornada_id} jornada_agente_id=${jornada.jornada_agente_id}> 
                             <td> ${jornada.jornada_agente_id}  </td>
-                            <td>   ${jornada.docente} </td>
-                            <td>   ${jornada.catedra} </td>
+                            <td>   ${agente_nombre} </td>
+                            <td>   ${area} </td>
                             <td>   ${jornada.fecha_inicio} </td>
                             <td>   ${jornada.fecha_fin} </td>
                             <td>   ${jornada.tipo_jornada} </td>
@@ -425,13 +431,11 @@ $(document).ready(function () {
 
                         if (filtros.agente_id == undefined) {
                             template += `   
-                         <td> 
+                            <td> 
                                 <button class="jornada-item btn btn-info"><i class="fas fa-pen"></i></button>
                                 <button class="jornada_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
                                 <button type="button"class=" jornada-horario btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                <i class="fas fa-clock"></i></button>
-                                
-                                  
+                                <i class="fas fa-clock"></i></button>      
                             </tr>
                             <td colspan="4">
                             `;
@@ -458,7 +462,7 @@ $(document).ready(function () {
                                 </div>
                             </div>
                        
-                        
+                
                             `;
 
                         }
@@ -467,64 +471,6 @@ $(document).ready(function () {
 
                     }
 
-
-                    /*  jornadas.forEach(jornada => {
-                            if (tipo_agente == 'docente') {
-                                template += `
-                                    <tr jornada_id=${jornada.jornada_id} jornada_agente_id=${jornada.jornada_agente_id}> 
-                                    <td> ${jornada.jornada_agente_id}  </td>
-                                    <td>   ${jornada.docente} </td>
-                                    <td>   ${jornada.catedra} </td>
-                                    <td>   ${jornada.fecha_inicio} </td>
-                                    <td>   ${jornada.fecha_fin} </td>
-                                    <td>   ${jornada.tipo_jornada} </td>
-                                    <td>   ${jornada.descripcion} </td>
-                                    <td>   ${jornada.detalle_jornada} </td>
-                                    `;
-                                  
-
-
-                                if (agente_id == undefined) {
-                                    template += `   
-                                    <td> 
-                                    <button class="jornada-item btn btn-info"><i class="fas fa-pen"></i></button>
-                                    <button class="jornada_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
-                                    <button type="button"class=" jornada-horario btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                    <i class="fas fa-clock"></i></button>
-                                    
-                                      
-                                </tr>`;
-
-
-                                } else {
-                                    template += `<td> <button type="button" class=" jornada-item  btn btn-success" data-toggle="collapse" data-target=".multi-collapse"  aria-controls="toggle_jornadas agente_tabla search_agente" role="button" type="button" "><i class="fas fa-check-circle"></i></button></td>
-                                    </tr>`;
-
-                                }
-
-                            } else {
-                                template += ` 
-                            <tr jornada_id='${jornada.jornada_id}' jornada_agente_id='${jornada.jornada_agente_id}'>  
-                            <td>   ${jornada.jornada_agente_id}  </td>   
-                            <td>   ${jornada.no_docente}  </td>
-                            <td>   ${jornada.area}  </td>  
-                            <td>   ${jornada.fecha_inicio}  </td>   
-                            <td>   ${jornada.fecha_fin}  </td>   
-                            <td>   ${jornada.tipo_jornada}  </td>   
-                            <td>   ${jornada.descripcion}  </td>   
-                          
-                        
-                            <td> <button class=" jornada-item btn btn-info"><i class="fas fa-pen"></i></button>
-                            <button class=" jornada_borrar btn btn-danger"><i class="fas fa-trash"></i></button></td>
-                            
-                            </tr>
-                    
-                            `;
-
-                            }
-
-
-                        }) */
                 }
 
                 $('#listar_jornadas').html(template);
@@ -535,7 +481,7 @@ $(document).ready(function () {
         )
     }
 
-    
+
 
     $(document).on('click', '.horario_mesa_i_add_agente', function () {
         let element = $(this)[0].parentElement;
@@ -787,7 +733,7 @@ $(document).ready(function () {
                 const msg = JSON.parse(response);
 
                 notif(msg);
-                 listar_jornadas_mesa(); 
+                listar_jornadas_mesa();
                 if (msg.success === true) {
                     $('#jornada_mesa').trigger('reset');
                     editar = false;
@@ -795,13 +741,13 @@ $(document).ready(function () {
             })
 
     })
-     listar_jornadas_mesa(); 
+    listar_jornadas_mesa();
 
     function listar_jornadas_mesa(filtros) {
         let template = '';
         $.post(
             '/universys/jornada/backend/listar_jornada_mesa.php',
-           filtros,
+            filtros,
             function (response) {
                 let jm = JSON.parse(response);
                 if (jm == '') {
@@ -883,7 +829,7 @@ $(document).ready(function () {
 
         )
     }
-    
+
     $('#filtroJornadaMesa').submit(function (e) {
         e.preventDefault();
         let filtrosMesa = {
@@ -896,6 +842,6 @@ $(document).ready(function () {
     })
 
     $(document).on('click', '.filtro_reset_mesa', function () {
-        listar_jornadas_mesa(); 
+        listar_jornadas_mesa();
     })
 })

@@ -25,12 +25,14 @@
             <button type="button" class="btn horarioModal" data-toggle="modal" data-target="#modal_horarios"><i class="fas fa-clock fa-7x"></i></a></button>
           </div>
         </div>
-        <div class="card text-center" style="width: 15rem;">
-          <div class="card-body">
-            <h5 class="card-title">Mesa de Examen</h5>
-            <button class="btn" type="submit"> <a href="mesa.php"><i class="fas fa-user fa-7x"></i></i></a></button>
+        <?php if ($tipo_agente == 'docente') { ?>
+          <div class="card text-center" style="width: 15rem;">
+            <div class="card-body">
+              <h5 class="card-title">Mesa de Examen</h5>
+              <button class="btn" type="submit"> <a href="mesa.php"><i class="fas fa-user fa-7x"></i></i></a></button>
+            </div>
           </div>
-        </div>
+        <?php } ?>
 
       </div>
     </div>
@@ -77,7 +79,7 @@
       <div class="modal-body">
         <?php include("horario.php");  ?>
       </div>
-     
+
     </div>
   </div>
 </div>

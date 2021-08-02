@@ -4,7 +4,8 @@
     <div class="form-group col-md-12">
         <label for="">Jornadas disponibles</label>
         <select class="form-control" id="jornada_agente" required>
-            <option selected value="" disabled>Escoja una jornada</option>
+           
+            
         </select>
     </div>
 </div>
