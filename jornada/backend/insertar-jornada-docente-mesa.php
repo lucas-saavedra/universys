@@ -12,48 +12,50 @@ if (isset($_POST['llamado_id'])) {
     $carrera_id = $_POST['carrera_id'];
     $llamado_id = $_POST['llamado_id'];
 
-    if (strtotime($fechaInicioMesa) > strtotime($fechaFinMesa)) {
+
+    mysqli_query($conexion, 'START TRANSACTION');
+    try {
+
+        if (strtotime($fechaInicioMesa) > strtotime($fechaFinMesa)) {
+            throw new Exception('La fecha de inicio no puede ser mayor a la fecha de fin');
+        }
+        $hora_inicio = $_POST['hora_inicio_mesa'];
+        $hora_fin = $_POST['hora_fin_mesa'];
+        if (strtotime($hora_inicio) > strtotime($hora_fin)) {
+            throw new Exception('La hora de inicio no puede ser mayor a la hora de fin');
+        }
+
+        $query1 = "INSERT INTO `jornada` ( `fecha_inicio`, `fecha_fin`, `tipo_jornada_id`, `descripcion`) 
+        VALUES ( '$fechaInicioMesa', '$fechaFinMesa', '4', '$descripcion');";
+        if (!$result = mysqli_query($conexion, $query1)) throw new Exception(mysqli_error($conexion));
+
+        $jornadaCreadaId = mysqli_insert_id($conexion);
+        $dia_id = $_POST['dia_id'];
+
+
+        foreach ($dia_id as $id) {
+
+            $query_detalle = "INSERT INTO detalle_jornada ( jornada_id, hora_inicio, hora_fin, dia) 
+            VALUES ( '$jornadaCreadaId','$hora_inicio' , '$hora_fin', '$id');";
+            if (!$result = mysqli_query($conexion, $query_detalle)) throw new Exception(mysqli_error($conexion));
+        }
+
+        $query = "INSERT INTO mesa_examen (carrera_id, llamado_id, jornada_id) VALUES ( '$carrera_id', '$llamado_id', '$jornadaCreadaId');";
+        if (!$result = mysqli_query($conexion, $query)) throw new Exception(mysqli_error($conexion));
+        mysqli_commit($conexion);
+
         $json[] = array(
-            'name' => 'La fecha de inicio debe ser menor a la fecha de fin',
+            'name' => '¡La jornada de mesa ha sido creada!',
+            'type' => 'success',
+            'success' => true
+        );
+    } catch (Exception $e) {
+        $json[] = array(
+            'name' => $e->getMessage(),
             'type' => 'warning',
             'success' => false
         );
-    } else {
-        mysqli_query($conexion, 'START TRANSACTION');
-        try {
-            $query1 = "INSERT INTO `jornada` ( `fecha_inicio`, `fecha_fin`, `tipo_jornada_id`, `descripcion`) 
-        VALUES ( '$fechaInicioMesa', '$fechaFinMesa', '4', '$descripcion');";
-            if (!$result = mysqli_query($conexion, $query1)) throw new Exception(mysqli_error($conexion));
-
-            $jornadaCreadaId = mysqli_insert_id($conexion);
-            $dia_id = $_POST['dia_id'];
-            $hora_inicio = $_POST['hora_inicio_mesa'];
-            $hora_fin = $_POST['hora_fin_mesa'];
-
-            foreach ($dia_id as $id) {
-
-                $query_detalle = "INSERT INTO detalle_jornada ( jornada_id, hora_inicio, hora_fin, dia) 
-            VALUES ( '$jornadaCreadaId','$hora_inicio' , '$hora_fin', '$id');";
-                if (!$result = mysqli_query($conexion, $query_detalle)) throw new Exception(mysqli_error($conexion));
-            }
-
-            $query = "INSERT INTO mesa_examen (carrera_id, llamado_id, jornada_id) VALUES ( '$carrera_id', '$llamado_id', '$jornadaCreadaId');";
-            if (!$result = mysqli_query($conexion, $query)) throw new Exception(mysqli_error($conexion));
-            mysqli_commit($conexion);
-
-            $json[] = array(
-                'name' => '¡La jornada de mesa ha sido creada!',
-                'type' => 'success',
-                'success' => true
-            );
-        } catch (Exception $e) {
-            $json[] = array(
-                'name' => $e->getMessage(),
-                'type' => 'warning',
-                'success' => false
-            );
-            mysqli_rollback($conexion);
-        }
+        mysqli_rollback($conexion);
     }
 } else if (isset($_POST['docentes_mesa_id'])) {
 
@@ -92,6 +94,12 @@ if (isset($_POST['llamado_id'])) {
             );
         }
     }
+}else{
+    $json[] = array(
+        'name' => 'Debe agregar al menos un docente',
+        'type' => 'warning',
+        'success' => false
+    );
 }
 
 

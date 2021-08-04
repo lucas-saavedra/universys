@@ -11,6 +11,7 @@ $(document).ready(function () {
 
     function search_catedra() {
         $('#search').keyup(function (e) {
+            $('#catedraCollapse').collapse('show');
             if ($('#search').val()) {
                 let search = $('#search').val();
                 $.ajax({
@@ -23,47 +24,54 @@ $(document).ready(function () {
 
                         let catedras = JSON.parse(response);
                         let template = " ";
-
-                        catedras.forEach(catedra => {
-                            template += ` 
+                        if (catedras == '') {
+                            template = "Nada por aquí..."
+                        } else {
+                            catedras.forEach(catedra => {
+                                template += ` 
                         <tr catedraId=${catedra.id}>  
                         <th> ${catedra.nombre} </th>
                         <th> ${catedra.carrera} </th>
                         <th> ${catedra.periodo} </th>
                         <th> ${catedra.anio} </th>
                         <td class="d-flex justify-content-end">
-                        <a class="catedra btn btn-info" data-toggle="collapse" role="button" type="submit" href="#collapseExample">Aceptar</a>
+                        <a class="catedra btn btn-info" data-toggle="collapse" role="button" type="submit" href="#catedraCollapse">Aceptar</a>
                         </td>
                         </tr>
                         `
-                        });
-                        $('#container_catedra').html(template);
+                            });
+                            $('#container_catedra').html(template);
 
+                        }
                     }
                 });
-            }
+            } else $('#catedraCollapse').collapse('hide');
         });
     }
 
     function search_agente() {
         $('#search-agente').keyup(function (e) {
+            $('#agente_tabla').collapse('show');
             if ($('#search-agente').val()) {
                 let search_agente = $('#search-agente').val();
                 let tipo_agente = $('#tipo_agente').attr('tipo_agente');
                 let horario = false;
                 agente(search_agente, tipo_agente, horario)
+            } else {
+                $('#agente_tabla').collapse('hide');
             }
         });
     }
 
     function search_agente_horarios() {
         $('#search-agente-horario').keyup(function (e) {
+            $('#agente_tabla_horarios').collapse('show');
             if ($('#search-agente-horario').val()) {
                 let search_agente = $('#search-agente-horario').val();
                 let tipo_agente = $('#tipo_agente').attr('tipo_agente');
                 let horario = true;
                 agente(search_agente, tipo_agente, horario)
-            }
+            }else $('#agente_tabla_horarios').collapse('hide');
         });
     }
 
@@ -92,7 +100,7 @@ $(document).ready(function () {
                     <tr tipo_agente=${tipo_agente} agente_id=${agente.id} nombre_agente='${agente.nombre}' >  
                     <th  > ${agente.nombre} </th>
                     <td class="d-flex justify-content-end">
-                    <a class="agente btn btn-info" data-toggle="collapse" role="button" type="button" href="#${href}"  >Aceptar</a>
+                    <a class="agente btn btn-info" data-toggle="collapse" role="button" type="button" href="#${href}">Aceptar</a>
                     </td>
                     </tr>
                     `
@@ -180,13 +188,14 @@ $(document).ready(function () {
 
     });
     $(document).on('click', '.horario_item', function () {
-        let element = $(this)[0].parentElement.parentElement;
+        let element = $(this)[0].parentElement;
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         let jornada_agente_id = $(element).attr('jornada_agente_id');
         let horario_id = $(element).attr('horario_id');
         let jornada_id = $(element).attr('jornada_id');
         let agente_id = $(element).attr('agente_id');
         editar = true;
+        console.log(agente_id);
         $('#id_agente').val(agente_id);
 
         obtener_agente(agente_id, tipo_agente);
@@ -195,7 +204,7 @@ $(document).ready(function () {
 
     })
     $(document).on('click', '.horario_item_borrar', function () {
-        let element = $(this)[0].parentElement.parentElement;
+        let element = $(this)[0].parentElement;
         let horario_id = $(element).attr('horario_id');
         if (confirm('¿Seguro que desea eliminar este horario?')) {
             $.post('/universys/jornada/backend/borrar-jornada.php', {
@@ -299,7 +308,6 @@ $(document).ready(function () {
             catedraId
         }, function (response) {
             const catedra = JSON.parse(response);
-            /*  $('#catedra').val(catedra[0].nombre + ', ' + catedra[0].anio + ' Año, ' + catedra[0].carrera); */
             $('#catedraIdInput').val(catedra[0].id);
             $('#search').val(catedra[0].nombre + ', ' + catedra[0].anio + ' Año, ' + catedra[0].carrera);
         })
@@ -336,6 +344,20 @@ $(document).ready(function () {
             });
     });
 
+    $(document).on('click', '.reset', function () {
+        let element = $(this)[0].parentElement.parentElement.parentElement;
+        resetEditForm($(element).attr('id'))
+    })
+
+    function resetEditForm(form) {
+        editar = false;
+        $(`#${form}`).trigger('reset');
+        let template = '';
+        template = ` <option selected value="" disabled>Escoja una jornada</option>`;
+        $('#jornada_agente').html(template);
+                
+    }
+
     function listar_jornadas_agente(agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
@@ -348,31 +370,35 @@ $(document).ready(function () {
                 console.log(response)
                 let template = " "
                 if (jornadas == '') {
-                    template = "Nada por aquí..."
+                    template = ` <option selected value="" disabled >No contiene jornadas</option>`;
                 } else {
-
+                    let area;
+                    if (editar == false) {
+                        template += ` <option selected value="" disabled>Escoja una jornada</option>`;
+                    }
                     jornadas.forEach(jornada => {
+
                         if (tipo_agente == 'docente') {
                             area = jornada.catedra;
                         } else {
                             area = jornada.area;
                         }
-
                         template += `
-                        <option selected value="" disabled>Escoja una jornada</option>
-                        <option id="item_jornada" value=${jornada.jornada_id} 
-                        jornada_agente_id=${jornada.jornada_agente_id}> <td>
-                        ${jornada.area} | 
-                        ${jornada.tipo_jornada} | 
-                        ${jornada.descripcion} |  
-                        ${jornada.fecha_inicio} => 
-                        ${jornada.fecha_fin}
-                        </option> `;
+                            <option id="item_jornada" value=${jornada.jornada_id} 
+                            jornada_agente_id=${jornada.jornada_agente_id}> <td>
+                            ${area} | 
+                            ${jornada.tipo_jornada} | 
+                            ${jornada.descripcion} |  
+                            ${jornada.fecha_inicio} => 
+                            ${jornada.fecha_fin}
+                            </option> `;
 
 
                     })
+
                 }
                 $('#jornada_agente').html(template);
+                
             }
         )
 
@@ -382,13 +408,16 @@ $(document).ready(function () {
 
     $('#filtroJornada').submit(function (e) {
         e.preventDefault();
-     
+
         let filtros = {
             filtroFechaFin: $('#filtroFechaFin').val(),
             filtroFechaInicio: $('#filtroFechaInicio').val(),
             filtroTipoJornadaId: $('#filtroTipoJornadaId').val(),
-            tipo_agente : tipo_agente
+            filtroCarreraId: $('#filtroCarreraId').val(),
+            filtroAreaId: $('#filtroAreaId').val(),
+            tipo_agente: tipo_agente
         };
+        console.log(filtros);
         listar_jornadas(filtros)
     })
 
@@ -396,89 +425,97 @@ $(document).ready(function () {
         listar_jornadas(filtros);
     })
 
-
     function listar_jornadas(filtros) {
+        if (tipo_agente != '') {
+            var template = " ";
+            $.post(
+                '/universys/jornada/backend/listar_jornada.php',
+                filtros,
+                function (response) {
+                    let j = JSON.parse(response);
+                    if (j == '') {
+                        template = "Nada por aquí..."
+                    } else {
+                        for (jornada of j) {
 
-        var template = " ";
-        $.post(
-            '/universys/jornada/backend/listar_jornada.php',
-            filtros,
-            function (response) {
-                let j = JSON.parse(response);
-                if (j == '') {
-                    template = "Nada por aquí..."
-                } else {
-                    for (jornada of j) {
-                        if (tipo_agente == 'docente') {
-                            agente_nombre = jornada.docente;
-                            area = jornada.catedra;
-                        } else {
-                            if (tipo_agente == 'no_docente') {
-                                agente_nombre = jornada.no_docente;
-                                area = jornada.area;
+                            template += `
+                            <tr jornada_id=${jornada.jornada_id} jornada_agente_id=${jornada.jornada_agente_id} class="table-secondary"> 
+                            <td> ${jornada.jornada_agente_id}  </td>`;
+
+                            if (tipo_agente == 'docente') {
+                                template += `
+                                <td>  ${jornada.docente} </td>
+                                <td>  <p class="h6"> ${jornada.carrera} </p> <p class="mb-0"> ${jornada.catedra} </p>  </td>
+                                `;
+                            } else {
+                                template += `
+                                <td> ${jornada.no_docente}</td>
+                                <td> ${jornada.area}</td>
+                                `;
                             }
-                        }
-                        template += `
+
+
+                            template += `
                             
-                            <tr jornada_id=${jornada.jornada_id} jornada_agente_id=${jornada.jornada_agente_id}> 
-                            <td> ${jornada.jornada_agente_id}  </td>
-                            <td>   ${agente_nombre} </td>
-                            <td>   ${area} </td>
                             <td>   ${jornada.fecha_inicio} </td>
                             <td>   ${jornada.fecha_fin} </td>
                             <td>   ${jornada.tipo_jornada} </td>
-                            <td>   ${jornada.descripcion} </td>`;
-
-                        if (filtros.agente_id == undefined) {
-                            template += `   
+                            <td>   ${jornada.descripcion} </td>
+                           
                             <td> 
                                 <button class="jornada-item btn btn-info"><i class="fas fa-pen"></i></button>
                                 <button class="jornada_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
                                 <button type="button"class=" jornada-horario btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                <i class="fas fa-clock"></i></button>      
+                                <i class="fas fa-clock"></i></button> 
+                            </td>     
                             </tr>
-                            <td colspan="4">
+                            <tr>
+                                    <td colspan="6">
+                                        <table class="table mb-0">
+                                            <thead class="table-borderless">
+                                                <tr>
+                                                    <th scope="col">Dia</th>
+                                                    <th scope="col">Hora Inicio</th>
+                                                    <th scope="col">Hora Fin</th>
+                                                   
+                                                    <th scope="col">Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
                             `;
 
-                        } else {
-                            template += `<td> <button type="button" class=" jornada-item  btn btn-success" data-toggle="collapse" data-target=".multi-collapse"  aria-controls="toggle_jornadas agente_tabla search_agente" role="button" type="button" "><i class="fas fa-check-circle"></i></button></td>
-                                </tr>
-                                <td colspan="4">
-                            `;
-                        }
-                        for (detalle of jornada.detalle_jornada) {
-                            template += `
-                            <div horario_id="${detalle.id}" 
-                                jornada_agente_id="${jornada.jornada_agente_id}" 
-                                agente_id="${jornada.agente_id}"
-                                jornada_id="${detalle.jornada_id}">
-                                <div class="h6 bg-light text-dark" id="basic-addon1">
-                                <div class="badge badge-primary p-1"> ${detalle.nombre}</div>
-                                ${detalle.hora_inicio}<i class="fas fa-arrow-right p-1"></i>
-                                ${detalle.hora_fin}     
-                                <strong class="mx-3">  ${detalle.descripcion}</strong>
+                            for (detalle of jornada.detalle_jornada) {
+                                template += `
+                            <tr>
+                           
+
+                                <td class="badge badge-primary p-1"> ${detalle.nombre}</td>
+                               <td> ${detalle.hora_inicio}</td>
+                               <td> ${detalle.hora_fin}</td>
+                               <td horario_id="${detalle.id}" jornada_agente_id="${jornada.jornada_agente_id}" agente_id="${jornada.agente_id}"
+                                jornada_id="${detalle.jornada_id}"> 
                                     <button type="button" class="horario_item btn" data-toggle="modal" data-target="#modal_horarios"><i class=" fas fa-pen"></i></button>
                                     <button type="button" class="horario_item_borrar btn"><i class=" fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                       
-                
-                            `;
+                                </td>
+                                </tr>
+                             `;
+
+
+                            }
+                            template += ` 
+                        </tbody>
+                        </table>
+                    </td>
+                    </tr> `;
 
                         }
-                        template += ` </td>
-                         </tr> `;
-
                     }
-
+                    $('#listar_jornadas').html(template);
                 }
+            )
+        }
 
-                $('#listar_jornadas').html(template);
-
-            }
-
-
-        )
     }
 
 
@@ -545,6 +582,7 @@ $(document).ready(function () {
         $('#upd_mesa_dia').val($(element).attr('dia'));
 
     })
+
     $('#upd_mesa_horario').submit(function (e) {
         dia_hora = {
             id: $('#upd_mesa_horario_dia').val(),
@@ -786,7 +824,7 @@ $(document).ready(function () {
 
                             template += `
 
-                            <div>
+                            
                             <tr>
                                 <td>${horarios.nombre} </td>
                                 <td>${horarios.hora_inicio}</td>
@@ -809,7 +847,7 @@ $(document).ready(function () {
                                 </td>
                             </tr>
 
-                            </div>`;
+                           `;
 
                         }
 

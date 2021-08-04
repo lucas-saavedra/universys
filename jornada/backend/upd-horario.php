@@ -2,7 +2,6 @@
 <?php
 include('../includes/db.php');
 $json = array();
-
 if (isset($_POST['id'])) {
   $id = $_POST['id'];
   $inicio = $_POST['inicio'];
@@ -12,6 +11,9 @@ if (isset($_POST['id'])) {
   `hora_fin` = '$fin'
     WHERE `detalle_jornada`.`id` = '$id'";
   try {
+    if (strtotime($inicio) > strtotime($fin)) {
+      throw new Exception('La hora de inicio no puede ser mayor a la hora de fin');
+    }
     if (!$result = mysqli_query($conexion, $query1)) throw new Exception(mysqli_error($conexion));
   } catch (Exception $e) {
     $json[] = array(
@@ -41,7 +43,15 @@ if (isset($_POST['id'])) {
    WHERE `detalle_jornada`.`id` = '$horario_id'";
 
   try {
+    if (strtotime($hora_inicio) > strtotime($hora_fin)) {
+      throw new Exception('La hora de inicio no puede ser mayor a la hora de fin');
+    }
     if (!$result = mysqli_query($conexion, $query1)) throw new Exception(mysqli_error($conexion));
+    $json[] = array(
+      'name' => 'El horario se actualizó correctamente a la jornada',
+      'type' => 'success',
+      'success' => true
+    );
   } catch (Exception $e) {
     $json[] = array(
       'name' => $e->getMessage(),
@@ -49,11 +59,6 @@ if (isset($_POST['id'])) {
       'success' => false
     );
   }
-  $json[] = array(
-    'name' => 'El horario se actualizó correctamente a la jornada',
-    'type' => 'success',
-    'success' => true
-  );
 }
 $jsonstring = json_encode($json[0]);
 echo $jsonstring;

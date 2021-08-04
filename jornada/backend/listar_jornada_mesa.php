@@ -80,6 +80,5 @@ foreach (get_jornadas_mesa($conexion) as $mesa) :
 endforeach;
 
 
-
 $jsonstring = json_encode($json_mesa);
 echo $jsonstring;

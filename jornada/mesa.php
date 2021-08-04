@@ -2,7 +2,6 @@
 <div class="container">
     <div class="row">
         <div class="col">
-
             <div class="card mb-4">
                 <div class="card-header">
                     <h2 class="card-title text-center h-4">Mesa de examen docentes</h2>
@@ -58,11 +57,7 @@
                                 <input type="time" class="form-control timepicker" id="hora_fin_mesa" value="19:00" step="1800">
                             </div>
                         </div>
-
-
                         <input type="hidden" id="horario_mesa_id">
-
-
                         <div class="form-row">
                             <div class="form-group col-md-12">
                                 <label for="">Descripcion de la jornada</label>
@@ -73,10 +68,10 @@
                         </div>
                         <div class="form-row justify-content-center">
                             <div class="form-group col-md-6">
-                                <button type="submit" class="btn btn-primary  btn-lg btn-block" name="enviar">Aceptar</button>
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Aceptar</button>
                             </div>
                             <div class="form-group col-md-6">
-                                <button type="reset" class="btn btn-secondary  btn-lg btn-block">Resetear</button>
+                                <button type="reset" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block reset ">Cancelar</button>
                             </div>
                         </div>
                     </form>
@@ -87,30 +82,27 @@
 </div>
 <div class="container">
     <?php include_once("includes/listar_jornada_mesa.php");  ?>
-
 </div>
 
-
+<!-- Modal agregar agentes a la mesa -->
 <div class="modal fade" id="add_agente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="">Modal title</h5>
+                <h5 class="modal-title" id="">Agregar agentes</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
                 <form action="" method="post" id="formAddAgente">
                     <div class="form-group col-md-12">
-                        <label class="heading">Seleccione los docentes para el dia de la mesa</label>
-                        <div class="table-responsive" style="overflow:scroll;">
+                        <div class="table-responsive">
                             <div class="card-body">
                                 <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
                                     <input type="text" id="horario_id" hidden>
                                     <input type="text" id="mesa_id" hidden>
-                                    <?php foreach (get_docentes($conexion, $tipo_agente) as $e) : ?>
+                                    <?php foreach (get_docentes($conexion) as $e) : ?>
                                         <div required class="checkbox_docentes">
                                             <label>
                                                 <input type="checkbox" name="docentes" value="<?= $e['id'] ?>">
@@ -124,10 +116,10 @@
 
                     <div class="form-row justify-content-center">
                         <div class="form-group col-md-6">
-                            <button type="submit" class="btn btn-primary  btn-lg btn-block" name="enviar">Aceptar</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Aceptar</button>
                         </div>
                         <div class="form-group col-md-6">
-                            <button type="reset" class="btn btn-secondary  btn-lg btn-block">Resetear</button>
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block reset ">Cancelar</button>
                         </div>
                     </div>
                 </form>
@@ -142,9 +134,9 @@
 
 
 
-<!-- Modal -->
+<!-- Modal actualizar mesa -->
 <div class="modal fade" id="upd_jornada_mesa" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="">Editar Jornada de Mesa</h5>
@@ -200,13 +192,55 @@
                     </div>
                     <div class="form-row justify-content-center">
                         <div class="form-group col-md-6">
-                            <button type="submit" class="btn btn-primary  btn-lg btn-block" name="enviar">Aceptar</button>
+                            <button type="submit" class="btn btn-primary btn-lg btn-block">Aceptar</button>
                         </div>
                         <div class="form-group col-md-6">
-                            <button type="reset" class="btn btn-secondary  btn-lg btn-block">Resetear</button>
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block reset ">Cancelar</button>
                         </div>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- MODAL PARA ACTUALIZAR EL DETALLE DE MESA -->
+
+<div class="modal fade" id="upd_detalle_mesa" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modificacion del horario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="" id="upd_mesa_horario">
+                    <div class="form-row py-3">
+                        <div class="form-group col-md-4">
+                        <label>Dia </label>
+                            <input type="text" class="form-control " disabled id="upd_mesa_dia">
+                        </div>
+                        <div class="form-group   col-md-4">
+                            <label>Inicio </label>
+                            <input type="time" id="mesa_horario_inicio" class="form-control timepicker" step="1800">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label >Fin</label>
+                            <input type="time" id="mesa_horario_fin" class="form-control timepicker" step="1800">
+                        </div>
+                    </div>
+                    <input type="text" hidden id="upd_mesa_horario_dia">
+
+                    <div class="form-row justify-content-center">
+                        <div class="form-group col-md-6">
+                            <button type="submit" class="btn btn-primary  btn-block">Aceptar</button>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <button type="reset" data-dismiss="modal" class="btn btn-secondary  btn-block reset ">Cancelar</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>

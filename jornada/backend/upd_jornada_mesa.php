@@ -43,6 +43,9 @@ if (isset($_POST['jornada_id'])) {
         mysqli_query($conexion, 'START TRANSACTION');
 
         try {
+            if (strtotime($fechaInicioMesa) > strtotime($fechaFinMesa)) {
+                throw new Exception('La fecha de inicio no puede ser mayor a la hora de fin');
+             }
             $query1 = "UPDATE jornada SET fecha_inicio = '$fechaInicioMesa', 
             fecha_fin = '$fechaFinMesa', descripcion = '$descripcion' 
              WHERE jornada.id = '$jornada_id_mesa'";

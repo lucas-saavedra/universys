@@ -12,6 +12,8 @@ if ($tipo_agente == 'docente') {
     jornada_id, 
     docente_nombre.nombre as docente, 
     c.nombre as catedra,
+    c.carrera_id,
+    carrera.nombre as carrera,
     j.fecha_inicio,
     j.fecha_fin,
     j.tipo_jornada_id,
@@ -20,7 +22,8 @@ if ($tipo_agente == 'docente') {
     FROM jornada_docente as jornada_agente
     LEFT JOIN docente_nombre on jornada_agente.docente_id = docente_nombre.id
     LEFT JOIN catedra as c on c.id = catedra_id
-    LEFT OUTER JOIN v_jornada as j on jornada_agente.jornada_id=j.id"; 
+    LEFT OUTER JOIN v_jornada as j on jornada_agente.jornada_id=j.id
+    LEFT JOIN carrera on c.carrera_id = carrera.id"; 
 } else {
   $query = "SELECT 
     jornada_agente.id as jornada_agente_id,
@@ -51,6 +54,20 @@ if (isset($_POST['filtroTipoJornadaId'])) {
   if (($_POST['filtroTipoJornadaId']) <> null) {
     $tipoJornadaId = $_POST['filtroTipoJornadaId'];
     $query = $query . " and j.tipo_jornada_id='$tipoJornadaId' ";
+  }
+} 
+
+if (isset($_POST['filtroCarreraId'])) {
+  if (($_POST['filtroCarreraId']) <> null) {
+    $filtroCarreraId = $_POST['filtroCarreraId'];
+    $query = $query . " and c.carrera_id='$filtroCarreraId' ";
+  }
+} 
+
+if (isset($_POST['filtroAreaId'])) {
+  if (($_POST['filtroAreaId']) <> null) {
+    $filtroAreaId = $_POST['filtroAreaId'];
+    $query = $query . " and area_id='$filtroAreaId' ";
   }
 } 
 
@@ -117,6 +134,7 @@ while ($row = mysqli_fetch_array($result)) {
       'jornada_id' => $row['jornada_id'],
       'catedra_id' => $row['catedra_id'],
       'catedra' => $row['catedra'],
+      'carrera' => $row['carrera'],
       'docente' => $row['docente'],
       'fecha_inicio' => $row['fecha_inicio'],
       'fecha_fin' => $row['fecha_fin'],

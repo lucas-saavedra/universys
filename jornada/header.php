@@ -13,7 +13,11 @@
 </head>
 <?php include("includes/db.php"); ?>
 <?php include("includes/consultas.php"); ?>
-<?php $tipo_agente = $_SESSION['tipo_agente']; ?>
+
+<?php if (isset($_GET['tipo_agente'])) {
+  $tipo_agente =  $_GET['tipo_agente'];
+}
+?>
 <input type="hidden" id="tipo_agente" tipo_agente="<?php echo $tipo_agente ?>">
 <input type="hidden" id="id_agente">
 <input type="hidden" id="jornada_agente_id">
@@ -28,11 +32,20 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="/universys/jornada/agente.php">Inicio <span class="sr-only">(current)</span></a>
+           
+              <a class="nav-link" href="/universys/jornada/agente.php?tipo_agente=<?php echo $tipo_agente ?>">Inicio <span class="sr-only">(current)</span></a>
             </li>
           </ul>
-          <span class="navbar-text">
-            Usted está trabajando con el tipo de agente: <?php echo $_SESSION['tipo_agente'] ?>
+          <span>
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Tipo de agente
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'docente' ?>">Docente</a>
+                <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'no_docente' ?>">No Docente</a>
+              </div>
+            </div>
           </span>
         </div>
       </nav>
@@ -44,7 +57,7 @@
 <body>
   <div id='notif'></div>
 
-  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 7000; right: 0; bottom: 0;">
     <div id="toastNotif" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
       <div class="toast-header">
         <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">

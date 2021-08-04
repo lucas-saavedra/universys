@@ -16,7 +16,6 @@
     ";
   }
 
-
   $result = mysqli_query($conexion, $sql);
   if (!$result) {
     die('Error');
