@@ -40,11 +40,10 @@ INSERT INTO `tipo_jornada` (`id`, `nombre`, `pertenece`) VALUES
 (1, '1er Cuatrimestre', 'docente'),
 (2, '2do Cuatrimestre', 'docente'),
 (3, 'Anual', 'docente'),
-(4, 'Mesa de Examen', 'docente'),
+(4, 'Mesa de Examen', 'mesa'),
 (5, 'Mañana', 'no_docente'),
 (6, 'Tarde', 'no_docente'),
 (7, 'Noche', 'no_docente');
-
 
 
 create table jornada (
@@ -66,7 +65,7 @@ create table detalle_jornada (
     dia int,
     descripcion varchar(100),
     PRIMARY key (id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)  ON DELETE CASCADE
 );
 
 create table area (
@@ -83,7 +82,7 @@ create table jornada_no_docente (
     PRIMARY key (id),
     FOREIGN KEY (area_id) REFERENCES area(id),
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id) ON DELETE CASCADE
 );
 
 create table carrera (
@@ -124,17 +123,43 @@ create table jornada_docente (
     catedra_id int,
     PRIMARY key (id),
     FOREIGN KEY (docente_id) REFERENCES docente(id),
-    FOREIGN KEY (jornada_id) REFERENCES jornada(id),
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (catedra_id) REFERENCES catedra(id)
 );
 
+create table llamado (
+	id int AUTO_INCREMENT,
+    nombre varchar(50),
+    PRIMARY key (id)
+);
+INSERT INTO llamado (id, nombre) VALUES
+(1, '1er Llamado'),
+(2, '2do Llamado'),
+(3, '3er Llamado'),
+(4, '4to Llamado');
+create table mesa_examen (
+	id int AUTO_INCREMENT,
+    carrera_id int,
+    llamado_id int,
+    jornada_id int,
+    PRIMARY key (id),
+    FOREIGN KEY (carrera_id) REFERENCES carrera(id),
+    FOREIGN KEY (jornada_id) REFERENCES jornada(id)
+    ON DELETE CASCADE,
+    FOREIGN KEY (llamado_id) REFERENCES llamado(id)
+);
 create table jornada_docente_mesa (
 	id int AUTO_INCREMENT,
     docente_id int,
     det_jornada_id int,
+    mesa_examen_id int,
     PRIMARY key (id),
     FOREIGN KEY (docente_id) REFERENCES docente(id),
+    FOREIGN KEY (mesa_examen_id) REFERENCES mesa_examen(id)
+    ON DELETE CASCADE,
     FOREIGN KEY (det_jornada_id) REFERENCES detalle_jornada(id)
+    
 );
 create table marcacion_docente (
 	id int AUTO_INCREMENT,
@@ -315,7 +340,6 @@ create table inasistencia_sin_aviso_no_docente (
     FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id),
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
-
 create table mes (
 	id int AUTO_INCREMENT,
     nombre varchar(50),
@@ -332,7 +356,6 @@ create table planilla_productividad_docente (
     FOREIGN KEY (mes_id) REFERENCES mes(id)
 );
 
-
 create table expediente_planilla_docente (
 	id int AUTO_INCREMENT,
     planilla_productividad_docente_id int,
@@ -342,7 +365,6 @@ create table expediente_planilla_docente (
     FOREIGN KEY (planilla_productividad_docente_id) REFERENCES planilla_productividad_docente(id),
     FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id)
 );
-
 create table planilla_productividad_no_docente (
 	id int AUTO_INCREMENT,
     mes_id int,
@@ -379,7 +401,6 @@ INSERT INTO area(nombre) VALUES
 INSERT INTO periodo(nombre) VALUES ('1er Cuatrimestre'),('2do Cuatrimestre'),('Anual');
 
 INSERT INTO carrera(nombre) VALUES ('Analisis de Sistemas'),('Prod. Agropecuaria'),('Gestion Ambiental');
-
 
 INSERT INTO `catedra` (`nombre`, `carrera_id`, `anio_plan_id`, `periodo_id`) VALUES 
 /*---------------- Analisis de sistemas--------------- */
@@ -473,3 +494,102 @@ INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_n
 
 insert into mes(nombre) values 
 ('Enero'),('Febrero'), ('Marzo'), ('Abril'), ('Mayo'), ('Junio'), ('Julio'), ('Agosto'), ('Septiembre'), ('Octubre'), ('Noviembre'), ('Diciembre');
+CREATE TABLE dia ( id INT NOT NULL , nombre VARCHAR(20) NOT NULL , PRIMARY KEY (`id`));
+INSERT INTO dia (id, `nombre`) VALUES 
+('0', 'Lunes'),('1', 'Martes'),('2', 'Miércoles'),
+('3', 'Jueves'),('4', 'Viernes'),('5', 'Sábado'),
+('6', 'Domingo');
+
+/* --------------VISTAS----------- */
+
+-- Estructura Stand-in para la vista `agente_nombre`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `agente_nombre` (
+`id` int(11)
+,`nombre` varchar(100)
+);
+
+-- Estructura para la vista `agente_nombre`
+--
+DROP TABLE IF EXISTS `agente_nombre`;
+
+CREATE ALGORITHM=UNDEFINED
+ SQL SECURITY DEFINER VIEW `agente_nombre`  AS 
+ SELECT `no_docente`.`id` AS `id`, `persona`.`nombre` AS `nombre` 
+ FROM (`no_docente` left join `persona` on(`no_docente`.`persona_id` = `persona`.`id`)) ;
+
+-- --------------------------------------------------------
+
+-- Estructura Stand-in para la vista `docente_nombre`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `docente_nombre` (
+`id` int(11)
+,`nombre` varchar(100)
+);
+-- Estructura para la vista `docente_nombre`
+--
+DROP TABLE IF EXISTS `docente_nombre`;
+
+CREATE ALGORITHM=UNDEFINED 
+ SQL SECURITY DEFINER VIEW `docente_nombre`  AS 
+ SELECT `docente`.`id` AS `id`, `persona`.`nombre` AS `nombre` 
+ FROM (`docente` left join `persona` on(`docente`.`persona_id` = `persona`.`id`)) ;
+
+-- --------------------------------------------------------
+
+
+-- --------------------------------------------------------
+-- Estructura Stand-in para la vista `v_jornada`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `v_jornada` (
+`id` int(11)
+,`tipo_jornada_id` int(11)
+,`fecha_inicio` date
+,`fecha_fin` date
+,`nombre` varchar(50)
+,`descripcion` varchar(100)
+,`pertenece` varchar(20)
+);
+-- Estructura para la vista `v_jornada`
+--
+DROP TABLE IF EXISTS `v_jornada`;
+
+CREATE ALGORITHM=UNDEFINED 
+SQL SECURITY DEFINER VIEW `v_jornada`  AS
+SELECT `jornada`.`id` AS `id`, `tipo_jornada`.`id` AS `tipo_jornada_id`,
+`jornada`.`fecha_inicio` AS `fecha_inicio`, `jornada`.`fecha_fin` AS `fecha_fin`, 
+`tipo_jornada`.`nombre` AS `nombre`, `jornada`.`descripcion` AS `descripcion`,
+`tipo_jornada`.`pertenece` AS `pertenece` 
+FROM (`jornada` left join `tipo_jornada` on(`jornada`.`tipo_jornada_id` = `tipo_jornada`.`id`)) ;
+
+-- Estructura Stand-in para la vista `mesa_examen_jornada`
+-- (Véase abajo para la vista actual)
+--
+CREATE TABLE `mesa_examen_jornada` (
+`id` int(11)
+,`jornada_id` int(11)
+,`carrera_nombre` varchar(100)
+,`carreraId` int(11)
+,`llamadoId` int(11)
+,`llamado_nombre` varchar(50)
+,`fecha_inicio` date
+,`fecha_fin` date
+,`descripcion` varchar(100)
+);
+-- Estructura para la vista `mesa_examen_jornada`
+--
+DROP TABLE IF EXISTS `mesa_examen_jornada`;
+
+CREATE ALGORITHM=UNDEFINED 
+SQL SECURITY DEFINER VIEW `mesa_examen_jornada`  AS
+ SELECT `mesa_examen`.`id` AS `id`, `mesa_examen`.`jornada_id` AS `jornada_id`,
+`carrera`.`nombre` AS `carrera_nombre`, `carrera`.`id` AS `carreraId`,
+`llamado`.`id` AS `llamadoId`, `llamado`.`nombre` AS `llamado_nombre`,
+`v_jornada`.`fecha_inicio` AS `fecha_inicio`, `v_jornada`.`fecha_fin` AS `fecha_fin`,
+`v_jornada`.`descripcion` AS `descripcion` 
+ FROM (((`mesa_examen` left join `carrera` on(`mesa_examen`.`carrera_id` = `carrera`.`id`)) 
+ left join `llamado` on(`mesa_examen`.`llamado_id` = `llamado`.`id`)) 
+ left join `v_jornada` on(`mesa_examen`.`jornada_id` = `v_jornada`.`id`)) ;
