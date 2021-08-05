@@ -15,7 +15,7 @@ $(document).ready(function () {
             if ($('#search').val()) {
                 let search = $('#search').val();
                 $.ajax({
-                    url: '/universys/jornada/backend/select-catedra.php',
+                    url: '../jornada/backend/select-catedra.php',
                     type: 'POST',
                     data: {
                         search
@@ -77,7 +77,7 @@ $(document).ready(function () {
 
     function agente(search_agente, tipo_agente, horario) {
         $.ajax({
-            url: '/universys/jornada/backend/select-agente.php',
+            url: '../jornada/backend/select-agente.php',
             type: 'POST',
             data: {
                 search_agente,
@@ -85,6 +85,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 let agentes = JSON.parse(response);
+                console.log(response)
                 let template = " ";
                 let href = '';
                 let container = '';
@@ -121,7 +122,7 @@ $(document).ready(function () {
     })
 
     function obtener_agente(agente_id, tipo_agente) {
-        $.post('/universys/jornada/backend/select-agente.php', {
+        $.post('../jornada/backend/select-agente.php', {
             agente_id,
             tipo_agente
         }, function (response) {
@@ -136,7 +137,7 @@ $(document).ready(function () {
         if (confirm('¿Seguro que desea eliminar esta jornada?')) {
             let element = $(this)[0].parentElement.parentElement;
             let jornada_id = $(element).attr('jornada_id');
-            $.post('/universys/jornada/backend/borrar-jornada.php', {
+            $.post('../jornada/backend/borrar-jornada.php', {
                 jornada_id
             }, function (response) {
                 listar_jornadas(filtros);
@@ -163,7 +164,7 @@ $(document).ready(function () {
         };
 
         e.preventDefault();
-        let url = editar === false ? '/universys/jornada/backend/insertar-jornada-docente.php' : '/universys/jornada/backend/upd-jornada.php';
+        let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
         $.post(url, jornadaAgente, function (response) {
             listar_jornadas(filtros);
 
@@ -207,7 +208,7 @@ $(document).ready(function () {
         let element = $(this)[0].parentElement;
         let horario_id = $(element).attr('horario_id');
         if (confirm('¿Seguro que desea eliminar este horario?')) {
-            $.post('/universys/jornada/backend/borrar-jornada.php', {
+            $.post('../jornada/backend/borrar-jornada.php', {
                 horario_id
             }, function (response) {
                 const msg = JSON.parse(response);
@@ -218,7 +219,7 @@ $(document).ready(function () {
     })
 
     function obtener_horario(horario_id, jornada_id) {
-        $.post('/universys/jornada/backend/horarios.php', {
+        $.post('../jornada/backend/horarios.php', {
             horario_id,
             jornada_id
         }, function (response) {
@@ -239,7 +240,7 @@ $(document).ready(function () {
         let jornada_id = $(element).attr('jornada_id');
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         obtener_jornada(jornada_agente_id, tipo_agente);
-        $.post('/universys/jornada/backend/horarios.php', {
+        $.post('../jornada/backend/horarios.php', {
             jornada_id,
         }, function (response) {
             const horarios = JSON.parse(response);
@@ -264,7 +265,7 @@ $(document).ready(function () {
 
     function obtener_jornada(jornada_agente_id, tipo_agente) {
         tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        $.post('/universys/jornada/backend/listar_jornada.php', {
+        $.post('../jornada/backend/listar_jornada.php', {
             jornada_agente_id,
             tipo_agente
         }, function (response) {
@@ -273,8 +274,8 @@ $(document).ready(function () {
             $('#jornadaId').val(jd[0].jornada_id);
             $('#jornada_agente_id').val(jd[0].jornada_agente_id);
             $('#descripcion').val(jd[0].descripcion);
-            $('#fechaInicio').val(jd[0].fecha_fin);
-            $('#fechaFin').val(jd[0].fecha_inicio);
+            $('#fechaInicio').val(jd[0].fecha_inicio);
+            $('#fechaFin').val(jd[0].fecha_fin);
             $('#tipoJornadaId').val(jd[0].tipo_jornada_id);
             obtener_catedra(jd[0].catedra_id);
             $('#id_agente').val(jd[0].id_agente);
@@ -304,7 +305,7 @@ $(document).ready(function () {
     })
 
     function obtener_catedra(catedraId) {
-        $.post('/universys/jornada/backend/select-catedra.php', {
+        $.post('../jornada/backend/select-catedra.php', {
             catedraId
         }, function (response) {
             const catedra = JSON.parse(response);
@@ -328,7 +329,7 @@ $(document).ready(function () {
             hora_fin: $('#hora_fin').val(),
             dia_id: $('#dia_id').val()
         };
-        let url2 = editar === false ? '/universys/jornada/backend/insertar-horario.php' : '/universys/jornada/backend/upd-horario.php';
+        let url2 = editar === false ? '../jornada/backend/insertar-horario.php' : '../jornada/backend/upd-horario.php';
         $.post(url2,
             horarioAgente,
             function (response) {
@@ -361,7 +362,7 @@ $(document).ready(function () {
     function listar_jornadas_agente(agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
-            '/universys/jornada/backend/listar_jornada.php', {
+            '../jornada/backend/listar_jornada.php', {
                 tipo_agente,
                 agente_id
             },
@@ -429,7 +430,7 @@ $(document).ready(function () {
         if (tipo_agente != '') {
             var template = " ";
             $.post(
-                '/universys/jornada/backend/listar_jornada.php',
+                '../jornada/backend/listar_jornada.php',
                 filtros,
                 function (response) {
                     let j = JSON.parse(response);
@@ -556,7 +557,7 @@ $(document).ready(function () {
         }
 
         $.post(
-            '/universys/jornada/backend/insertar-jornada-docente-mesa.php',
+            '../jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
                 const msg = JSON.parse(response);
@@ -592,7 +593,7 @@ $(document).ready(function () {
         }
 
         e.preventDefault();
-        $.post('/universys/jornada/backend/upd-horario.php',
+        $.post('../jornada/backend/upd-horario.php',
             dia_hora,
             function (response) {
 
@@ -615,7 +616,7 @@ $(document).ready(function () {
         if (confirm('¿Seguro que desea eliminar este agente?')) {
             let element = $(this)[0];
             let jornada_agente_mesa_id = $(element).attr('jornada_agente_mesa_id');
-            $.post('/universys/jornada/backend/borrar-jornada.php', {
+            $.post('../jornada/backend/borrar-jornada.php', {
                 jornada_agente_mesa_id
             }, function (response) {
                 const msg = JSON.parse(response);
@@ -634,7 +635,7 @@ $(document).ready(function () {
             let jornada_id = $(element).attr('jornada_id');
             let mesa_id = $(element).attr('mesa_id');
 
-            $.post('/universys/jornada/backend/borrar-jornada.php', {
+            $.post('../jornada/backend/borrar-jornada.php', {
                 jornada_id,
                 mesa_id
             }, function (response) {
@@ -684,7 +685,7 @@ $(document).ready(function () {
          }
          console.log(jornada_mesa);
          $.post(
-             '/universys/jornada/backend/test.php',
+             '../jornada/backend/test.php',
              jornada_mesa,
              function (response) {
 
@@ -704,7 +705,7 @@ $(document).ready(function () {
         let mesa_id = $(element).attr('mesa_id');
         editar = true;
         $.post(
-            '/universys/jornada/backend/upd_jornada_mesa.php', {
+            '../jornada/backend/upd_jornada_mesa.php', {
                 jornada_id
             },
             function (response) {
@@ -737,7 +738,7 @@ $(document).ready(function () {
         }
 
         $.post(
-            '/universys/jornada/backend/upd_jornada_mesa.php',
+            '../jornada/backend/upd_jornada_mesa.php',
             jornada_mesa_upd,
             function (response) {
                 const msg = JSON.parse(response);
@@ -765,7 +766,7 @@ $(document).ready(function () {
             hora_fin_mesa: $('#hora_fin_mesa').val(),
         }
         $.post(
-            '/universys/jornada/backend/insertar-jornada-docente-mesa.php',
+            '../jornada/backend/insertar-jornada-docente-mesa.php',
             jornada_mesa,
             function (response) {
                 const msg = JSON.parse(response);
@@ -784,7 +785,7 @@ $(document).ready(function () {
     function listar_jornadas_mesa(filtros) {
         let template = '';
         $.post(
-            '/universys/jornada/backend/listar_jornada_mesa.php',
+            '../jornada/backend/listar_jornada_mesa.php',
             filtros,
             function (response) {
                 let jm = JSON.parse(response);
