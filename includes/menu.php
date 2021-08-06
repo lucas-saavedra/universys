@@ -16,10 +16,8 @@
         <a class="nav-link" href="../expediente/expediente-pendiente-doc.php">Pendientes de documentación <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="../expediente/exportar-cambio.php">Exportar planilla<span class="sr-only">(current)</span></a>
+        <a class="btn btn-outline-success my-2 my-sm-0" href="../expediente/generar_inasistencia.php">Generar inasistencias <span class="sr-only">(current)</span></a>
       </li>
-
-      
       
     </ul>
     <form class="form-inline my-2 my-lg-0">
