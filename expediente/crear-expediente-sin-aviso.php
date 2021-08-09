@@ -1,5 +1,4 @@
 <?php include ("../includes/header.php");?>
-<?php include('../dataBase.php');?>
 
 <div class="container-fluid">
 

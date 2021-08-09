@@ -348,6 +348,7 @@ $(document).ready(function () {
     $(document).on('click', '.reset', function () {
         let element = $(this)[0].parentElement.parentElement.parentElement;
         resetEditForm($(element).attr('id'))
+        $('#catedraIdInput').val(catedra[0].id);
     })
 
     function resetEditForm(form) {
@@ -356,6 +357,9 @@ $(document).ready(function () {
         let template = '';
         template = ` <option selected value="" disabled>Escoja una jornada</option>`;
         $('#jornada_agente').html(template);
+        $('#agente').val('');
+        $('#agente_horarios').val('');
+        $('#id_agente').val('');
                 
     }
 

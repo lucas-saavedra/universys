@@ -1,5 +1,5 @@
 <?php 
-require('database.php');
+require('../includes/db.php');
 
 $query_marcaciones = "select m1.hora_registro as hora_inicio, m2.hora_registro as hora_fin, 
 m2.docente_id, m2.detalle_jornada_id, m1.fecha, m1.dia_id from 

@@ -1,5 +1,5 @@
 <?php 
-require_once('../dataBase.php');
+require_once('../includes/db.php');
 include ("../header.html");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");

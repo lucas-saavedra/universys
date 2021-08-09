@@ -1,6 +1,6 @@
 <?php 
-require_once('../dataBase.php');
-include ("../header.html");
+
+include ("../header.php");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
 

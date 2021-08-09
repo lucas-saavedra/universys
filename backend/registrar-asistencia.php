@@ -1,5 +1,5 @@
 <?php
-require 'database.php';
+require '../includes/db.php';
 session_start();
 $time= $_POST['appt'];
 $sol= $_POST['fecha'];

@@ -1,5 +1,5 @@
 <?php
-require 'database.php';
+require '../includes/db.php';
 session_start();
 
 $usuario = $_POST['usuario'];

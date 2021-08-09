@@ -1,6 +1,5 @@
 <?php include ("../includes/header.php");?>
-<?php include('../dataBase.php');?>
-
+<?php include ("../includes/menu.php");?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-6 m-auto">
@@ -29,7 +28,7 @@
             $anio = $_POST['anio'];
             $tipo_agente=$_POST['select'];
             if ($tipo_agente == 'Docente' ){
-                $query_planilla ="SELECT  planilla_productividad_docente.id,planilla_productividad_docente.anio, m1.nombre FROM planilla_productividad_docente,(SELECT * FROM `mes` WHERE nombre= '$mes') as m1 WHERE m1.id= planilla_productividad_docente.mes_id and anio='$anio'";
+                $query_planilla ="SELECT  planilla_productividad_docente.id,planilla_productividad_docente.anio, m1.nombre FROM planilla_productividad_docente,(SELECT * FROM `mes` WHERE nombre= '$mes') as m1 ";
                 $result_planilla = mysqli_query($conexion,$query_planilla);
             
                 while ($row_planilla = mysqli_fetch_array($result_planilla)){
