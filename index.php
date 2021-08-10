@@ -1,15 +1,17 @@
 <?php include('includes/header.php'); ?>
+
 <div id="sidebar-container" class="bg-primary">
     <div class="logo">
         <h4 class="text-light p-3">UNIVERSYS</h4>
         <?php
         session_start();
-        $usuario = $_SESSION['username'];
-        $persona_id = $_SESSION['usuario_id'];
-        echo "<h5 class='ml-3'> $usuario </h5>";
-
+        $agente = $_SESSION['agente'];
+        $agente_id = $_SESSION['agente_id'];
+        $agente_rol =  $_SESSION['agente_rol'];
+        echo "<h5 class='ml-3'> $agente </h5>";
         ?>
-        <h4 class="text-light p-3"><?php echo $_SESSION['usuario_id']; ?></h4>
+
+        <h4 class="text-light p-3"><?php echo $_SESSION['agente_rol']; ?></h4>
         <h4 class="text-light p-3">Hoy es <?php echo fechaArgentina() ?></h4>
     </div>
 

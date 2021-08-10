@@ -348,7 +348,6 @@ $(document).ready(function () {
     $(document).on('click', '.reset', function () {
         let element = $(this)[0].parentElement.parentElement.parentElement;
         resetEditForm($(element).attr('id'))
-        $('#catedraIdInput').val(catedra[0].id);
     })
 
     function resetEditForm(form) {
@@ -360,7 +359,7 @@ $(document).ready(function () {
         $('#agente').val('');
         $('#agente_horarios').val('');
         $('#id_agente').val('');
-                
+        $('#catedraIdInput').val(''); 
     }
 
     function listar_jornadas_agente(agente_id) {

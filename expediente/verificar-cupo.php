@@ -2,7 +2,7 @@
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') exit;
 
-include('../dataBase.php');
+include('../includes/db.php');
 include('./includes/cupos.php');
 
 function validar($val){

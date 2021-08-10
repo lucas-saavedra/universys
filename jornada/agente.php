@@ -1,10 +1,9 @@
-<?php include("header.php"); ?>
+<?php include("navbar.php"); ?>
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container-fluid">
 
-
-    <h1 class="display-4">¡Bienvenido! AGENTE_NOMBRE</h1>
+    <h1 class="display-4">¡Bienvenido! <?php echo $agente ?> </h1>
     <h3 class="display-6">Tipo de agente seleccionado: <?php echo $tipo_agente ?> </h3>
 
     <hr class="my-4">
@@ -78,6 +77,4 @@
 
 
 
-
-
-<?php include("footer.html") ?>
+<?php include("footer.php") ?>

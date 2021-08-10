@@ -1,6 +1,6 @@
 <?php 
-require_once('../includes/db.php');
-include ("../header.html");
+/* require_once('../includes/db.php'); */
+include ("../includes/header.php");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/asignar-planilla-prod.php");
@@ -201,4 +201,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     filtro_agentes(<?=json_encode($agentes)?>);
     filtro_codigos(<?=json_encode($codigos, JSON_NUMERIC_CHECK )?>);
 </script>
-<?php include("../footer.html"); ?>
+<?php include("../includes/footer.php"); ?>

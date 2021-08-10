@@ -1,21 +1,18 @@
-<!DOCTYPE html>
-<html>
 
+<title>Universys-Login</title>
+<?php include('includes/header.php'); 
+
+session_unset();?>
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
-
-  <title>Universys</title>
+  <title></title>
 </head>
 
-<body>
+<link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
   <div class="container">
     <div class="row justify-content-center mt-5">
       <div class="col-md-8 col-lg-6 text-center">
-        <form action="logear.php" method="POST">
-          <img class="my-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72"
-            height="72">
-          <h1 class="h3 mb-3 font-weight-normal">Inicio de sesión de asistencia social</h1>
+        <form action="backend/login.php" method="POST" id="loginForm">
+          <h1 class="h3 mb-3 font-weight-normal"><i class="fab fa-connectdevelop"></i>Universys</h1>
           <div class="form-group text-left">
             <label for="inputEmail">Email</label>
             <input type="email" name="usuario" id="inputEmail" class="form-control" placeholder="Email" required=""
@@ -34,6 +31,4 @@
   </div>
 
 
-</body>
-
-</html>
+   <?php include('includes/footer.php'); ?> 

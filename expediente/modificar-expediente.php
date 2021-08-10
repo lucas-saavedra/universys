@@ -1,6 +1,6 @@
 <?php 
-require_once('../dataBase.php');
-include ("../header.html");
+ require_once('../includes/db.php'); 
+include ("../includes/header.php");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/validaciones.php");
@@ -281,4 +281,4 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
 </div>
 
 <script src="./js/verificar_cupo.js"></script>
-<?php include("../footer.html"); ?>
+<?php include("../includes/footer.php"); ?>

@@ -1,6 +1,6 @@
 <?php 
 
-include ("../header.php");
+include ("../includes/header.php");
 include ("./includes/navbar.php");
 include ("./includes/consultas.php");
 
@@ -149,4 +149,4 @@ $agentes = get_agentes($conexion);
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
 </script>
-<?php include("../footer.html"); ?>
+<?php include("../includes/footer.php"); ?>
