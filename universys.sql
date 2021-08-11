@@ -492,6 +492,9 @@ INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_n
 -- Justificación
 ('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1');
 
+-- Falta C/Aviso: ejemplo de cupo
+INSERT INTO `cupo` (`id`, `codigo_id`, `longitud`, `tipo`, `cantidad_max_dias`) VALUES (NULL, '1', '1', 'Mes', '2'), (NULL, '1', '1', 'Año', '6');
+
 insert into mes(nombre) values 
 ('Enero'),('Febrero'), ('Marzo'), ('Abril'), ('Mayo'), ('Junio'), ('Julio'), ('Agosto'), ('Septiembre'), ('Octubre'), ('Noviembre'), ('Diciembre');
 CREATE TABLE dia ( id INT NOT NULL , nombre VARCHAR(20) NOT NULL , PRIMARY KEY (`id`));
