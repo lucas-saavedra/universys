@@ -1,11 +1,12 @@
 
 <?php include("../includes/header.php"); ?>
 
-<?php /* include("includes/consultas.php");  */?>
+<?php  include("includes/consultas.php");  ?>
 
 <?php if (isset($_GET['tipo_agente'])) {
   $tipo_agente =  $_GET['tipo_agente'];
 }
+$agente = $_SESSION['agente'];
 ?>
 <input type="hidden" id="tipo_agente" tipo_agente="<?php echo $tipo_agente ?>">
 <input type="hidden" id="id_agente">
@@ -27,7 +28,7 @@
               <a class="nav-link" href="/expediente/crear-expediente.php">Expedientes<span class="sr-only">(current)</span></a>
             </li>
           </ul>
-          <span>
+      <!--     <span>
             <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Tipo de agente
@@ -37,7 +38,30 @@
                 <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'no_docente' ?>">No Docente</a>
               </div>
             </div>
+          </span> -->
+
+          <span>
+            <div class="dropdown">
+  
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <?php  echo $agente ?> <i class="fas fa-user fa-fw"></i>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="../includes/logout.php">Salir</a>
+              </div>
+            </div>
           </span>
+
+          
+
+
+
+
+
+
+
+
+           
         </div>
       </nav>
     </div>
@@ -45,7 +69,7 @@
 </div>
 
 
-<body>
+
   <div id='notif'></div>
 
   <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 7000; right: 0; bottom: 0;">

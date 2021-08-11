@@ -10,7 +10,7 @@
 
 </head>
 
-<?php /* include "functions.php";  */?>
+<?php include_once "functions.php";  ?>
 <?php include('db.php');?>
 
 <body>

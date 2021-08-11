@@ -1,9 +1,14 @@
-<?php include("navbar.php"); ?>
+<?php include("navbar.php");
+if (!isset($_SESSION['agente'])){
+  header("Location: ../index.php ");
+}
+$agente = $_SESSION['agente'];
+?>
 
 <div class="jumbotron jumbotron-fluid">
   <div class="container-fluid">
 
-    <h1 class="display-4">¡Bienvenido! <?php echo $agente ?> </h1>
+    <h1 class="display-4">¡Bienvenido! <?php  echo $agente ?> </h1>
     <h3 class="display-6">Tipo de agente seleccionado: <?php echo $tipo_agente ?> </h3>
 
     <hr class="my-4">

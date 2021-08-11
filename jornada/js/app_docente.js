@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    console.log('si')
     let editar = false;
     array_horarios = [];
     let filtros = {};
