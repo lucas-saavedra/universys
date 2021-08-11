@@ -7,7 +7,13 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="../expediente/confirmar-p-productividad.php">Planilla de producción <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="subir-documentacion.php">Documentación</a>
+      </li>
+      <li class="nav-item active">
+            <a class="nav-link" href="crear-expediente.php">Expedientes</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="../expediente/confirmar-p-productividad.php">Planilla de productividad <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="../expediente/crear-expediente-sin-aviso.php">Expediente sin aviso <span class="sr-only">(current)</span></a>
@@ -20,9 +26,5 @@
       </li>
       
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
   </div>
 </nav>
