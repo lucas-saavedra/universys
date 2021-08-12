@@ -1,4 +1,9 @@
-<?php include("navbar.php"); ?>
+<?php include("navbar.php");
+
+if (!isset($_SESSION['agente'])) {
+    header("Location: ../index.php ");
+}
+?>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -219,7 +224,7 @@
                 <form action="" id="upd_mesa_horario">
                     <div class="form-row py-3">
                         <div class="form-group col-md-4">
-                        <label>Dia </label>
+                            <label>Dia </label>
                             <input type="text" class="form-control " disabled id="upd_mesa_dia">
                         </div>
                         <div class="form-group   col-md-4">
@@ -227,7 +232,7 @@
                             <input type="time" id="mesa_horario_inicio" class="form-control timepicker" step="1800">
                         </div>
                         <div class="form-group col-md-4">
-                            <label >Fin</label>
+                            <label>Fin</label>
                             <input type="time" id="mesa_horario_fin" class="form-control timepicker" step="1800">
                         </div>
                     </div>
