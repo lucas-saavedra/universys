@@ -293,7 +293,7 @@ create table expediente_docente (
     expediente_id int,
     docente_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
 );
 
@@ -302,7 +302,7 @@ create table expediente_no_docente (
     expediente_id int,
     no_docente_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
 
@@ -311,7 +311,7 @@ create table expediente_detalle (
     expediente_id int,
     det_jornada_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (det_jornada_id) REFERENCES detalle_jornada(id)
 );
 
@@ -324,7 +324,7 @@ create table inasistencia_sin_aviso_docente (
     hora_fin time,
     dia int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id),
+    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
 );
 
@@ -337,7 +337,7 @@ create table inasistencia_sin_aviso_no_docente (
     hora_fin time,
     dia int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id),
+    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
 create table mes (
@@ -363,7 +363,7 @@ create table expediente_planilla_docente (
     hs_descontadas int,
     PRIMARY key (id),
     FOREIGN KEY (planilla_productividad_docente_id) REFERENCES planilla_productividad_docente(id),
-    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id)
+    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE
 );
 create table planilla_productividad_no_docente (
 	id int AUTO_INCREMENT,
@@ -382,7 +382,7 @@ create table expediente_planilla_no_docente (
     hs_descontadas int,
     PRIMARY key (id),
     FOREIGN KEY (planilla_productividad_no_docente_id) REFERENCES planilla_productividad_no_docente(id),
-    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id)
+    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE
 );
 
 
