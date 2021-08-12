@@ -1,38 +1,50 @@
 <?php
 include('includes/header.php');
-session_start();
+
 if ($_POST) {
+  session_start();
   $usuario = $_POST['usuario'];
   $clave = $_POST['clave'];
-  $query_persona = "SELECT *from persona where email = '$usuario' and contrasenia = '$clave'";
+  $query_persona = "SELECT * from persona where email = '$usuario' and contrasenia = '$clave'";
   $result_persona = mysqli_query($conexion, $query_persona);
-  function obtener_area($persona_id,$area_id, $conexion)
-  {
-    $query_area = "SELECT * FROM no_docente 
-  left join persona on persona.id= no_docente.persona_id
-  RIGHT JOIN  jornada_no_docente on jornada_no_docente.no_docente_id=no_docente.id
-  WHERE persona.id='$persona_id' AND jornada_no_docente.area_id= '$area_id' ";
-    $result_area = mysqli_query($conexion, $query_area);
-    return mysqli_num_rows($result_area);
-  }
 
   if (mysqli_num_rows($result_persona) > 0) {
     $persona = mysqli_fetch_assoc($result_persona);
     $persona_id = $persona['id'];
-    /* $sql = "SELECT id FROM jornada_no_docente WHERE jornada_no_docente.no_docente_id = 
-    (SELECT id FROM no_docente where no_docente.persona_id = '$id_agente') AND jornada_no_docente.area_id = 1";
-    $result = mysqli_query($conexion, $sql); */
+    $query_rol = "SELECT rol.nombre as rol from persona 
+    RIGHT join persona_rol on persona.id = persona_rol.persona_id
+    RIGHT JOIN rol on rol.id = persona_rol.rol_id
+    WHERE persona_id='$persona_id'";
+    $result_rol = mysqli_query($conexion, $query_rol);
+    $roles = mysqli_fetch_all($result_rol, MYSQLI_ASSOC);
 
-    if (obtener_area($persona_id,1, $conexion) > 0) {
-      $_SESSION['agente_personal'] = true;
-    }
-    if (obtener_area($persona_id ,7, $conexion) > 0) {
-      $_SESSION['agente_mesa_entrada'] = true;
-    }
-    if (obtener_area($persona_id,2, $conexion) > 0) {
-      $_SESSION['agente_mesa_coord'] = true;
-    }
+    if (mysqli_num_rows($result_rol) > 0) {
+      foreach ($roles as $rol) :
 
+        switch ($rol['rol']) {
+          case 'admin':
+            $_SESSION['agente_personal'] = true;
+            $_SESSION['agente_mesa_entrada'] = true;
+            $_SESSION['agente_coord'] = true;
+            break;
+          case 'personal':
+            $_SESSION['agente_personal'] = true;
+            break;
+          case 'mesa_entrada':
+            $_SESSION['agente_mesa_entrada'] = true;
+            break;
+          case 'coordinacion':
+            $_SESSION['agente_coord'] = true;
+            break;
+          default:
+            $_SESSION['agente_personal'] = false;
+            $_SESSION['agente_mesa_entrada'] = false;
+            $_SESSION['agente_coord'] = false;
+            break;
+        }
+
+      endforeach;
+    };
     $_SESSION['agente'] = $persona['nombre'];
     $_SESSION['agente_id'] = $persona['id'];
     header("location: ./jornada/index.php");
@@ -40,6 +52,7 @@ if ($_POST) {
     echo 'Datos incorrectos';
   }
 }
+
 
 ?>
 

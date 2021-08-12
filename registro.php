@@ -1,4 +1,8 @@
-<?php include('includes/header.php'); ?>
+<?php include('includes/header.php'); 
+if (session_status() !== PHP_SESSION_ACTIVE){
+    header("Location: ../index.php ");
+}
+?>
 
 <div id="sidebar-container" class="bg-primary">
     <div class="logo">

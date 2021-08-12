@@ -8,6 +8,26 @@ create table persona (
     telefono varchar(20),
     PRIMARY key (id) 
 );
+create table rol (
+	id int AUTO_INCREMENT,
+    nombre varchar(50),
+    PRIMARY key (id)
+);
+create table persona_rol (
+    id int AUTO_INCREMENT,
+	rol_id int,
+	persona_id int,
+    PRIMARY key (id),
+    FOREIGN KEY (rol_id) REFERENCES rol(id),
+    FOREIGN KEY (persona_id) REFERENCES persona(id)
+);
+/* Volcado de datos para la tabla rol */
+INSERT INTO rol (nombre) VALUES
+('admin'),
+('personal'),
+('mesa_entrada'),
+('coordinacion');
+/* Volcado de datos para la tabla persona_rol */
 
 create table docente (
 	id int AUTO_INCREMENT,
@@ -386,7 +406,6 @@ create table expediente_planilla_no_docente (
 );
 
 
-
 /* Carga de archivo */
 
 INSERT INTO anio_plan (id, nombre) VALUES
@@ -456,7 +475,7 @@ INSERT INTO `catedra` (`nombre`, `carrera_id`, `anio_plan_id`, `periodo_id`) VAL
 
 
 INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES 
-
+('Admin','admin@gmail.com','root'),
 ('Nayra Asensio','nayra@gmail.com','1234'),
 ('Roman Morano','roman@gmail.com','1234'),
 ('Ion Machado','ion@gmail.com','1234'),
@@ -464,6 +483,9 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 ('Samuel Vicente','samuel@gmail.com','1234'),
 ('Enriqueta Galan','enriqueta@gmail.com','1234'),
 ('Pilar Fernandez','pilar@gmail.com','1234');
+
+INSERT INTO persona_rol (rol_id,persona_id) VALUES
+(1,1);
 
 INSERT INTO `docente`(`persona_id`) VALUES ('1'),('2'),('3'),('6'),('7');
 INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');

@@ -1,7 +1,7 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente'])){
+ if (!isset($_SESSION['agente'])){
   header("Location: ../index.php ");
-}
+} 
 $agente = $_SESSION['agente'];
 ?>
 
