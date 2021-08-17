@@ -1,5 +1,5 @@
 <?php
-    include ('../dataBase.php');
+    require '../includes/db.php';
 
     if(isset($_POST['id_no_docente'])){
         $id = $_POST['id_no_docente'];
@@ -9,6 +9,7 @@
         if (!$result) {
             die("fallo el delete from");
         }else{
+            //hacer con tutorial de plazy
             echo ("inasistencia eliminada");
         }
         
@@ -22,13 +23,10 @@
         if (!$result) {
             die("fallo el delete from");
         }else{
+            //igual
             echo ("inasistencia eliminada");
         }
     }
-
-
-
-
 
 
 ?> 

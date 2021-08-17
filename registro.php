@@ -24,7 +24,7 @@ if (session_status() !== PHP_SESSION_ACTIVE){
 $Object = new DateTime();
 $DateAndTime = $Object->format("h:i:s a");
 $fecha = date("Y-n-j");
-$sol = (strtotime($fecha));
+$fecha_string = (strtotime($fecha));
 ?>
 
 <?php
@@ -40,8 +40,8 @@ if (mysqli_num_rows($result_docente) == 0) {
         <div class="col">
             <form action="backend/registrar-asistencia.php" method="POST">
                 <button class="btn btn-danger" type="submit">Registrar asistencia docente</button>
-                <input type="hidden" id="time" name="appt" value="<?= $DateAndTime ?>"></label>
-                <input type="hidden" name="fecha" value="<?= $sol ?>"></label>
+                <input type="hidden" id="time" name="tiempo" value="<?= $DateAndTime ?>"></label>
+                <input type="hidden" name="fecha" value="<?= $fecha_string ?>"></label>
             </form>
         </div>
     </div>
@@ -58,8 +58,8 @@ if (mysqli_num_rows($result_no_docente) == 0) {
         <div class="col">
             <form action="expediente/registrar-asistencia_no_docente.php" method="POST">
                 <button class="btn btn-danger" type="submit">Registrar asistencia no docente</button>
-                <input type="hidden" id="time" name="appt" value="<?= $DateAndTime ?>"></label>
-                <input type="hidden" name="fecha" value="<?= $sol ?>"></label>
+                <input type="hidden" id="time" name="tiempo" value="<?= $DateAndTime ?>"></label>
+                <input type="hidden" name="fecha" value="<?= $fecha_string ?>"></label>
             </form>
         </div>
     </div>

@@ -8,7 +8,7 @@
         <div class="col-md-5 m-auto">
             <form action="" method="post">
                 <div class="form-group text-center">
-                    <h2 class="col-md-12">Expedientes pendientes de documentación</h2>
+                    <h2 class="col-md-12">Lista de expedietes. Con y sin documentación</h2>
                     <div class="row m-auto col">
                         <select name="select" class="form-control mr-sm-2 col">
                             <option value="Docente">Docente </option>
@@ -40,7 +40,7 @@
                     </tr>
                 </thead>
                 <?php
-                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id And expediente.doc_justificada_id is NULL";
+                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id ";
                 $result_sin_doc = mysqli_query($conexion, $query_sin_doc);
                 while ($row_sin_doc = mysqli_fetch_array($result_sin_doc)) {
                     $persona =  $row_sin_doc['persona_id'];
@@ -95,7 +95,7 @@
                                     </tr>
                                 </thead>
                                 <?php
-                                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id And expediente.doc_justificada_id is NULL";
+                                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id";
                                 $result_sin_doc = mysqli_query($conexion, $query_sin_doc);
                                 while ($row_sin_doc = mysqli_fetch_array($result_sin_doc)) {
                                     $persona =  $row_sin_doc['persona_id'];

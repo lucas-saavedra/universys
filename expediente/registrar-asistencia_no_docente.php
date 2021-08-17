@@ -1,15 +1,11 @@
 <?php
 require '../includes/db.php';
 session_start();
-$time= $_POST['appt'];
-$sol= $_POST['fecha'];
-$usuario_id = $_SESSION['usuario_id'];
+$time= $_POST['tiempo'];
+$fecha_string= $_POST['fecha'];
+$usuario_id = $_SESSION['agente_id'];
 
-echo "registro su entrada a las: ",$time;
-?>
-<br>
-<?php
-$fecha = date("Y-n-j", $sol);
+$fecha = date("Y-n-j", $fecha_string);
 
 
 $query_fecha_dia = "select weekday ('$fecha')";
@@ -18,9 +14,8 @@ while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
     $fecha_dia= $row_fecha_dia[0];
 }
 
-?>
-<br>
-<?php
+$cont_jornada=0;
+$cont_det_jornada=0;
 
 $query_no_docente = "SELECT id from no_docente where persona_id = '$usuario_id'";
 $result_no_docente = mysqli_query($conexion, $query_no_docente);
@@ -31,6 +26,7 @@ $query_jornada_no_docente = "SELECT *FROM jornada_no_docente WHERE no_docente_id
 $result_jornada_no_docente = mysqli_query($conexion,$query_jornada_no_docente);
 while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente)){
         $jornada = $row_jornada_no_docente['jornada_id'];
+        $cont_jornada += 1;
 
         $query_fecha = "SELECT *FROM jornada WHERE id='$jornada'";
         $result_fecha = mysqli_query($conexion,$query_fecha);
@@ -43,15 +39,13 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                 $query_detalle_jornada = "SELECT *from detalle_jornada WHERE jornada_id = '$jornada' AND dia='$fecha_dia' AND '$time' >= ADDTIME(hora_inicio, '-00:20:00') AND '$time' <= ADDTIME(hora_inicio, '00:30:00')";
                 $result_detalle_jornada = mysqli_query($conexion,$query_detalle_jornada);
                 if (mysqli_num_rows($result_detalle_jornada) == 0){
+                        $cont_det_jornada += 1;
                 }else{
                         while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)){
                                 $detalle_id = $row_detalle_jornada['id'];
                                 $hora_inicio = $row_detalle_jornada['hora_inicio'];
                                 $hora_fin = $row_detalle_jornada['hora_fin'];
                                 echo $hora_inicio,' ', $hora_fin;
-                                ?>
-                                        <br>
-                                <?php
 
                                 $query_exis_marcacion = "SELECT *from marcacion_no_docente WHERE no_docente_id='$no_docente_id' AND fecha = '$fecha' AND hora_registro >= ADDTIME('$time', '-00:20:00') AND hora_registro <= ADDTIME('$time', '00:30:00')";
                                 $result_exis_marcacion = mysqli_query($conexion,$query_exis_marcacion);
@@ -63,10 +57,29 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                         $query_asistencia = "INSERT INTO asistencia_no_docente(detalle_jornada_id , no_docente_id , fecha , hora_inicio , hora_fin , dia) VALUES ('$detalle_id' , '$no_docente_id' , now() , '$hora_inicio' , '$hora_fin' , '$fecha_dia')";
                                         $result_asistencia = mysqli_query($conexion,$query_asistencia);
 
+                                        ?>
+                                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                        <strong><?php echo "registro su entrada a las: ",$time; ?></strong>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                        <?php
                                 }else{
-                                        echo "Ya realizo esta marcación...";
+                                        ?>
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                                <strong>Ya realizo esta marcación!!!</strong>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                      <?php
                                 }
                             }
+                        }
+                        if ($cont_jornada==$cont_det_jornada){
+                                ?>
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>No tiene un horario asignado para esta hora.</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                        <?php
                         }
             }
     }
