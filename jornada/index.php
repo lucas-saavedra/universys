@@ -5,7 +5,6 @@ include("navbar.php");
 
 <div class="jumbotron jumbotron-fluid">
     <div class="container-fluid">
-
         <h1 class="h-3">¡Bienvenid@! <?php echo $agente ?> </h1>
         <?php if ($es_personal) { ?>
         <p class="lead">Seleccione el tipo de agente con el que desea trabajar.</p>
