@@ -1,11 +1,13 @@
 <?php
 require '../includes/db.php';
 session_start();
-$time= $_POST['appt'];
-$sol= $_POST['fecha'];
-$usuario_id = $_SESSION['usuario_id'];
+$time = $_POST['appt'];
+$sol = $_POST['fecha'];
+$agente = $_SESSION['agente'];
+$usuario_id = $_SESSION['agente_id'];
 
-echo "registro su entrada a las: ",$time;
+
+echo "registro su entrada a las: ", $time;
 ?>
 <br>
 <?php
@@ -13,9 +15,9 @@ $fecha = date("Y-n-j", $sol);
 
 
 $query_fecha_dia = "select weekday ('$fecha')";
-$result_fecha_dia = mysqli_query($conexion,$query_fecha_dia);
-while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
-    $fecha_dia= $row_fecha_dia[0];
+$result_fecha_dia = mysqli_query($conexion, $query_fecha_dia);
+while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
+        $fecha_dia = $row_fecha_dia[0];
 }
 
 ?>
@@ -45,51 +47,49 @@ $array = mysqli_fetch_assoc($result_docente);
 $docente_id = $array['id'];
 
 $query_jornada_mesa = "SELECT *FROM jornada_docente_mesa WHERE docente_id='$docente_id'";
-$result_jornada_mesa = mysqli_query($conexion,$query_jornada_mesa);
-while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)){
+$result_jornada_mesa = mysqli_query($conexion, $query_jornada_mesa);
+while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
         $mesa = $row_jornada_mesa['mesa_examen_id'];
-        
+
 
         $query_mesa_examen = "SELECT *FROM mesa_examen WHERE id='$mesa'";
-        $result_mesa_examen = mysqli_query($conexion,$query_mesa_examen);
-        while ($row_mesa_examen = mysqli_fetch_array($result_mesa_examen)){
+        $result_mesa_examen = mysqli_query($conexion, $query_mesa_examen);
+        while ($row_mesa_examen = mysqli_fetch_array($result_mesa_examen)) {
                 $jornada = $row_mesa_examen['jornada_id'];
-                
+
 
 
                 $query_fecha = "SELECT *FROM jornada WHERE id='$jornada'";
-                $result_fecha = mysqli_query($conexion,$query_fecha);
+                $result_fecha = mysqli_query($conexion, $query_fecha);
                 $row_fecha = mysqli_fetch_assoc($result_fecha);
                 $fecha_inicio = $row_fecha['fecha_inicio'];
                 $fecha_fin    = $row_fecha['fecha_fin'];
-                
 
 
-                if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)){
+
+                if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)) {
                         $query_detalle_jornada = "SELECT *from detalle_jornada WHERE jornada_id = '$jornada' AND dia='$fecha_dia' AND '$time' >= ADDTIME(hora_inicio, '-00:20:00') AND '$time' <= ADDTIME(hora_inicio, '00:30:00')";
-                        $result_detalle_jornada = mysqli_query($conexion,$query_detalle_jornada);
-                        if (mysqli_num_rows($result_detalle_jornada) == 0){
-                        }else{
-                                while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)){
+                        $result_detalle_jornada = mysqli_query($conexion, $query_detalle_jornada);
+                        if (mysqli_num_rows($result_detalle_jornada) == 0) {
+                        } else {
+                                while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)) {
                                         $detalle_id = $row_detalle_jornada['id'];
                                         $hora_inicio = $row_detalle_jornada['hora_inicio'];
                                         $hora_fin = $row_detalle_jornada['hora_fin'];
-                                        ?>
-                                                <br>
+?>
+                                        <br>
                                         <?php
 
                                         $query_exis_marcacion = "SELECT *from marcacion_docente WHERE docente_id='$docente_id' AND fecha = '$fecha' AND hora_registro >= ADDTIME('$time', '-00:20:00') AND hora_registro <= ADDTIME('$time', '00:30:00')";
-                                        $result_exis_marcacion = mysqli_query($conexion,$query_exis_marcacion);
-                                        if (mysqli_num_rows($result_exis_marcacion) == 0){
+                                        $result_exis_marcacion = mysqli_query($conexion, $query_exis_marcacion);
+                                        if (mysqli_num_rows($result_exis_marcacion) == 0) {
 
                                                 $query_marcacion = "INSERT into marcacion_docente(docente_id, fecha, hora_registro,  dia, estado) VALUES ('$docente_id', now(),'$time',  $fecha_dia, 'entrada')";
-                                                $result_marcacion = mysqli_query($conexion,$query_marcacion);
+                                                $result_marcacion = mysqli_query($conexion, $query_marcacion);
 
                                                 $query_asistencia = "INSERT INTO asistencia_docente(detalle_jornada_id , docente_id , fecha , hora_inicio , hora_fin , dia) VALUES ('$detalle_id' , '$docente_id' , now() , '$hora_inicio' , '$hora_fin' , '$fecha_dia')";
-                                                $result_asistencia = mysqli_query($conexion,$query_asistencia);
-
-
-                                        }else{
+                                                $result_asistencia = mysqli_query($conexion, $query_asistencia);
+                                        } else {
                                                 echo "Ya realizo esta marcación...";
                                         }
                                 }
@@ -99,53 +99,53 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)){
 }
 $last_id = mysqli_insert_id($conexion);
 
-if ($last_id == 0){
+
+if ($last_id == 0) {
 
         $query_jornada = "SELECT *FROM jornada_docente WHERE docente_id='$docente_id'";
-        $result_jornada = mysqli_query($conexion,$query_jornada);
-        while ($row_jornada = mysqli_fetch_array($result_jornada)){
+        $result_jornada = mysqli_query($conexion, $query_jornada);
+        while ($row_jornada = mysqli_fetch_array($result_jornada)) {
                 $jornada = $row_jornada['jornada_id'];
-                
+
 
                 $query_fecha = "SELECT *FROM jornada WHERE id='$jornada'";
-                $result_fecha = mysqli_query($conexion,$query_fecha);
+                $result_fecha = mysqli_query($conexion, $query_fecha);
                 $row_fecha = mysqli_fetch_assoc($result_fecha);
                 $fecha_inicio = $row_fecha['fecha_inicio'];
                 $fecha_fin    = $row_fecha['fecha_fin'];
-                
-                if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)){
-                
+
+                if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)) {
+
                         $query_detalle_jornada = "SELECT *from detalle_jornada WHERE jornada_id = '$jornada' AND dia='$fecha_dia' AND '$time' >= ADDTIME(hora_inicio, '-00:20:00') AND '$time' <= ADDTIME(hora_inicio, '00:30:00')";
-                        $result_detalle_jornada = mysqli_query($conexion,$query_detalle_jornada);
-                        if (mysqli_num_rows($result_detalle_jornada) == 0){
-                        }else{
-                                while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)){
+                        $result_detalle_jornada = mysqli_query($conexion, $query_detalle_jornada);
+                        if (mysqli_num_rows($result_detalle_jornada) == 0) {
+                        } else {
+                                while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)) {
                                         $detalle_id = $row_detalle_jornada['id'];
                                         $hora_inicio = $row_detalle_jornada['hora_inicio'];
                                         $hora_fin = $row_detalle_jornada['hora_fin'];
-                                        echo $hora_inicio,' ', $hora_fin;
+                                        echo $hora_inicio, ' ', $hora_fin;
                                         ?>
-                                                <br>
-                                        <?php
+                                        <br>
+<?php
 
                                         $query_exis_marcacion = "SELECT *from marcacion_docente WHERE docente_id='$docente_id' AND fecha = '$fecha' AND hora_registro >= ADDTIME('$time', '-00:20:00') AND hora_registro <= ADDTIME('$time', '00:30:00')";
-                                        $result_exis_marcacion = mysqli_query($conexion,$query_exis_marcacion);
-                                        if (mysqli_num_rows($result_exis_marcacion) == 0){
+                                        $result_exis_marcacion = mysqli_query($conexion, $query_exis_marcacion);
+                                        if (mysqli_num_rows($result_exis_marcacion) == 0) {
 
                                                 $query_marcacion = "INSERT into marcacion_docente(docente_id, fecha, hora_registro,  dia, estado) VALUES ('$docente_id', now(),'$time',  $fecha_dia, 'entrada')";
-                                                $result_marcacion = mysqli_query($conexion,$query_marcacion);
+                                                $result_marcacion = mysqli_query($conexion, $query_marcacion);
 
                                                 $query_asistencia = "INSERT INTO asistencia_docente(detalle_jornada_id , docente_id , fecha , hora_inicio , hora_fin , dia) VALUES ('$detalle_id' , '$docente_id' , now() , '$hora_inicio' , '$hora_fin' , '$fecha_dia')";
-                                                $result_asistencia = mysqli_query($conexion,$query_asistencia);
-
-                                        }else{
+                                                $result_asistencia = mysqli_query($conexion, $query_asistencia);
+                                        } else {
                                                 echo "Ya realizo esta marcación...";
                                         }
-                }
                                 }
                         }
                 }
         }
+}
       
 
 /*

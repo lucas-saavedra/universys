@@ -482,13 +482,16 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 ('Andoni Roig','andoni@gmail.com','1234'),
 ('Samuel Vicente','samuel@gmail.com','1234'),
 ('Enriqueta Galan','enriqueta@gmail.com','1234'),
-('Pilar Fernandez','pilar@gmail.com','1234');
+('Pilar Fernandez','pilar@gmail.com','1234'),
+('Emilio Espino','emi@gmail.com','1234'),
+('Angelina Nieto','angi@gmail.com','1234'),
+('Trinidad Moyano','trinidad@gmail.com','1234');
 
 INSERT INTO persona_rol (rol_id,persona_id) VALUES
 (1,1);
 
-INSERT INTO `docente`(`persona_id`) VALUES ('1'),('2'),('3'),('6'),('7');
-INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
+INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
+INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');
 
 
 INSERT INTO tipo_justificacion (descripcion) VALUES 

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    console.log('si')
+    
     let editar = false;
     array_horarios = [];
     let filtros = {};
@@ -72,7 +72,7 @@ $(document).ready(function () {
                 let tipo_agente = $('#tipo_agente').attr('tipo_agente');
                 let horario = true;
                 agente(search_agente, tipo_agente, horario)
-            }else $('#agente_tabla_horarios').collapse('hide');
+            } else $('#agente_tabla_horarios').collapse('hide');
         });
     }
 
@@ -86,7 +86,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 let agentes = JSON.parse(response);
-                console.log(response)
+                
                 let template = " ";
                 let href = '';
                 let container = '';
@@ -151,6 +151,23 @@ $(document).ready(function () {
 
     $('#jornada').submit(function (e) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
+        var selected_dias = [];
+        var array_dias = [];
+        let dia;
+        let inicio = document.getElementsByName('inicio[]');
+        let fin = document.getElementsByName('fin[]');
+        $('.checkbox_dias input:checked').each(function () {
+            selected_dias.push(Number($(this).val()));
+        });
+
+        for (var i = 0; i < selected_dias.length; i++) {
+            dia = {
+                dia_id: selected_dias[i],
+                hora_inicio: inicio[selected_dias[i]].value,
+                hora_fin: fin[selected_dias[i]].value,
+            };
+            array_dias.push(dia);
+        }
         const jornadaAgente = {
             tipo_agente: tipo_agente,
             jornadaId: $('#jornadaId').val(),
@@ -161,23 +178,23 @@ $(document).ready(function () {
             fechaFin: $('#fechaFin').val(),
             descripcion: $('#descripcion').val(),
             catedraId: $('#catedraIdInput').val(),
-            area_id: $('#area_id').val()
+            area_id: $('#area_id').val(),
+            dias_horas:array_dias,
         };
-
+        
         e.preventDefault();
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
         $.post(url, jornadaAgente, function (response) {
             listar_jornadas(filtros);
-
             const msg = JSON.parse(response);
             notif(msg);
             if (msg.success === true) {
-                $('#jornada').trigger('reset');
+                resetEditForm('jornada');
                 $('#modal_jornadas').modal('hide');
                 editar = false;
             }
 
-        });
+        }); 
 
     });
     $(document).on('click', '.jornada-item', function () {
@@ -197,7 +214,7 @@ $(document).ready(function () {
         let jornada_id = $(element).attr('jornada_id');
         let agente_id = $(element).attr('agente_id');
         editar = true;
-        console.log(agente_id);
+       
         $('#id_agente').val(agente_id);
 
         obtener_agente(agente_id, tipo_agente);
@@ -360,19 +377,20 @@ $(document).ready(function () {
         $('#agente').val('');
         $('#agente_horarios').val('');
         $('#id_agente').val('');
-        $('#catedraIdInput').val(''); 
+        $('#catedraIdInput').val('');
     }
 
-    function listar_jornadas_agente(agente_id) {
+    function listar_jornadas_agente(agente_id,jornada_agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
             '../jornada/backend/listar_jornada.php', {
                 tipo_agente,
-                agente_id
+                agente_id,
+                jornada_agente_id
             },
             function (response) {
                 let jornadas = JSON.parse(response);
-                console.log(response)
+               
                 let template = " "
                 if (jornadas == '') {
                     template = ` <option selected value="" disabled >No contiene jornadas</option>`;
@@ -403,7 +421,7 @@ $(document).ready(function () {
 
                 }
                 $('#jornada_agente').html(template);
-                
+
             }
         )
 
@@ -422,7 +440,7 @@ $(document).ready(function () {
             filtroAreaId: $('#filtroAreaId').val(),
             tipo_agente: tipo_agente
         };
-        console.log(filtros);
+        
         listar_jornadas(filtros)
     })
 
@@ -536,9 +554,10 @@ $(document).ready(function () {
     function notif(msg) {
         let template = ' ';
         template += `
-                    <div class="alert alert-${msg.type}  alert-dismissible fade show" role="alert">
-                    ${msg.name} 
-                    </div>  `;
+                    <div class="alert alert-${msg.type}  alert-dismissible fade show" role="alert">`;
+                   msg.type =='success' ? template += `${msg.name}` : template += `
+                   <strong>Error: </strong> ${msg.name}`
+                    template += `</div>`;
 
         $('#toast_notif').html(template);
         $("#toastNotif").toast('show');

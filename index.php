@@ -42,17 +42,17 @@ if ($_POST) {
             $_SESSION['agente_coord'] = false;
             break;
         }
-
       endforeach;
     };
     $_SESSION['agente'] = $persona['nombre'];
     $_SESSION['agente_id'] = $persona['id'];
-    header("location: ./jornada/index.php");
+     header("location: ./jornada/index.php");
   } else {
-    echo 'Datos incorrectos';
+    $_SESSION['message'] = 'Usuario y/o contraseña incorrecto';
+    $_SESSION['message_type'] = 'danger';
   }
+  
 }
-
 
 ?>
 
@@ -80,6 +80,14 @@ if ($_POST) {
     </div>
   </div>
 </div>
-
+<?php if (isset($_SESSION['message'])) { ?>
+  <div class="alert alert-<?= $_SESSION['message_type'] ?> alert-dismissible fade show" role="alert">
+    <?= $_SESSION['message'] ?>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<?php unset($_SESSION['message']);
+} ?>
 
 <?php include('includes/footer.php'); ?>

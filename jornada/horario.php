@@ -13,7 +13,7 @@
                             <div class="input-group-prepend">
                                 <span data-toggle="collapse" role="button" type="submit" href="#agente_tabla_horarios" class="btn btn-outline-success input-group-text" id="inputGroupPrepend"><i class="fas fa-search"></i></span>
                             </div>
-                            <input class="form-control  input-group-text" aria-describedby="inputGroupPrepend" autofocus type="search" id="search-agente-horario" placeholder="Ingrese el nombre del agente" aria-label="Search">
+                            <input autocomplete="off"  class="form-control  input-group-text" aria-describedby="inputGroupPrepend" autofocus type="search" id="search-agente-horario" placeholder="Ingrese el nombre del agente" aria-label="Search">
                         </div>
                     </div>
 
@@ -31,7 +31,6 @@
                     <div class="form-group col-md-12">
                         <label for="">Jornadas disponibles</label>
                         <select class="form-control" id="jornada_agente" required>
-
 
                         </select>
                     </div>
@@ -62,7 +61,7 @@
                     <div class="form-group col-md-12">
                         <label for="">Descripcion de la jornada</label>
                         <div class="form-floating">
-                            <textarea id='descripcion_horario' required name="detalle" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
+                            <textarea id='descripcion_horario' name="detalle" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
                         </div>
                     </div>
 

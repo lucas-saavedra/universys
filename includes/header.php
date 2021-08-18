@@ -11,8 +11,25 @@
 </head>
 
 <?php include_once "functions.php";  ?>
-<?php include('db.php');?>
+<?php include('db.php');
+/* if (session_status() !== PHP_SESSION_ACTIVE) session_start();
+if (!isset($_SESSION['agente'])) {
+  $agente = $_SESSION['agente'];
+  $agente_id = $_SESSION['agente_id'];
+  header("Location: index.php ");
+} */
+?>
 
 <body>
 
-
+  <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 7000; right: 0; bottom: 0;">
+    <div id="toastNotif" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000">
+      <div class="toast-header">
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body" id="toast_notif">
+      </div>
+    </div>
+  </div>
