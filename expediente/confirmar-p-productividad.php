@@ -13,7 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST'){
 else{
     $mes = $_POST['mes'];
     $anio = $_POST['anio'];
-    $tipo_agente=$_POST['select'];
+    $tipo_agente = $_POST['select'];
+}
+
+if (isset($_GET['del_expdte_id'])){
+    $msg = ['content' => "El expediente de ID {$_GET['del_expdte_id']} ha sido eliminado", 'type' => 'success'];
 }
 
 
@@ -54,7 +58,7 @@ else{
         </div>
     </div>
     <?php
-
+        include "includes/msg-box.php";
         if ($tipo_agente == 'Docente' ){
             $query_planilla ="SELECT  planilla_productividad_docente.id,planilla_productividad_docente.anio, m1.nombre FROM planilla_productividad_docente,(SELECT * FROM mes WHERE nombre= '$mes') as m1 WHERE m1.id= planilla_productividad_docente.mes_id and anio='$anio'";
             $result_planilla = mysqli_query($conexion,$query_planilla);
@@ -117,7 +121,7 @@ else{
                 <td class="text-center"><?php echo $row_docente['antiguedad']?></td>
             </tr>
             <tr>
-                <table class="table table-striped ml-5">
+                <table class="table table-striped ml-4">
                     <thead>
                         <tr>
                             <th scope="col">Codigo</th>
@@ -126,6 +130,7 @@ else{
                             <th scope="col">Desde</th>
                             <th scope="col">Hasta</th>
                             <th scope="col">Descuento</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <?php
@@ -156,6 +161,24 @@ else{
                             <td><?php echo $row_expediente['fecha_inicio']?></td>
                             <td><?php echo $row_expediente['fecha_fin']?></td>
                             <td><?php if($descuento==1){echo "Con descuento";}else{echo "Sin descuento";}?></td>
+                            <td>
+                                <a 
+                                    class="btn btn-sm btn-primary" 
+                                    href=<?="modificar-expediente.php?id={$row_expediente['expediente_id']}"?>
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <form class="d-inline-block" action="eliminar-expediente.php" method="POST">
+                                    <button 
+                                        class="btn btn-sm btn-danger" 
+                                        type="submit" name="id" 
+                                        value="<?=$row_expediente['expediente_id']?>"
+                                        onclick="return confirm('Seguro que desea eliminar el expediente de ID <?=$row_expediente['expediente_id']?>?')"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -230,7 +253,7 @@ else{
                 <td><?php echo $row_no_docente['antiguedad']?></td>
             </tr>
             <tr>
-                <table class="table table-striped ml-5">
+                <table class="table table-striped ml-4">
                     <thead>
                         <tr>
                             <th scope="col">Codigo</th>
@@ -239,6 +262,7 @@ else{
                             <th scope="col">Desde</th>
                             <th scope="col">Hasta</th>
                             <th scope="col">Descuento</th>
+                            <th scope="col">Acciones</th>
                         </tr>
                     </thead>
                     <?php
@@ -270,6 +294,24 @@ else{
                             <td><?php echo $row_expediente['fecha_inicio']?></td>
                             <td><?php echo $row_expediente['fecha_fin']?></td>
                             <td><?php if($descuento==1){echo "Con descuento";}else{echo "Sin descuento";}?></td>
+                            <td>
+                                <a 
+                                    class="btn btn-sm btn-primary" 
+                                    href=<?="modificar-expediente.php?id={$row_expediente['expediente_id']}"?>
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <form class="d-inline-block" action="eliminar-expediente.php" method="POST">
+                                    <button 
+                                        class="btn btn-sm btn-danger" 
+                                        type="submit" name="id" 
+                                        value="<?=$row_expediente['expediente_id']?>"
+                                        onclick="return confirm('Seguro que desea eliminar el expediente de ID <?=$row_expediente['expediente_id']?>?')"
+                                    >
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
                         </tr>
                     </tbody>
                     <?php } ?>
