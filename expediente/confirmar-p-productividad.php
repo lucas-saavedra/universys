@@ -13,11 +13,24 @@
                         </select>
                     </div>
                     <div class="row col text-center">
-                        <input class="form-control mr-sm-2 col" type="search" name="mes" placeholder="Escriba el mes" aria-label="Search">
+                    <select name="mes" class="form-control mr-sm-2 col-3">
+                            <option value="Enero">Enero </option>
+                            <option value="Febrero">Febrero </option>
+                            <option value="Marzo">Marzo </option>
+                            <option value="Abril">Abril </option>
+                            <option value="Mayo">Mayo </option>
+                            <option value="Junio">Junio </option>
+                            <option value="Julio">Julio </option>
+                            <option value="Agosto">Agosto </option>
+                            <option value="Septiembre">Septiembre </option>
+                            <option value="Octubre">Octubre </option>
+                            <option value="Noviembre">Noviembre </option>
+                            <option value="Diciembre">Diciembre </option>
+                        </select>
                         <input class="form-control mr-sm-2 col" type="search" name="anio" placeholder="ingrese el año" aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0 col-md" name="planilla" type="submit">BUSCAR.</button>
                         <!--<a href="desc_exel.php" class="btn btn-outline-success">descargar</a> -->
-                    </div>
+                    </div> 
                 </div>
             </form>  
         </div>
@@ -28,7 +41,7 @@
             $anio = $_POST['anio'];
             $tipo_agente=$_POST['select'];
             if ($tipo_agente == 'Docente' ){
-                $query_planilla ="SELECT  planilla_productividad_docente.id,planilla_productividad_docente.anio, m1.nombre FROM planilla_productividad_docente,(SELECT * FROM `mes` WHERE nombre= '$mes') as m1 ";
+                $query_planilla ="SELECT  planilla_productividad_docente.id,planilla_productividad_docente.anio, m1.nombre FROM planilla_productividad_docente,(SELECT * FROM `mes` WHERE nombre= '$mes') as m1 WHERE m1.id= planilla_productividad_docente.mes_id and anio='$anio'";
                 $result_planilla = mysqli_query($conexion,$query_planilla);
             
                 while ($row_planilla = mysqli_fetch_array($result_planilla)){
@@ -42,7 +55,7 @@
                 <th scope="col">Facultad: Ciencia y Tecnología</th>
                 <th scope="col">Sede: Chajarí</th>
                 <th scope="col">Planilla: <?php echo $tipo_agente?></th>
-                <th scope="col">Mes: <?php echo $row_planilla['nombre']?></th>
+                <th scope="col">Mes: <?php echo $row_planilla['nombre'], $planilla_id?></th>
                 <th scope="col">Año: <?php echo $row_planilla['anio']?></th>
             </tr>
         </thead>

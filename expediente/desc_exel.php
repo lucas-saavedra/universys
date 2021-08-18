@@ -7,10 +7,10 @@ header("Content-Disposition: attachment; filename=archivo.xls");
 
 <table>
     <tr>
-        <td>ale</td>
-        <td>jorge</td>
-        <td>pepe</td>
-        <td>tati</td>
+        <td>......</td>
+        <td>......</td>
+        <td>......</td>
+        <td>......</td>
 </tr>
 
 </table>

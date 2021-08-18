@@ -1,5 +1,6 @@
 <?php include ("../includes/header.php");?>
 <?php include("../includes/menu.php"); ?>
+
 <div class="container-fluid">
 
     <div class="row">
@@ -216,7 +217,7 @@
         
        <?php }}
           if (isset($_POST['generar'])){
-            echo ('entro hasta ak');
+            
               $query_generar = "SELECT docente_id, fecha,expediente_docente_id FROM `inasistencia_sin_aviso_docente` where expediente_docente_id is NULL GROUP BY docente_id, fecha";
               $result_generar = mysqli_query($conexion,$query_generar);
               while($row_generar = mysqli_fetch_array($result_generar)) {
@@ -241,7 +242,6 @@
                   }
                   $id_expdt_docente = mysqli_insert_id($conexion);
                  
-                  echo $id,' ',$id_expdt_docente,' ',$docente,' ',$fecha;?><br><?php
 
                   $query_modificacion = "UPDATE inasistencia_sin_aviso_docente set expediente_docente_id='".$id_expdt_docente."' WHERE docente_id='".$docente."' AND fecha='".$fecha."'";
                   $result_modificacion = mysqli_query($conexion,$query_modificacion) or die("error".mysqli_error($conexion));
@@ -260,7 +260,14 @@
                   }
                   
                   $query_pprod = "SELECT * FROM planilla_productividad_docente WHERE mes_id = '$mes' AND anio = '$anio'";
-                  $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
+                  $result_pprod = mysqli_query($conexion,$query_pprod);
+
+                  if (mysqli_num_rows($result_pprod) == 0){
+                    $query_crear_pprod= "INSERT into planilla_productividad_docente (mes_id, anio) VALUES ('$mes','$anio')";
+                    $result_crear_pprod = mysqli_query($conexion,$query_crear_pprod);
+                  }
+                  $result_pprod = mysqli_query($conexion,$query_pprod);
+
                   while($row_pprod = mysqli_fetch_array($result_pprod)) {
                     $pprod = $row_pprod[0];
                   }
@@ -279,7 +286,13 @@
                   $planilla_expdt = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id, hs_descontadas) VALUES ('$pprod','$id_expdt_docente',$total)";
                   $result_planilla_expdt = mysqli_query($conexion,$planilla_expdt) or die("error".mysqli_error($conexion));
                   $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
-              }
+              } 
+              ?>
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Expedientes generados</strong>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php
           }  
           if (isset($_POST['generar_no_docente'])){
             $query_generar = "SELECT no_docente_id, fecha,expediente_no_docente_id FROM `inasistencia_sin_aviso_no_docente` where expediente_no_docente_id is NULL GROUP BY no_docente_id, fecha";
@@ -306,7 +319,7 @@
               }
               $id_expdt_no_docente = mysqli_insert_id($conexion);
             
-              echo $id,' ',$id_expdt_no_docente,' ',$no_docente,' ',$fecha;?> <br> <?php
+           
 
               $query_modificacion = "UPDATE inasistencia_sin_aviso_no_docente set expediente_no_docente_id='".$id_expdt_no_docente."' WHERE no_docente_id='".$no_docente."' AND fecha='".$fecha."'";
               $result_modificacion = mysqli_query($conexion,$query_modificacion) or die("error".mysqli_error($conexion));
@@ -324,13 +337,20 @@
               }
           
               $query_pprod = "SELECT * FROM planilla_productividad_no_docente WHERE mes_id = '$mes' AND anio = '$anio'";
-              $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
+              $result_pprod = mysqli_query($conexion,$query_pprod);
+              if (mysqli_num_rows($result_pprod) == 0){
+                $query_crear_pprod= "INSERT into planilla_productividad_no_docente (mes_id, anio) VALUES ('$mes','$anio')";
+                $result_crear_pprod = mysqli_query($conexion,$query_crear_pprod);
+              }
+              $result_pprod = mysqli_query($conexion,$query_pprod);
               while($row_pprod = mysqli_fetch_array($result_pprod)) {
                 $pprod = $row_pprod[0];
               }
+            
               $total = 0;
               $hora_inicio = 0;
               $hora_fin= 0;
+
               $query_horas = "SELECT * FROM inasistencia_sin_aviso_no_docente WHERE no_docente_id = '$no_docente' and fecha = '$fecha'";
               $result_horas = mysqli_query($conexion,$query_horas) or die("error".mysqli_error($conexion));
               while($row_horas = mysqli_fetch_array($result_horas)) {
@@ -344,6 +364,12 @@
               $result_planilla_expdt = mysqli_query($conexion,$planilla_expdt) or die("error".mysqli_error($conexion));
               $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
             }
+            ?>
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Expedientes generados</strong>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            <?php
           }  
          mysqli_close($conexion);
         ?>
