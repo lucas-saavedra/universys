@@ -55,7 +55,7 @@
                 <th scope="col">Facultad: Ciencia y Tecnología</th>
                 <th scope="col">Sede: Chajarí</th>
                 <th scope="col">Planilla: <?php echo $tipo_agente?></th>
-                <th scope="col">Mes: <?php echo $row_planilla['nombre'], $planilla_id?></th>
+                <th scope="col">Mes: <?php echo $row_planilla['nombre']?></th>
                 <th scope="col">Año: <?php echo $row_planilla['anio']?></th>
             </tr>
         </thead>

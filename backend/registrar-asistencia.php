@@ -151,7 +151,7 @@ if ($last_id == 0){
                                                 </div>
                                         <?php
                                         }
-                }
+                                }
                                 }
                         }
                 }
@@ -164,4 +164,5 @@ if ($last_id == 0){
                         <?php
                 }
         }
+
  include("../includes/footer.php");

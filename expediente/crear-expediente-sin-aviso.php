@@ -216,6 +216,7 @@
             </form>
         
        <?php }}
+       
           if (isset($_POST['generar'])){
             
               $query_generar = "SELECT docente_id, fecha,expediente_docente_id FROM `inasistencia_sin_aviso_docente` where expediente_docente_id is NULL GROUP BY docente_id, fecha";

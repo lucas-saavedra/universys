@@ -45,7 +45,7 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                 $detalle_id = $row_detalle_jornada['id'];
                                 $hora_inicio = $row_detalle_jornada['hora_inicio'];
                                 $hora_fin = $row_detalle_jornada['hora_fin'];
-                                echo $hora_inicio,' ', $hora_fin;
+                                
 
                                 $query_exis_marcacion = "SELECT *from marcacion_no_docente WHERE no_docente_id='$no_docente_id' AND fecha = '$fecha' AND hora_registro >= ADDTIME('$time', '-00:20:00') AND hora_registro <= ADDTIME('$time', '00:30:00')";
                                 $result_exis_marcacion = mysqli_query($conexion,$query_exis_marcacion);
