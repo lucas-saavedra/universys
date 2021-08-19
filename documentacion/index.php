@@ -70,7 +70,7 @@ $agentes = get_agentes($conexion);
     <?php include("../expediente/includes/msg-box.php"); ?>
 
     <div class="row mt-4">
-        <div class="col-md-8">
+        <div class="col">
             <form action="index.php" method="POST" enctype="multipart/form-data" id="form-doc">
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
@@ -114,7 +114,7 @@ $agentes = get_agentes($conexion);
                 <div class="mb-3 row">
                     <label for="" class="col-md-2 form-label">Archivo</label>
                     <div class="col-md-10">
-                        <input class="form-control-file" type="file" name="archivo" >
+                        <input class="form-control-file" type="file" name="archivo" required>
                     </div>
                 </div>
 
@@ -138,15 +138,73 @@ $agentes = get_agentes($conexion);
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                <div class="mb-3 text-center">
+                    <button type="submit" class="btn btn-lg btn-primary">Confirmar</button>
                 </div>
             </form>
         </div>
     </div>
+
+
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header py-3">
+                    <h4>Documentación sin expediente asignado</h4>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tipo</th>
+                                    <th>Agente</th>
+                                    <th>Fecha de recepción</th>
+                                    <th>Descripción</th>
+                                    <th class="text-center">Archivo</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach(get_docs_sin_expdte($conexion) as $doc):?>
+                                    <tr>
+                                        <td class="align-middle"><?=$doc['id']?></td>
+                                        <td class="align-middle"><?=$doc['nom_tipo_just']?></td>
+                                        <td class="align-middle"><?=$doc['agente_nombre']?></td>
+                                        <td class="align-middle"><?=$doc['fecha_recepcion']?></td>
+                                        <td class="align-middle"><?=$doc['descripcion']?></td>
+                                        <td class="align-middle text-center">
+                                            <a href=<?="uploads/{$doc['archivo']}"?>>
+                                                <i class="fa fa-lg fa-download"></i>
+                                            </a>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <form class="m-0" action="eliminar.php" method="POST">
+                                                <button 
+                                                    class="btn btn-danger" 
+                                                    type="submit" name="id" 
+                                                    value="<?=$doc['id']?>"
+                                                    onclick="return confirm('Seguro que desea eliminar la documentación de ID <?= $doc['id'] ?>?')"
+                                                >
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
-<script src="../js/filtro_agentes.js"></script>
+<script src="../expediente/js/filtro_agentes.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);
 </script>
