@@ -33,7 +33,7 @@ if (isset($_POST['horario_id'])) {
       if (!$result = mysqli_query($conexion, $query1)) throw new Exception(mysqli_error($conexion));
       if (!$result = mysqli_query($conexion, $query2)) throw new Exception(mysqli_error($conexion));
       $json[] = array(
-        'name' => 'La jornada docente de mesa ha sido eliminada',
+        'name' => 'La jornada de mesa ha sido eliminada',
         'type' => 'success',
         'success' => true
       );

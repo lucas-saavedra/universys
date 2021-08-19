@@ -313,7 +313,7 @@ create table expediente_docente (
     expediente_id int,
     docente_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
 );
 
@@ -322,7 +322,7 @@ create table expediente_no_docente (
     expediente_id int,
     no_docente_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
 
@@ -331,7 +331,7 @@ create table expediente_detalle (
     expediente_id int,
     det_jornada_id int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_id) REFERENCES expediente(id),
+    FOREIGN KEY (expediente_id) REFERENCES expediente(id) ON DELETE CASCADE,
     FOREIGN KEY (det_jornada_id) REFERENCES detalle_jornada(id)
 );
 
@@ -344,7 +344,7 @@ create table inasistencia_sin_aviso_docente (
     hora_fin time,
     dia int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id),
+    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
 );
 
@@ -357,7 +357,7 @@ create table inasistencia_sin_aviso_no_docente (
     hora_fin time,
     dia int,
     PRIMARY key (id),
-    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id),
+    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)
 );
 create table mes (
@@ -383,7 +383,7 @@ create table expediente_planilla_docente (
     hs_descontadas int,
     PRIMARY key (id),
     FOREIGN KEY (planilla_productividad_docente_id) REFERENCES planilla_productividad_docente(id),
-    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id)
+    FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE
 );
 create table planilla_productividad_no_docente (
 	id int AUTO_INCREMENT,
@@ -402,7 +402,7 @@ create table expediente_planilla_no_docente (
     hs_descontadas int,
     PRIMARY key (id),
     FOREIGN KEY (planilla_productividad_no_docente_id) REFERENCES planilla_productividad_no_docente(id),
-    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id)
+    FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE
 );
 
 
@@ -482,13 +482,16 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 ('Andoni Roig','andoni@gmail.com','1234'),
 ('Samuel Vicente','samuel@gmail.com','1234'),
 ('Enriqueta Galan','enriqueta@gmail.com','1234'),
-('Pilar Fernandez','pilar@gmail.com','1234');
+('Pilar Fernandez','pilar@gmail.com','1234'),
+('Emilio Espino','emi@gmail.com','1234'),
+('Angelina Nieto','angi@gmail.com','1234'),
+('Trinidad Moyano','trinidad@gmail.com','1234');
 
 INSERT INTO persona_rol (rol_id,persona_id) VALUES
 (1,1);
 
-INSERT INTO `docente`(`persona_id`) VALUES ('1'),('2'),('3'),('6'),('7');
-INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7');
+INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
+INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');
 
 
 INSERT INTO tipo_justificacion (descripcion) VALUES 
@@ -513,6 +516,9 @@ INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_n
 ('Maternidad', 'Licencia por Maternidad', '12','1','1','1', '0', '1','1'),
 -- Justificación
 ('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1');
+
+-- Falta C/Aviso: ejemplo de cupo
+INSERT INTO `cupo` (`id`, `codigo_id`, `longitud`, `tipo`, `cantidad_max_dias`) VALUES (NULL, '1', '1', 'Mes', '2'), (NULL, '1', '1', 'Año', '6');
 
 insert into mes(nombre) values 
 ('Enero'),('Febrero'), ('Marzo'), ('Abril'), ('Mayo'), ('Junio'), ('Julio'), ('Agosto'), ('Septiembre'), ('Octubre'), ('Noviembre'), ('Diciembre');

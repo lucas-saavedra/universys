@@ -1,7 +1,7 @@
 <?php include('includes/header.php'); 
-if (session_status() !== PHP_SESSION_ACTIVE){
-    header("Location: ../index.php ");
-}
+/* if (!isset($_SESSION['agente'])){
+    header("Location: index.php ");
+  }  */
 ?>
 
 <div id="sidebar-container" class="bg-primary">

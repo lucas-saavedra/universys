@@ -81,4 +81,13 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+    function get_meses($bd, $id_mes=null){
+
+        $where = isset($id_mes) ? "id={$id_mes}": "1";
+
+        $sql = "SELECT * FROM mes where $where";
+
+        return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
+    }
+
 ?>

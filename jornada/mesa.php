@@ -67,7 +67,7 @@ if (!isset($_SESSION['agente'])) {
                             <div class="form-group col-md-12">
                                 <label for="">Descripcion de la jornada</label>
                                 <div class="form-floating">
-                                    <textarea id='descripcion_mesa' required class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 10em;">test</textarea>
+                                    <textarea id='descripcion_mesa' class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 10em;">test</textarea>
                                 </div>
                             </div>
                         </div>
@@ -192,7 +192,7 @@ if (!isset($_SESSION['agente'])) {
                     <div class="form-group">
                         <label for="">Descripcion de la jornada</label>
                         <div class="form-floating">
-                            <textarea id='descripcion_mesa_updt' required name="detalle" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
+                            <textarea id='descripcion_mesa_updt' name="detalle" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
                         </div>
                     </div>
                     <div class="form-row justify-content-center">

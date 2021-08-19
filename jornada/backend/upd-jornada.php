@@ -36,6 +36,15 @@ try {
     $query2 = " UPDATE jornada_no_docente SET no_docente_id = '$id_agente', area_id = '$area_id' WHERE jornada_no_docente.id = '$jornada_agente_id' ";
   }
   mysqli_query($conexion, $query2);
+  if (isset($_POST['dias_horas'])) {
+
+    $array_dias = $_POST['dias_horas'];
+    foreach ($array_dias as $array_dias) {
+      $query_detalle = "INSERT INTO detalle_jornada ( jornada_id, hora_inicio, hora_fin, dia) 
+    VALUES ( '$jornadaId','{$array_dias['hora_inicio']}' , '{$array_dias['hora_fin']}', '{$array_dias['dia_id']}');";
+      if (!$result = mysqli_query($conexion, $query_detalle)) throw new Exception(mysqli_error($conexion));
+    }
+  }
   mysqli_commit($conexion);
   $json[] = array(
     'name' => 'La jornada docente <strong>[ ' . $jornada_agente_id . ' ]</strong> ha sido actualizada',
