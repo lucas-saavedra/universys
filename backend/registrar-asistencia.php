@@ -58,7 +58,9 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
 ?>
                                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                         <strong><?php echo "Registro su entrada a las: ", $time; ?></strong>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                 </div>
                                         <?php
 
@@ -80,19 +82,6 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
                                         }
                                 }
                         }
-                }
-                if ($cont_jornada == $cont_det_jornada) {
-                        ?>
-
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>No tiene un horario asignado para esta hora.</strong>
-
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                </button>
-                        </div>
-
-                        <?php
                 }
         }
 }
@@ -136,7 +125,9 @@ if ($last_id == 0) {
                         ?>
                                                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                                                         <strong><?php echo "Registro su entrada a las: ", $time; ?></strong>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                 </div>
                                         <?php
 
@@ -151,7 +142,9 @@ if ($last_id == 0) {
 
                                                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                         <strong>Ya realizo esta marcación!</strong>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                 </div>
                         <?php
                                         }
@@ -170,6 +163,14 @@ if ($last_id == 0) {
 <?php
                 }
         }
+        ?>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>No existen jornadas para este agente</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+        </button>
+</div>
+<?php
 }
 
 

@@ -1,6 +1,10 @@
 <?php include ("../includes/header.php");?>
-<?php include("../includes/menu.php"); ?>
+<?php include("../includes/menu.php"); 
 
+if (isset($_GET['del_expdte_id'])) {
+    $msg = ['content' => "La inasistencia ha sido eliminada", 'type' => 'success'];
+}
+?>
 <div class="container-fluid">
 
     <div class="row">
@@ -20,7 +24,9 @@
         </div>
     </div>
   <?php 
+   include "includes/msg-box.php";
     if (isset($_POST['expedt'])){
+     
       $tipo_agente=$_POST['select'];
       if ($tipo_agente == 'Docente' ){
         $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
@@ -41,19 +47,19 @@
                 while($row_docente = mysqli_fetch_array($result_docente)) {
                   $docente_id= $row_docente['id'];
                   $days = array('Lunes','Martes', 'Miercoles', 'Jueves','Viernes','Sabado','Domingo');
-  ?>
-  <table class="table table-striped table-dark">
-    <thead>
-      <tr>
-        <th scope="col">Agente</th>
-        <th class="text-center" scope="col">Dia</th>
-        <th class="text-center" scope="col">Inasistencias</th>
-        <th class="text-center" scope="col">Horas totales</th>
+        ?>
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Agente</th>
+              <th class="text-center" scope="col">Dia</th>
+              <th class="text-center" scope="col">Inasistencias</th>
+              <th class="text-center" scope="col">Horas totales</th>
+              
+            </tr>
+          </thead>
+          <tbody>
         
-      </tr>
-    </thead>
-    <tbody>
-   
       <tr>
         <td><?php echo $row_docente['nombre']?></td>
         <td class="text-center"><?php echo $days[$fecha_dia],' ', $fecha ?></td>
@@ -105,25 +111,32 @@
               <td><?php echo $row_inasist['fecha']?></td>
               <td><?php echo $row_inasist['hora_inicio']?></td>
               <td><?php echo $row_inasist['hora_fin']?></td>
-              <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>-->
-              <td><button type="button" class="task-delete_docente btn btn-danger">Eliminar</button></td>
+              <td>
+                <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
+                      <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </form>
+                </td>
+              <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
+              <td><button type="button" class="task-delete_docente btn btn-danger">Eliminar</button></td>-->
                 <?php 
                   }
                 ?>
             </tr>
           </tbody>
         </table>
-      </tr>
-    </tbody>
-   
-  </table>
-    <?php }}}} ?>
-    <form action="" method="post">
-          <button class="btn btn-secondary pull-right" type="submit" name="generar">Generar expedientes</button>
-        </form>
-  <?php
-    }
-      else{
+        </tr>
+          </tbody>
+        
+        </table>
+          <?php }}}} ?>
+          <form action="" method="post">
+                <button class="btn btn-secondary pull-right" type="submit" name="generar">Generar expedientes</button>
+              </form>
+        <?php
+          }
+            else{
         $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente";
         $result_fecha = mysqli_query($conexion,$query_fecha);
           while($row_fecha = mysqli_fetch_array($result_fecha)) {
@@ -140,8 +153,8 @@
                 while($row_no_docente = mysqli_fetch_array($result_no_docente)) {
                   $no_docente_id= $row_no_docente['id'];
                   $days = array('Lunes','Martes', 'Miercoles', 'Jueves','Viernes','Sabado','Domingo');
-    ?>
-    <table class="table table-striped table-dark">
+      ?>
+      <table class="table table-striped table-dark">
       <thead>
         <tr>
           <th scope="col">Agente</th>
@@ -199,8 +212,15 @@
                 <td><?php echo $row_inasist['fecha']?></td>
                 <td><?php echo $row_inasist['hora_inicio']?></td>
                 <td><?php echo $row_inasist['hora_fin']?></td>
-                <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>-->
-                <td><button type="button" class="task-delete_no_docente btn btn-danger">Eliminar</button></td>
+                <td>
+                <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
+                      <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </form>
+                </td>
+                <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
+                <td><button type="button" class="task-delete_no_docente btn btn-danger">Eliminar</button></td>-->
 
                 <?php  } ?>
               </tr>
@@ -231,7 +251,7 @@
                     $persona = $row_docente['persona_id'];
                   }
 
-                  $insertar_expediente = "INSERT INTO expediente(persona_id,fecha_inicio,fecha_fin,codigo_id) VALUES( '$persona','$fecha','$fecha','2')";
+                  $insertar_expediente = "INSERT INTO expediente(persona_id,fecha_inicio,fecha_fin,confirmado,codigo_id) VALUES( '$persona','$fecha','$fecha','0','2')";
                   if (($result_insertar = mysqli_query($conexion,$insertar_expediente)) === false) {
                     die(mysqli_error($conexion));
                   }
@@ -291,7 +311,9 @@
               ?>
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                       <strong>Expedientes generados</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
               </div>
             <?php
           }  
@@ -368,7 +390,9 @@
             ?>
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                       <strong>Expedientes generados</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
               </div>
             <?php
           }  

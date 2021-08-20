@@ -1,6 +1,7 @@
 <?php
 require '../includes/db.php';
-session_start();
+include("../jornada/navbar.php");
+
 $time= $_POST['tiempo'];
 $fecha_string= $_POST['fecha'];
 $usuario_id = $_SESSION['agente_id'];
@@ -60,27 +61,42 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                         ?>
                                                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                         <strong><?php echo "registro su entrada a las: ",$time; ?></strong>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                        </button>
                                                 </div>
                                         <?php
                                 }else{
                                         ?>
                                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                 <strong>Ya realizo esta marcación!!!</strong>
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                                </button>
                                         </div>
                                       <?php
                                 }
-                        }
-                        if ($cont_jornada==$cont_det_jornada){
-                                ?>
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong>No tiene un horario asignado para esta hora.</strong>
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                        <?php
-                        }
-            }
-    }
+                        }     
+                }
+
+        }
+         if ($cont_jornada==$cont_det_jornada){
+                ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>No tiene un horario asignado para esta hora.</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+                <?php
+        }
 }
+?>
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>No existen jornadas para este agente</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+        </button>
+</div>
+<?php
 ?>
