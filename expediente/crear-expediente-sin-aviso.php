@@ -24,7 +24,7 @@ if (isset($_GET['del_expdte_id'])) {
         </div>
     </div>
   <?php 
-   include "includes/msg-box.php";
+   
     if (isset($_POST['expedt'])){
      
       $tipo_agente=$_POST['select'];
