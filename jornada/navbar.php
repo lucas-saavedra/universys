@@ -1,5 +1,4 @@
 <?php include("../includes/header.php"); ?>
-
 <?php include("includes/consultas.php");  ?>
 
 <?php if (isset($_GET['tipo_agente'])) {
@@ -24,9 +23,8 @@ if (isset($_SESSION['agente_mesa_entrada'])) {
   $es_mesa =  $_SESSION['agente_mesa_entrada'];
 }
 if (isset($_SESSION['agente_coord'])) {
-  $es_mesa =  $_SESSION['agente_coord'];
+  $es_coord =  $_SESSION['agente_coord'];
 }
-
 $agente = $_SESSION['agente'];
 ?>
 <input type="hidden" id="tipo_agente" tipo_agente="<?php echo $tipo_agente ?>">
@@ -41,9 +39,6 @@ $agente = $_SESSION['agente'];
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#"> Asistencia <span class="sr-only">(current)</span></a>
-      </li>
       <?php if ($es_personal) {  ?>
         <li class="nav-item ">
           <a class="nav-link" href="../expediente/crear-expediente.php">Expedientes </a>
@@ -61,7 +56,7 @@ $agente = $_SESSION['agente'];
       <?php } ?>
       <?php if ($es_mesa) { ?>
         <li class="nav-item">
-          <a class="nav-link" href="../expediente/subir-documentacion.php">Documentacion</a>
+          <a class="nav-link" href="../documentacion/index.php">Documentacion</a>
         </li>
       <?php } ?>
     </ul>
@@ -77,31 +72,4 @@ $agente = $_SESSION['agente'];
     </ul>
   </div>
 </nav>
-</div>
-
-
-
-<!-- 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-4">
-      <ul class="nav flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-
- -->
 <div id='notif'></div>

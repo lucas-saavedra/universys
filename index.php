@@ -20,7 +20,6 @@ if ($_POST) {
 
     if (mysqli_num_rows($result_rol) > 0) {
       foreach ($roles as $rol) :
-
         switch ($rol['rol']) {
           case 'admin':
             $_SESSION['agente_personal'] = true;
@@ -46,12 +45,11 @@ if ($_POST) {
     };
     $_SESSION['agente'] = $persona['nombre'];
     $_SESSION['agente_id'] = $persona['id'];
-     header("location: ./jornada/index.php");
+    header("location: ./jornada/index.php");
   } else {
     $_SESSION['message'] = 'Usuario y/o contraseña incorrecto';
     $_SESSION['message_type'] = 'danger';
   }
-  
 }
 
 ?>
@@ -77,17 +75,19 @@ if ($_POST) {
         <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
         <p class="mt-5 mb-3 text-muted">© 2021-2021</p>
       </form>
+
+      <?php if (isset($_SESSION['message'])) { ?>
+        <div class="alert alert-<?= $_SESSION['message_type'] ?> alert-dismissible fade show" role="alert">
+          <?= $_SESSION['message'] ?>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      <?php unset($_SESSION['message']);
+      } ?>
+
     </div>
   </div>
-</div>
-<?php if (isset($_SESSION['message'])) { ?>
-  <div class="alert alert-<?= $_SESSION['message_type'] ?> alert-dismissible fade show" role="alert">
-    <?= $_SESSION['message'] ?>
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-<?php unset($_SESSION['message']);
-} ?>
 
+</div>
 <?php include('includes/footer.php'); ?>

@@ -21,14 +21,21 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
-    function get_docs_sin_expdte($bd, $expdte){
-        $id_agente = $expdte['persona_id'];
-        $id_expdte = $expdte['id'];
+    function get_docs_sin_expdte($bd, $expdte=null){
 
-        $sql = "SELECT doc.*, tj.descripcion as nom_tipo_just FROM documentacion_justificada as doc 
-        INNER JOIN tipo_justificacion as tj ON doc.tipo_justificacion_id=tj.id 
-        WHERE doc.persona_id={$id_agente} and 
-            doc.id not in (SELECT doc_justificada_id FROM expediente WHERE id != {$id_expdte} and doc_justificada_id is not null);";
+        $filter_agente = 1;
+        $filter_expdte = 1;
+
+        if (!is_null($expdte)){
+            $filter_agente = "doc.persona_id={$expdte['persona_id']}";
+            $filter_expdte = "id!={$expdte['id']}";
+        }
+
+        $sql = "SELECT doc.*, tj.descripcion as nom_tipo_just, p.nombre as agente_nombre FROM documentacion_justificada as doc 
+        INNER JOIN tipo_justificacion as tj ON doc.tipo_justificacion_id=tj.id
+        LEFT JOIN persona as p ON p.id = doc.persona_id
+        WHERE $filter_agente and 
+            doc.id not in (SELECT doc_justificada_id FROM expediente WHERE $filter_expdte and doc_justificada_id is not null);";
         
         $result = mysqli_query($bd, $sql);
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
