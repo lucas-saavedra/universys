@@ -103,7 +103,7 @@ function get_docentes($conexion)
 
 
 
-function get_agentes_mesa($conexion, $mesa_id,$horario_id)
+function get_agentes_mesa($conexion, $mesa_id, $horario_id)
 {
   $sql = "SELECT jdm.id as jornada_agente_id, 
   jdm.docente_id as agente_id , 
@@ -121,4 +121,29 @@ function get_agentes_mesa($conexion, $mesa_id,$horario_id)
 WHERE mesa_examen_jornada.id = '$mesa_id' and detalle_jornada.id='$horario_id'";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
+function get_jornadas_docentes_hoy($conexion, $docente_id)
+{
+  $query_jornadas =
+    "SELECT hora_inicio,hora_fin,dia, fecha_inicio,fecha_fin, catedra.nombre as catedra, carrera.nombre as carrera  from jornada_docente 
+    LEFT  join jornada on jornada.id = jornada_docente.jornada_id
+    LEFT JOIN detalle_jornada on detalle_jornada.jornada_id = jornada_docente.jornada_id
+    left JOIN catedra on catedra.id = jornada_docente.catedra_id
+    right JOIN carrera on carrera.id = catedra.carrera_id
+    WHERE jornada_docente.docente_id = '$docente_id' and detalle_jornada.dia = (select weekday(now()))
+    order by hora_inicio";
+
+  return mysqli_query($conexion, $query_jornadas);
+}
+function get_jornadas_no_docentes_hoy($conexion, $no_docente_id)
+{
+  $query_jornadas =
+  "SELECT hora_inicio,hora_fin,dia, fecha_inicio,fecha_fin, area.nombre as area  from jornada_no_docente
+  LEFT join jornada on jornada.id = jornada_no_docente.jornada_id
+  LEFT JOIN detalle_jornada on detalle_jornada.jornada_id = jornada_no_docente.jornada_id
+  left JOIN area on area.id = jornada_no_docente.area_id
+  WHERE jornada_no_docente.no_docente_id = '$no_docente_id' and detalle_jornada.dia = (select weekday(now()))
+  order by hora_inicio";
+  return mysqli_query($conexion, $query_jornadas);
 }

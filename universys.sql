@@ -487,8 +487,22 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 ('Angelina Nieto','angi@gmail.com','1234'),
 ('Trinidad Moyano','trinidad@gmail.com','1234');
 
+
+
+/* 
+1 admin
+2 personal
+3 mesa_entrada
+4 coordinacion 
+*/
+
+/* Volcado de datos para la tabla persona_rol */
 INSERT INTO persona_rol (rol_id,persona_id) VALUES
-(1,1);
+(1,1),
+(4,8),
+(4,8),
+(3,7),
+(2,3);
 
 INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
 INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');
