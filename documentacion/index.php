@@ -1,8 +1,9 @@
 <title>Subir documentación</title>
 <?php 
 
-include ("../includes/header.php");
-include ("../includes/menu.php");
+/* include ("../includes/header.php");
+include ("../includes/menu.php"); */
+include ("../jornada/navbar.php");
 include ("../expediente/includes/consultas.php");
 
 function subir_archivo($file, $nombre){

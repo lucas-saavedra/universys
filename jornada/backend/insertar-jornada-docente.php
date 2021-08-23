@@ -69,7 +69,7 @@ try {
   mysqli_commit($conexion);
 
   $json[] = array(
-    'name' => 'La jornada docente ha sido creada',
+    'name' => 'La jornada ha sido creada',
     'type' => 'success',
     'success' => true
   );

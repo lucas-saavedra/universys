@@ -6,6 +6,6 @@
 
     $result = mysqli_query($conexion, "DELETE FROM expediente WHERE id={$_POST['id']}");
 
-    header("Location:confirmar-p-productividad.php?del_expdte_id={$_POST['id']}");
+    header("Location:index.php?del_expdte_id={$_POST['id']}");
 
 ?>
