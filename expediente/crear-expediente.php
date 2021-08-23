@@ -1,7 +1,5 @@
 <title>Crear Expediente</title>
 <?php 
-/* include ("../includes/header.php");
-include ("../includes/menu.php"); */
 include ("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/asignar-planilla-prod.php");
@@ -72,6 +70,11 @@ function crear_expediente($bd){
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $msg = crear_expediente($conexion);
+
+    if ($msg['type'] == 'success'){
+        $_SESSION['crear_expdte_msg'] = $msg;
+        header('Location:index.php');
+    }
 }
 ?>
 <div class="container">

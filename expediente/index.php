@@ -19,6 +19,10 @@ if (isset($_SESSION['elim_expdte_msg'])) {
     $msg = $_SESSION['elim_expdte_msg'];
     unset($_SESSION['elim_expdte_msg']);
 }
+elseif (isset($_SESSION['crear_expdte_msg'])) {
+    $msg = $_SESSION['crear_expdte_msg'];
+    unset($_SESSION['crear_expdte_msg']);
+}
 
 
 ?>
