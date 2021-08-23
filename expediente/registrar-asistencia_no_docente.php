@@ -15,8 +15,8 @@ while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
         $fecha_dia = $row_fecha_dia[0];
 }
 
-$cont_jornada=0;
-$cont_det_jornada=0;
+$marc_bol=false;
+$sin_det_jornada=true;
 
 $query_no_docente = "SELECT id from no_docente where persona_id = '$usuario_id'";
 $result_no_docente = mysqli_query($conexion, $query_no_docente);
@@ -27,7 +27,8 @@ $query_jornada_no_docente = "SELECT *FROM jornada_no_docente WHERE no_docente_id
 $result_jornada_no_docente = mysqli_query($conexion, $query_jornada_no_docente);
 while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente)) {
         $jornada = $row_jornada_no_docente['jornada_id'];
-        $cont_jornada += 1;
+        $marc_bol=true;
+        
 
         $query_fecha = "SELECT *FROM jornada WHERE id='$jornada'";
         $result_fecha = mysqli_query($conexion, $query_fecha);
@@ -40,8 +41,9 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                 $query_detalle_jornada = "SELECT *from detalle_jornada WHERE jornada_id = '$jornada' AND dia='$fecha_dia' AND '$time' >= ADDTIME(hora_inicio, '-00:20:00') AND '$time' <= ADDTIME(hora_inicio, '00:30:00')";
                 $result_detalle_jornada = mysqli_query($conexion,$query_detalle_jornada);
                 if (mysqli_num_rows($result_detalle_jornada) == 0){
-                        $cont_det_jornada += 1;
+                        
                 }else{
+                        $sin_det_jornada = false;
                         while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)){
                                 $detalle_id = $row_detalle_jornada['id'];
                                 $hora_inicio = $row_detalle_jornada['hora_inicio'];
@@ -59,19 +61,20 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                         $result_asistencia = mysqli_query($conexion,$query_asistencia);
 
                                         ?>
-                                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                                        <strong><?php echo "registro su entrada a las: ",$time; ?></strong>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                                <strong><?php echo "registro su entrada a las: ",$time; ?></strong>
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                </div>
+                                                </button>
+                                        </div>
+                                        
                                         <?php
                                 }else{
                                         ?>
-                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                 <strong>Ya realizo esta marcación!!!</strong>
-                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
                                       <?php
@@ -80,23 +83,27 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                 }
 
         }
-         if ($cont_jornada==$cont_det_jornada){
-                ?>
+}
+if ($marc_bol == false) {
+        ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                        <strong>No tiene un horario asignado para esta hora.</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <strong>No existen jornadas para este agente.</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
+        <?php 
+}else{
+        if ($sin_det_jornada == true) {
+                ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>No tiene un horario asignado para esta hora.</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+
                 <?php
         }
 }
-?>
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
-        <strong>No existen jornadas para este agente</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-        </button>
-</div>
-<?php
 ?>

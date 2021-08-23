@@ -25,70 +25,105 @@ if (isset($_GET['del_expdte_id'])) {
       </div>
 
     </div>
-  </div>
-  <?php
-  include "includes/msg-box.php";
-  if (isset($_POST['expedt'])) {
-    $tipo_agente = $_POST['select'];
-    if ($tipo_agente == 'Docente') {
-      $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
-      $result_fecha = mysqli_query($conexion, $query_fecha);
+  <?php 
+   
+    if (isset($_POST['expedt'])){
+     
+      $tipo_agente=$_POST['select'];
+      if ($tipo_agente == 'Docente' ){
+        $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
+        $result_fecha = mysqli_query($conexion,$query_fecha);
 
-      while ($row_fecha = mysqli_fetch_array($result_fecha)) {
-        if ($row_fecha['expediente_docente_id'] == Null) {
-          $fecha = $row_fecha['fecha'];
-          $docente = $row_fecha['docente_id'];
-          $query_fecha_dia = "select weekday ('$fecha')";
-          $result_fecha_dia = mysqli_query($conexion, $query_fecha_dia);
+        while($row_fecha = mysqli_fetch_array($result_fecha)) {
+          if ($row_fecha['expediente_docente_id'] == Null){
+            $fecha= $row_fecha['fecha'];
+            $docente= $row_fecha['docente_id'];
+            $query_fecha_dia = "select weekday ('$fecha')";
+            $result_fecha_dia = mysqli_query($conexion,$query_fecha_dia);
 
-          while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
-            $fecha_dia = $row_fecha_dia[0];
-            $query_docente = "SELECT persona.nombre, m1.id FROM persona, (SELECT persona_id, id FROM docente,(SELECT DISTINCT docente_id, fecha from inasistencia_sin_aviso_docente where fecha = '$fecha' and docente_id='$docente' ) as m2 WHERE docente.id = m2.docente_id ) as m1 Where m1.persona_id = persona.id;";
-            $result_docente = mysqli_query($conexion, $query_docente);
+            while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
+              $fecha_dia= $row_fecha_dia[0];
+              $query_docente = "SELECT persona.nombre, m1.id FROM persona, (SELECT persona_id, id FROM docente,(SELECT DISTINCT docente_id, fecha from inasistencia_sin_aviso_docente where fecha = '$fecha' and docente_id='$docente' ) as m2 WHERE docente.id = m2.docente_id ) as m1 Where m1.persona_id = persona.id;";
+              $result_docente = mysqli_query($conexion,$query_docente);
 
-            while ($row_docente = mysqli_fetch_array($result_docente)) {
-              $docente_id = $row_docente['id'];
-              $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
-  ?>
-              <table class="table table-striped table-dark">
-                <thead>
-                  <tr>
-                    <th scope="col">Agente</th>
-                    <th class="text-center" scope="col">Dia</th>
-                    <th class="text-center" scope="col">Inasistencias</th>
-                    <th class="text-center" scope="col">Horas totales</th>
+                while($row_docente = mysqli_fetch_array($result_docente)) {
+                  $docente_id= $row_docente['id'];
+                  $days = array('Lunes','Martes', 'Miercoles', 'Jueves','Viernes','Sabado','Domingo');
+        ?>
+        <table class="table table-striped table-dark">
+          <thead>
+            <tr>
+              <th scope="col">Agente</th>
+              <th class="text-center" scope="col">Dia</th>
+              <th class="text-center" scope="col">Inasistencias</th>
+              <th class="text-center" scope="col">Horas totales</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+        
+      <tr>
+        <td><?php echo $row_docente['nombre']?></td>
+        <td class="text-center"><?php echo $days[$fecha_dia],' ', $fecha ?></td>
+        <?php 
+          $contador="SELECT COUNT(docente_id) from inasistencia_sin_aviso_docente where fecha= '$fecha' and docente_id='$docente'";
+          $contador_docente = mysqli_query($conexion,$contador);
+          while($row_contador = mysqli_fetch_array($contador_docente)) {
+        ?>
+        <td class="text-center"><?php echo $row_contador[0]?></td>
 
-                  </tr>
-                </thead>
-                <tbody>
-
-                  <tr>
-                    <td><?php echo $row_docente['nombre'] ?></td>
-                    <td class="text-center"><?php echo $days[$fecha_dia], ' ', $fecha ?></td>
-                    <?php
-                    $contador = "SELECT COUNT(docente_id) from inasistencia_sin_aviso_docente where fecha= '$fecha' and docente_id='$docente'";
-                    $contador_docente = mysqli_query($conexion, $contador);
-                    while ($row_contador = mysqli_fetch_array($contador_docente)) {
-                    ?>
-                      <td class="text-center"><?php echo $row_contador[0] ?></td>
-
-                      <?php
-                      $query_total = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha = '$fecha' and docente_id='$docente'";
-                      $result_total = mysqli_query($conexion, $query_total);
-                      $val_fin = 0;
-                      $val_inicio = 0;
-                      $total = 0;
-                      while ($row_total = mysqli_fetch_array($result_total)) {
-                        $val_fin = (int)$row_total['hora_fin'];
-                        $val_inicio = (int)$row_total['hora_inicio'];
-                        $total += ($val_fin - $val_inicio);
-                      }
-                      ?>
-                      <td class="text-center"><?php echo $total ?></td>
-
-                  </tr>
-                <?php
-                    }
+        <?php 
+          $query_total = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha = '$fecha' and docente_id='$docente'";
+          $result_total = mysqli_query($conexion,$query_total);
+          $val_fin= 0;
+          $val_inicio= 0;
+          $total = 0;
+          while($row_total = mysqli_fetch_array($result_total)) {
+            $val_fin= (int)$row_total['hora_fin'];
+            $val_inicio= (int)$row_total['hora_inicio'];
+            $total += ($val_fin - $val_inicio);
+          }
+        ?>
+        <td class="text-center"><?php echo $total ?></td>
+       
+      </tr>
+      <?php 
+        }
+      ?>
+      <tr>
+        <table class="table table-striped ml-5">
+          <thead>
+            <tr>
+              <th scop="col">ID</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Hora de ingreso</th>
+              <th scope="col">Horas fin</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php 
+              $query_inasist = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha='$fecha' and docente_id='$docente'";
+              $result_inasist = mysqli_query($conexion,$query_inasist);
+              while($row_inasist = mysqli_fetch_array($result_inasist)) {
+              
+            ?>
+            <tr inasistencia_id="<?php echo $row_inasist['id']?>">
+            <td><?php echo $row_inasist['id']?></td>
+              <td><?php echo $row_inasist['fecha']?></td>
+              <td><?php echo $row_inasist['hora_inicio']?></td>
+              <td><?php echo $row_inasist['hora_fin']?></td>
+              <td>
+                <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
+                      <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                          <i class="fa fa-trash"></i>
+                      </button>
+                  </form>
+                </td>
+              <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
+              <td><button type="button" class="task-delete_docente btn btn-danger">Eliminar</button></td>-->
+                <?php 
+                  }
                 ?>
                 <tr>
                   <table class="table table-striped ml-5">
