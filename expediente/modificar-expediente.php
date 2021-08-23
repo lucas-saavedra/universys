@@ -22,7 +22,7 @@ function get_campos_modificados($array1, $array2, $convertir=array()){
         $converted = empty($convertir[$campo]) ? $campo: $convertir[$campo];
         if ($array1[$campo] != $array2[$campo]){
             if ($array2[$campo] === ""){
-                $modificaciones[$campo] = "{$campo}=NULL";
+                $modificaciones[$campo] = "{$converted}=NULL";
                 continue;
             }
             $modificaciones[$converted] = "{$converted}='{$array2[$campo]}'";
