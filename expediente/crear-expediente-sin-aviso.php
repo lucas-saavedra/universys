@@ -1,23 +1,28 @@
 <?php include ("../includes/header.php");?>
 <?php include("../includes/menu.php"); 
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  $tipo_agente = "Docente";
+} else {
+  $tipo_agente = $_POST['select'];
+}
+
 if (isset($_GET['del_expdte_id'])) {
     $msg = ['content' => "La inasistencia ha sido eliminada", 'type' => 'success'];
 }
 ?>
 <div class="container-fluid">
-
     <div class="row">
         <div class="col-lg-5 m-auto">
             <form action="" method="post">
                 <div class="form-group text-center">
                     <h2 class="col-md-12 text-center">Buscar expedientes sin aviso</h2>
                     <div class=" row m-auto col">
-                      <select name="select" class="form-control mr-sm-2 col">
-                          <option value="Docente">Docente </option>
-                          <option value="No docente">No docente </option>
-                      </select>
-                      <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit" name="expedt">BUSCAR.</button>
+                    <select name="select" class="form-control mr-sm-2 col-3" required>
+                            <option value="Docente" <?= $tipo_agente == 'Docente' ? 'selected' : '' ?>>Docente</option>
+                            <option value="No docente" <?= $tipo_agente == 'No docente' ? 'selected' : '' ?>>No docente</option>
+                        </select>
+                      <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit" >BUSCAR.</button>
                     </div>
                 </div>
             </form>  
@@ -25,9 +30,9 @@ if (isset($_GET['del_expdte_id'])) {
     </div>
   <?php 
    
-    if (isset($_POST['expedt'])){
+    
      
-      $tipo_agente=$_POST['select'];
+      
       if ($tipo_agente == 'Docente' ){
         $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
         $result_fecha = mysqli_query($conexion,$query_fecha);
@@ -235,7 +240,7 @@ if (isset($_GET['del_expdte_id'])) {
               <button class="btn btn-secondary pull-right" type="submit" name="generar_no_docente">Generar expedientes</button>
             </form>
         
-       <?php }}
+       <?php }
        
           if (isset($_POST['generar'])){
             
@@ -311,8 +316,8 @@ if (isset($_GET['del_expdte_id'])) {
               ?>
               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                       <strong>Expedientes generados</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
                       </button>
               </div>
             <?php
@@ -388,18 +393,20 @@ if (isset($_GET['del_expdte_id'])) {
               $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
             }
             ?>
-              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
                       <strong>Expedientes generados</strong>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
                       </button>
               </div>
             <?php
           }  
-         mysqli_close($conexion);
+        // mysqli_close($conexion);
+        
         ?>
       </tbody>
     </table>
+      
 </div>
 
 <?php include("../includes/footer.php") ?>
