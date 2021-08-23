@@ -499,10 +499,9 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 /* Volcado de datos para la tabla persona_rol */
 INSERT INTO persona_rol (rol_id,persona_id) VALUES
 (1,1),
-(4,8),
-(4,8),
-(3,7),
-(2,3);
+(4,8), /*pilar*/
+(3,7), /*enriqueta*/
+(2,3); /* roman*/
 
 INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
 INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');

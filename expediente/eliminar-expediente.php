@@ -15,6 +15,6 @@
         $_SESSION['elim_expdte_msg'] = ['content'=> mysqli_error($conexion), 'type'=> 'danger'];
     }
 
-    header("Location:confirmar-p-productividad.php");
+    header("Location:index.php?del_expdte_id={$_POST['id']}");
 
 ?>

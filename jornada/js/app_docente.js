@@ -555,8 +555,7 @@ $(document).ready(function () {
         let template = ' ';
         template += `
                     <div class="alert alert-${msg.type}  alert-dismissible fade show" role="alert">`;
-                   msg.type =='success' ? template += `${msg.name}` : template += `
-                   <strong>Error: </strong> ${msg.name}`
+                  template += `${msg.name}`
                     template += `</div>`;
 
         $('#toast_notif').html(template);

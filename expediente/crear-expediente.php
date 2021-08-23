@@ -1,7 +1,8 @@
 <title>Crear Expediente</title>
 <?php 
-include ("../includes/header.php");
-include ("../includes/menu.php");
+/* include ("../includes/header.php");
+include ("../includes/menu.php"); */
+include ("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/asignar-planilla-prod.php");
 include ("./includes/validaciones.php");

@@ -41,9 +41,11 @@ $agente = $_SESSION['agente'];
     <ul class="navbar-nav mr-auto">
       <?php if ($es_personal) {  ?>
         <li class="nav-item ">
-          <a class="nav-link" href="../expediente/crear-expediente.php">Expedientes </a>
+          <a class="nav-link" href="../expediente/crear-expediente-sin-aviso.php">Inasistencias</a>
         </li>
-
+        <li class="nav-item ">
+          <a class="nav-link" href="../expediente/">Productividad</a>
+        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Jornadas
@@ -51,6 +53,15 @@ $agente = $_SESSION['agente'];
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="../jornada/agente.php?tipo_agente=<?php echo $tipo_agente ?>">Jornada Agente</a>
             <a class="dropdown-item" href="../jornada/mesa.php">Jornada de Mesa</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Expedientes
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="../expediente/crear-expediente.php">Crear expediente</a>
+  
           </div>
         </li>
       <?php } ?>
