@@ -7,7 +7,7 @@ include ("./includes/asignar-planilla-prod.php");
 include ("./includes/validaciones.php");
 
 $agentes = get_agentes($conexion);
-$codigos = get_codigos_inasis($conexion);
+$codigos = get_codigos_inasis($conexion, "id!={$ID_COD_SIN_AVISO}");
 
 function crear_expediente($bd){
 
