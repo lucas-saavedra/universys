@@ -1,35 +1,38 @@
 <?php include("../includes/header.php"); ?>
 <?php include("../includes/menu.php");
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  $tipo_agente = "Docente";
+} else {
+  $tipo_agente = $_POST['select'];
+}
+
 if (isset($_GET['del_expdte_id'])) {
   $msg = ['content' => "La inasistencia ha sido eliminada", 'type' => 'success'];
 }
 ?>
 <div class="container-fluid">
-
-  <div class="row">
-    <div class="col-lg-5 m-auto py-3">
-      <div class="card">
-        <form action="" method="post">
-          <div class="form-group text-center">
-            <h2 class="col-md-12 text-center py-2">Buscar inasistencias sin aviso</h2>
-            <div class=" row m-auto col">
-              <select name="select" class="form-control mr-sm-2 col">
-                <option value="Docente">Docente </option>
-                <option value="No docente">No docente </option>
-              </select>
-              <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit" name="expedt">Buscar</button>
-            </div>
-          </div>
-        </form>
-      </div>
-
+    <div class="row">
+        <div class="col-lg-5 m-auto">
+            <form action="" method="post">
+                <div class="form-group text-center">
+                    <h2 class="col-md-12 text-center">Buscar expedientes sin aviso</h2>
+                    <div class=" row m-auto col">
+                    <select name="select" class="form-control mr-sm-2 col-3" required>
+                            <option value="Docente" <?= $tipo_agente == 'Docente' ? 'selected' : '' ?>>Docente</option>
+                            <option value="No docente" <?= $tipo_agente == 'No docente' ? 'selected' : '' ?>>No docente</option>
+                        </select>
+                      <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit" >BUSCAR.</button>
+                    </div>
+                </div>
+            </form>  
+        </div>
     </div>
   <?php 
    
-    if (isset($_POST['expedt'])){
+    
      
-      $tipo_agente=$_POST['select'];
+      
       if ($tipo_agente == 'Docente' ){
         $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
         $result_fecha = mysqli_query($conexion,$query_fecha);
@@ -261,12 +264,34 @@ if (isset($_GET['del_expdte_id'])) {
                           <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
                 <td><button type="button" class="task-delete_no_docente btn btn-danger">Eliminar</button></td>-->
 
-                        <?php  } ?>
-                        </tr>
-                    </tbody>
-                  </table>
-                </tr>
-                </tbody>
+                <?php  } ?>
+              </tr>
+            </tbody>
+          </table>
+        </tr>
+        </tbody>
+            
+        </table>
+          <?php  }}}}?>
+          <form action="" method="post">
+              <button class="btn btn-secondary pull-right" type="submit" name="generar_no_docente">Generar expedientes</button>
+            </form>
+        
+       <?php }
+       
+          if (isset($_POST['generar'])){
+            
+              $query_generar = "SELECT docente_id, fecha,expediente_docente_id FROM `inasistencia_sin_aviso_docente` where expediente_docente_id is NULL GROUP BY docente_id, fecha";
+              $result_generar = mysqli_query($conexion,$query_generar);
+              while($row_generar = mysqli_fetch_array($result_generar)) {
+                  $docente = $row_generar['docente_id'];
+                  $fecha = $row_generar['fecha'];
+
+                  $query_docente = "SELECT persona_id FROM docente WHERE id='$docente'";
+                  $result_docente = mysqli_query($conexion,$query_docente);
+                  while($row_docente = mysqli_fetch_array($result_docente)) {
+                    $persona = $row_docente['persona_id'];
+                  }
 
               </table>
       <?php  }
@@ -307,142 +332,104 @@ if (isset($_GET['del_expdte_id'])) {
       $id_expdt_docente = mysqli_insert_id($conexion);
 
 
-      $query_modificacion = "UPDATE inasistencia_sin_aviso_docente set expediente_docente_id='" . $id_expdt_docente . "' WHERE docente_id='" . $docente . "' AND fecha='" . $fecha . "'";
-      $result_modificacion = mysqli_query($conexion, $query_modificacion) or die("error" . mysqli_error($conexion));
+                  $planilla_expdt = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id, hs_descontadas) VALUES ('$pprod','$id_expdt_docente',$total)";
+                  $result_planilla_expdt = mysqli_query($conexion,$planilla_expdt) or die("error".mysqli_error($conexion));
+                  $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
+              } 
+              ?>
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Expedientes generados</strong>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                      </button>
+              </div>
+            <?php
+          }  
+          if (isset($_POST['generar_no_docente'])){
+            $query_generar = "SELECT no_docente_id, fecha,expediente_no_docente_id FROM `inasistencia_sin_aviso_no_docente` where expediente_no_docente_id is NULL GROUP BY no_docente_id, fecha";
+            $result_generar = mysqli_query($conexion,$query_generar);
+            while($row_generar = mysqli_fetch_array($result_generar)) {
+              $no_docente = $row_generar['no_docente_id'];
+              $fecha = $row_generar['fecha'];
+
+              $query_no_docente = "SELECT persona_id FROM no_docente WHERE id='$no_docente'";
+              $result_no_docente = mysqli_query($conexion,$query_no_docente);
+              while($row_no_docente = mysqli_fetch_array($result_no_docente)) {
+                $persona = $row_no_docente['persona_id'];
+              }
+
+              $insertar_expediente = "INSERT INTO expediente(persona_id,fecha_inicio,fecha_fin,codigo_id) VALUES( '$persona','$fecha','$fecha','2')";
+              if (($result_insertar = mysqli_query($conexion,$insertar_expediente)) === false) {
+                die(mysqli_error($conexion));
+              }
+              $id = mysqli_insert_id($conexion);
+
+              $insertar_expediente_no_docente = "INSERT INTO expediente_no_docente(expediente_id,no_docente_id) VALUES( '$id','$no_docente')";
+              if (($result_insertar_no_docente = mysqli_query($conexion,$insertar_expediente_no_docente)) === false) {
+                die(mysqli_error($conexion));
+              }
+              $id_expdt_no_docente = mysqli_insert_id($conexion);
+            
+           
+
+              $query_modificacion = "UPDATE inasistencia_sin_aviso_no_docente set expediente_no_docente_id='".$id_expdt_no_docente."' WHERE no_docente_id='".$no_docente."' AND fecha='".$fecha."'";
+              $result_modificacion = mysqli_query($conexion,$query_modificacion) or die("error".mysqli_error($conexion));
+
+              $query_mes ="SELECT EXTRACT(month FROM DATE '$fecha')";
+              $result_mes = mysqli_query($conexion,$query_mes) or die("error".mysqli_error($conexion));
+              while($row_mes = mysqli_fetch_array($result_mes)) {
+                $mes = $row_mes[0];
+              }
+
+              $query_anio ="SELECT EXTRACT(year FROM DATE '$fecha')";
+              $result_anio = mysqli_query($conexion,$query_anio) or die("error".mysqli_error($conexion));
+              while($row_anio = mysqli_fetch_array($result_anio)) {
+                $anio = $row_anio[0];
+              }
+          
+              $query_pprod = "SELECT * FROM planilla_productividad_no_docente WHERE mes_id = '$mes' AND anio = '$anio'";
+              $result_pprod = mysqli_query($conexion,$query_pprod);
+              if (mysqli_num_rows($result_pprod) == 0){
+                $query_crear_pprod= "INSERT into planilla_productividad_no_docente (mes_id, anio) VALUES ('$mes','$anio')";
+                $result_crear_pprod = mysqli_query($conexion,$query_crear_pprod);
+              }
+              $result_pprod = mysqli_query($conexion,$query_pprod);
+              while($row_pprod = mysqli_fetch_array($result_pprod)) {
+                $pprod = $row_pprod[0];
+              }
+            
+              $total = 0;
+              $hora_inicio = 0;
+              $hora_fin= 0;
+
+              $query_horas = "SELECT * FROM inasistencia_sin_aviso_no_docente WHERE no_docente_id = '$no_docente' and fecha = '$fecha'";
+              $result_horas = mysqli_query($conexion,$query_horas) or die("error".mysqli_error($conexion));
+              while($row_horas = mysqli_fetch_array($result_horas)) {
+                $hora_inicio = (int)$row_horas['hora_inicio'];
+                $hora_fin = (int)$row_horas['hora_fin'];
+                $total = $total + ($hora_fin - $hora_inicio);
+              }
 
 
-      $query_mes = "SELECT EXTRACT(month FROM DATE '$fecha')";
-      $result_mes = mysqli_query($conexion, $query_mes) or die("error" . mysqli_error($conexion));
-      while ($row_mes = mysqli_fetch_array($result_mes)) {
-        $mes = $row_mes[0];
-      }
-
-      $query_anio = "SELECT EXTRACT(year FROM DATE '$fecha')";
-      $result_anio = mysqli_query($conexion, $query_anio) or die("error" . mysqli_error($conexion));
-      while ($row_anio = mysqli_fetch_array($result_anio)) {
-        $anio = $row_anio[0];
-      }
-
-      $query_pprod = "SELECT * FROM planilla_productividad_docente WHERE mes_id = '$mes' AND anio = '$anio'";
-      $result_pprod = mysqli_query($conexion, $query_pprod);
-
-      if (mysqli_num_rows($result_pprod) == 0) {
-        $query_crear_pprod = "INSERT into planilla_productividad_docente (mes_id, anio) VALUES ('$mes','$anio')";
-        $result_crear_pprod = mysqli_query($conexion, $query_crear_pprod);
-      }
-      $result_pprod = mysqli_query($conexion, $query_pprod);
-
-      while ($row_pprod = mysqli_fetch_array($result_pprod)) {
-        $pprod = $row_pprod[0];
-      }
-      $total = 0;
-      $hora_inicio = 0;
-      $hora_fin = 0;
-      $query_horas = "SELECT * FROM inasistencia_sin_aviso_docente WHERE docente_id = '$docente' and fecha = '$fecha'";
-      $result_horas = mysqli_query($conexion, $query_horas) or die("error" . mysqli_error($conexion));
-      while ($row_horas = mysqli_fetch_array($result_horas)) {
-        $hora_inicio = (int)$row_horas['hora_inicio'];
-        $hora_fin = (int)$row_horas['hora_fin'];
-        $total = $total + ($hora_fin - $hora_inicio);
-      }
-
-
-      $planilla_expdt = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id, hs_descontadas) VALUES ('$pprod','$id_expdt_docente',$total)";
-      $result_planilla_expdt = mysqli_query($conexion, $planilla_expdt) or die("error" . mysqli_error($conexion));
-      $result_pprod = mysqli_query($conexion, $query_pprod) or die("error" . mysqli_error($conexion));
-    }
-    ?>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>Expedientes generados</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  <?php
-  }
-  if (isset($_POST['generar_no_docente'])) {
-    $query_generar = "SELECT no_docente_id, fecha,expediente_no_docente_id FROM `inasistencia_sin_aviso_no_docente` where expediente_no_docente_id is NULL GROUP BY no_docente_id, fecha";
-    $result_generar = mysqli_query($conexion, $query_generar);
-    while ($row_generar = mysqli_fetch_array($result_generar)) {
-      $no_docente = $row_generar['no_docente_id'];
-      $fecha = $row_generar['fecha'];
-
-      $query_no_docente = "SELECT persona_id FROM no_docente WHERE id='$no_docente'";
-      $result_no_docente = mysqli_query($conexion, $query_no_docente);
-      while ($row_no_docente = mysqli_fetch_array($result_no_docente)) {
-        $persona = $row_no_docente['persona_id'];
-      }
-
-      $insertar_expediente = "INSERT INTO expediente(persona_id,fecha_inicio,fecha_fin,codigo_id) VALUES( '$persona','$fecha','$fecha','2')";
-      if (($result_insertar = mysqli_query($conexion, $insertar_expediente)) === false) {
-        die(mysqli_error($conexion));
-      }
-      $id = mysqli_insert_id($conexion);
-
-      $insertar_expediente_no_docente = "INSERT INTO expediente_no_docente(expediente_id,no_docente_id) VALUES( '$id','$no_docente')";
-      if (($result_insertar_no_docente = mysqli_query($conexion, $insertar_expediente_no_docente)) === false) {
-        die(mysqli_error($conexion));
-      }
-      $id_expdt_no_docente = mysqli_insert_id($conexion);
-
-
-
-      $query_modificacion = "UPDATE inasistencia_sin_aviso_no_docente set expediente_no_docente_id='" . $id_expdt_no_docente . "' WHERE no_docente_id='" . $no_docente . "' AND fecha='" . $fecha . "'";
-      $result_modificacion = mysqli_query($conexion, $query_modificacion) or die("error" . mysqli_error($conexion));
-
-      $query_mes = "SELECT EXTRACT(month FROM DATE '$fecha')";
-      $result_mes = mysqli_query($conexion, $query_mes) or die("error" . mysqli_error($conexion));
-      while ($row_mes = mysqli_fetch_array($result_mes)) {
-        $mes = $row_mes[0];
-      }
-
-      $query_anio = "SELECT EXTRACT(year FROM DATE '$fecha')";
-      $result_anio = mysqli_query($conexion, $query_anio) or die("error" . mysqli_error($conexion));
-      while ($row_anio = mysqli_fetch_array($result_anio)) {
-        $anio = $row_anio[0];
-      }
-
-      $query_pprod = "SELECT * FROM planilla_productividad_no_docente WHERE mes_id = '$mes' AND anio = '$anio'";
-      $result_pprod = mysqli_query($conexion, $query_pprod);
-      if (mysqli_num_rows($result_pprod) == 0) {
-        $query_crear_pprod = "INSERT into planilla_productividad_no_docente (mes_id, anio) VALUES ('$mes','$anio')";
-        $result_crear_pprod = mysqli_query($conexion, $query_crear_pprod);
-      }
-      $result_pprod = mysqli_query($conexion, $query_pprod);
-      while ($row_pprod = mysqli_fetch_array($result_pprod)) {
-        $pprod = $row_pprod[0];
-      }
-
-      $total = 0;
-      $hora_inicio = 0;
-      $hora_fin = 0;
-
-      $query_horas = "SELECT * FROM inasistencia_sin_aviso_no_docente WHERE no_docente_id = '$no_docente' and fecha = '$fecha'";
-      $result_horas = mysqli_query($conexion, $query_horas) or die("error" . mysqli_error($conexion));
-      while ($row_horas = mysqli_fetch_array($result_horas)) {
-        $hora_inicio = (int)$row_horas['hora_inicio'];
-        $hora_fin = (int)$row_horas['hora_fin'];
-        $total = $total + ($hora_fin - $hora_inicio);
-      }
-
-
-      $planilla_expdt = "INSERT INTO expediente_planilla_no_docente (planilla_productividad_no_docente_id, expediente_no_docente_id, hs_descontadas) VALUES ('$pprod','$id_expdt_no_docente',$total)";
-      $result_planilla_expdt = mysqli_query($conexion, $planilla_expdt) or die("error" . mysqli_error($conexion));
-      $result_pprod = mysqli_query($conexion, $query_pprod) or die("error" . mysqli_error($conexion));
-    }
-  ?>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>Expedientes generados</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  <?php
-  }
-  mysqli_close($conexion);
-  ?>
-  </tbody>
-  </table>
+              $planilla_expdt = "INSERT INTO expediente_planilla_no_docente (planilla_productividad_no_docente_id, expediente_no_docente_id, hs_descontadas) VALUES ('$pprod','$id_expdt_no_docente',$total)";
+              $result_planilla_expdt = mysqli_query($conexion,$planilla_expdt) or die("error".mysqli_error($conexion));
+              $result_pprod = mysqli_query($conexion,$query_pprod) or die("error".mysqli_error($conexion));
+            }
+            ?>
+               <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <strong>Expedientes generados</strong>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                      </button>
+              </div>
+            <?php
+          }  
+        // mysqli_close($conexion);
+        
+        ?>
+      </tbody>
+    </table>
+      
 </div>
 
 <?php include("../includes/footer.php") ?>
