@@ -2,7 +2,7 @@
 <?php 
     include "../includes/db.php";
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) header("Location:confirmar-p-productividad.php");
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id'])) header("Location:index.php");
 
     
     $result = mysqli_query($conexion, "DELETE FROM expediente WHERE id={$_POST['id']}");
@@ -15,6 +15,6 @@
         $_SESSION['elim_expdte_msg'] = ['content'=> mysqli_error($conexion), 'type'=> 'danger'];
     }
 
-    header("Location:index.php?del_expdte_id={$_POST['id']}");
+    header("Location:index.php");
 
 ?>

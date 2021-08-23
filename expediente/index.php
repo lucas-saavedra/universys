@@ -1,8 +1,6 @@
-<?php /* include("../includes/header.php");  
-include("../includes/menu.php"); */ ?>
 <?php 
 include("../jornada/navbar.php");
- include("./includes/consultas.php");
+include("./includes/consultas.php");
 
 $hoy = new DateTime('NOW');
 
@@ -17,8 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $tipo_agente = $_POST['select'];
 }
 
-if (isset($_GET['del_expdte_id'])) {
-    $msg = ['content' => "El expediente de ID {$_GET['del_expdte_id']} ha sido eliminado", 'type' => 'success'];
+if (isset($_SESSION['elim_expdte_msg'])) {
+    $msg = $_SESSION['elim_expdte_msg'];
+    unset($_SESSION['elim_expdte_msg']);
 }
 
 
