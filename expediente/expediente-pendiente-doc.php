@@ -40,7 +40,7 @@
                     </tr>
                 </thead>
                 <?php
-                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id AND confirmado=0";
+                $query_sin_doc = "SELECT expediente.id , persona_id FROM expediente,(SELECT id FROM `codigo` WHERE requiere_doc=1) as m1 WHERE m1.id = expediente.codigo_id AND confirmado=false";
                 $result_sin_doc = mysqli_query($conexion, $query_sin_doc);
                 while ($row_sin_doc = mysqli_fetch_array($result_sin_doc)) {
                     $persona =  $row_sin_doc['persona_id'];
