@@ -22,6 +22,7 @@ if ($_POST) {
       foreach ($roles as $rol) :
         switch ($rol['rol']) {
           case 'admin':
+            $_SESSION['admin'] = true;
             $_SESSION['agente_personal'] = true;
             $_SESSION['agente_mesa_entrada'] = true;
             $_SESSION['agente_coord'] = true;
@@ -39,6 +40,7 @@ if ($_POST) {
             $_SESSION['agente_personal'] = false;
             $_SESSION['agente_mesa_entrada'] = false;
             $_SESSION['agente_coord'] = false;
+            $_SESSION['admin'] = false;
             break;
         }
       endforeach;

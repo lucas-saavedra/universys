@@ -2,12 +2,11 @@
 require '../includes/db.php';
 include("../jornada/navbar.php");
 
-$time= $_POST['tiempo'];
-$fecha_string= $_POST['fecha'];
+$Object = new DateTime();
+$time  = $Object->format("h:i:s a");
+$fecha = date("Y-n-j");
+
 $usuario_id = $_SESSION['agente_id'];
-
-$fecha = date("Y-n-j", $fecha_string);
-
 
 $query_fecha_dia = "select weekday ('$fecha')";
 $result_fecha_dia = mysqli_query($conexion, $query_fecha_dia);
@@ -29,7 +28,6 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
         $jornada = $row_jornada_no_docente['jornada_id'];
         $marc_bol=true;
         
-
         $query_fecha = "SELECT *FROM jornada WHERE id='$jornada'";
         $result_fecha = mysqli_query($conexion, $query_fecha);
         $row_fecha = mysqli_fetch_assoc($result_fecha);
