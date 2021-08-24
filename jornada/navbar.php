@@ -15,7 +15,10 @@ if (!isset($_SESSION['agente'])) {
 $es_personal = false;
 $es_mesa = false;
 $es_coord = false;
-
+$es_admin = false;
+if (isset($_SESSION['admin'])) {
+  $es_admin =  $_SESSION['admin'];
+}
 if (isset($_SESSION['agente_personal'])) {
   $es_personal =  $_SESSION['agente_personal'];
 }
@@ -61,13 +64,17 @@ $agente = $_SESSION['agente'];
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <a class="dropdown-item" href="../expediente/crear-expediente.php">Crear expediente</a>
-  
           </div>
         </li>
       <?php } ?>
       <?php if ($es_mesa) { ?>
         <li class="nav-item">
           <a class="nav-link" href="../documentacion/index.php">Documentacion</a>
+        </li>
+      <?php } ?>
+      <?php if ($es_admin) { ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../jornada/privilegios.php">Privilegios</a>
         </li>
       <?php } ?>
     </ul>

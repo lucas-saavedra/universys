@@ -1,5 +1,5 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente'])) {
+if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true' ) {
   header("Location: ../index.php ");
 }
 $agente = $_SESSION['agente'];
