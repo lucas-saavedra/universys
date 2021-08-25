@@ -1,5 +1,6 @@
-<?php include ("../includes/header.php");?>
-<?php include("../includes/menu.php"); 
+<?php include ("../includes/header.php");
+include("../includes/menu.php"); 
+include ("./includes/consultas.php");
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   $tipo_agente = "Docente";
@@ -118,13 +119,16 @@ if (isset($_GET['del_expdte_id'])) {
               <td><?php echo $row_inasist['hora_fin']?></td>
               <td>
                 <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
-                      <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                      <input type="hidden" name=docente_id value="<?= $docente_id ?>">
+                      <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">
+                      <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
+                      <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
+                      <input type="hidden" name=fecha value="<?=  $fecha ?>">
+                      <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar? ')">
                           <i class="fa fa-trash"></i>
                       </button>
                   </form>
                 </td>
-              <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
-              <td><button type="button" class="task-delete_docente btn btn-danger">Eliminar</button></td>-->
                 <?php 
                   }
                 ?>
@@ -140,6 +144,9 @@ if (isset($_GET['del_expdte_id'])) {
                 <button class="btn btn-secondary pull-right" type="submit" name="generar">Generar expedientes</button>
               </form>
         <?php
+
+      
+        
           }
             else{
         $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente";
@@ -219,7 +226,12 @@ if (isset($_GET['del_expdte_id'])) {
                 <td><?php echo $row_inasist['hora_fin']?></td>
                 <td>
                 <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
-                      <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                      <input type="hidden" name=no_docente_id value="<?= $no_docente ?>">
+                      <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">
+                      <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
+                      <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
+                      <input type="hidden" name=fecha value="<?=  $fecha ?>">
+                      <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar?')">
                           <i class="fa fa-trash"></i>
                       </button>
                   </form>

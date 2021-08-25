@@ -97,4 +97,43 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+
+
+////////////////////////              ALE             ///////////////////////////
+
+    function get_jornada_docente($bd,$docente){
+        $query_jornada_docente = "SELECT *FROM jornada_docente WHERE docente_id = '$docente'";
+        $result = mysqli_query($bd, $query_jornada_docente);
+       
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+       // return mysqli_fetch_all(mysqli_query($bd, $query_jornada_docente));
+    }
+    function get_jornada_no_docente($bd,$no_docente){
+        $query_jornada_no_docente = "SELECT *FROM jornada_no_docente WHERE no_docente_id = '$no_docente'";
+        $result = mysqli_query($bd, $query_jornada_no_docente);
+       
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+       // return mysqli_fetch_all(mysqli_query($bd, $query_jornada_docente));
+    }
+
+    function get_jornada($bd,$jornada){
+        $query_jornada ="SELECT *FROM jornada WHERE id='$jornada'";
+        $result = mysqli_query($bd, $query_jornada);
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+    function get_det_jornada($bd,$jornada_id,$hora_inicio,$hora_fin,$dia){
+        $query_det_jornada = "SELECT *FROM detalle_jornada WHERE 
+                             jornada_id ='$jornada_id' AND 
+                             hora_inicio ='$hora_inicio' AND
+                             hora_fin ='$hora_fin' AND
+                             dia ='$dia'";
+
+        $result = mysqli_query($bd, $query_det_jornada);
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
+
+
+
+    
 ?>
