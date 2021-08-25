@@ -106,14 +106,14 @@
         $result = mysqli_query($bd, $query_jornada_docente);
        
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
-       // return mysqli_fetch_all(mysqli_query($bd, $query_jornada_docente));
+       
     }
     function get_jornada_no_docente($bd,$no_docente){
         $query_jornada_no_docente = "SELECT *FROM jornada_no_docente WHERE no_docente_id = '$no_docente'";
         $result = mysqli_query($bd, $query_jornada_no_docente);
        
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
-       // return mysqli_fetch_all(mysqli_query($bd, $query_jornada_docente));
+       
     }
 
     function get_jornada($bd,$jornada){
