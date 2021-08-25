@@ -1,11 +1,11 @@
 <?PHP
 include('db.php');
-function get_agentes($conexion, $tipo_agente)
+/* function get_agentes($conexion, $tipo_agente)
 {
   $sql = "SELECT $tipo_agente.id,nombre FROM $tipo_agente left join persona on $tipo_agente.id = persona.id";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
-}
+} */
 function get_areas($conexion)
 {
   $sql = "SELECT * FROM area";
@@ -139,11 +139,36 @@ function get_jornadas_docentes_hoy($conexion, $docente_id)
 function get_jornadas_no_docentes_hoy($conexion, $no_docente_id)
 {
   $query_jornadas =
-  "SELECT hora_inicio,hora_fin,dia, fecha_inicio,fecha_fin, area.nombre as area  from jornada_no_docente
+    "SELECT hora_inicio,hora_fin,dia, fecha_inicio,fecha_fin, area.nombre as area  from jornada_no_docente
   LEFT join jornada on jornada.id = jornada_no_docente.jornada_id
   LEFT JOIN detalle_jornada on detalle_jornada.jornada_id = jornada_no_docente.jornada_id
   left JOIN area on area.id = jornada_no_docente.area_id
   WHERE jornada_no_docente.no_docente_id = '$no_docente_id' and detalle_jornada.dia = (select weekday(now()))
   order by hora_inicio";
   return mysqli_query($conexion, $query_jornadas);
+}
+
+function get_jornadasmesa_docentes_hoy($conexion, $docente_id)
+{
+  $query_jornadas_mesa_hoy = "SELECT 
+  docente_nombre.nombre as docente,
+  hora_inicio,hora_fin, dia.nombre as dia_nombre,dia.id as dia_id,
+  mesa_examen_jornada.id as id,
+  mesa_examen_jornada.carrera_nombre,
+  jornada.fecha_inicio,jornada.fecha_fin
+  from jornada_docente_mesa as jdm
+  LEFT JOIN detalle_jornada on jdm.det_jornada_id = detalle_jornada.id 
+  LEFT JOIN mesa_examen_jornada on mesa_examen_jornada.id= jdm.mesa_examen_id
+  LEFT JOIN docente_nombre on jdm.docente_id = docente_nombre.id
+  LEFT join dia on detalle_jornada.dia = dia.id 
+  LEFT JOIN jornada on mesa_examen_jornada.jornada_id = jornada.id
+  WHERE jdm.docente_id = '$docente_id' and detalle_jornada.dia = (select weekday(now()))";
+  return mysqli_query($conexion, $query_jornadas_mesa_hoy);
+}
+
+function get_roles($conexion){
+  $sql="SELECT persona.nombre as persona,rol.nombre as rol from persona_rol 
+  left join rol on persona_rol.rol_id = rol.id
+  left join persona on persona.id = persona_rol.persona_id ORDER by persona.nombre";
+  return mysqli_query($conexion, $sql);
 }

@@ -1,13 +1,12 @@
 <title>Crear Expediente</title>
 <?php 
-include ("../includes/header.php");
-include ("../includes/menu.php");
+include ("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/asignar-planilla-prod.php");
 include ("./includes/validaciones.php");
 
 $agentes = get_agentes($conexion);
-$codigos = get_codigos_inasis($conexion);
+$codigos = get_codigos_inasis($conexion, "id!={$ID_COD_SIN_AVISO}");
 
 function crear_expediente($bd){
 
@@ -71,6 +70,11 @@ function crear_expediente($bd){
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $msg = crear_expediente($conexion);
+
+    if ($msg['type'] == 'success'){
+        $_SESSION['crear_expdte_msg'] = $msg;
+        header('Location:index.php');
+    }
 }
 ?>
 <div class="container">
@@ -83,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     <?php include("./includes/msg-box.php"); ?>
 
     <div class="row mt-4">
-        <div class="col-md-8">
+        <div class="col">
             <form action="crear-expediente.php" method="POST">
                 <div class="card mb-3">
                     <div class="card-body p-3">
@@ -177,17 +181,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
                     </div>
                 </div>
             </form>
-        </div>
-        <div class="col-md-4">
-            <ul class="list-group list-group-horizontal flex-wrap">
-                <?php foreach (mysqli_fetch_all(mysqli_query($conexion, 'SELECT id FROM expediente'), MYSQLI_ASSOC) as $expdte):?>
-                    <li class="list-group-item">
-                        <a href="modificar-expediente.php?id=<?=$expdte['id']?>">
-                            <?=$expdte['id']?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
         </div>
     </div>
 

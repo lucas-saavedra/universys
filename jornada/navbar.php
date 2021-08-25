@@ -15,7 +15,10 @@ if (!isset($_SESSION['agente'])) {
 $es_personal = false;
 $es_mesa = false;
 $es_coord = false;
-
+$es_admin = false;
+if (isset($_SESSION['admin'])) {
+  $es_admin =  $_SESSION['admin'];
+}
 if (isset($_SESSION['agente_personal'])) {
   $es_personal =  $_SESSION['agente_personal'];
 }
@@ -40,10 +43,10 @@ $agente = $_SESSION['agente'];
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
       <?php if ($es_personal) {  ?>
+        
         <li class="nav-item ">
-          <a class="nav-link" href="../expediente/crear-expediente.php">Expedientes </a>
+          <a class="nav-link" href="../expediente/">Productividad</a>
         </li>
-
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Jornadas
@@ -53,10 +56,27 @@ $agente = $_SESSION['agente'];
             <a class="dropdown-item" href="../jornada/mesa.php">Jornada de Mesa</a>
           </div>
         </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Expedientes
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="../expediente/crear-expediente.php">Cargar expediente</a>
+            <a class="dropdown-item" href="../expediente/expediente-pendiente-doc.php">Sin documentacion</a>
+          </div>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="../expediente/generar_inasistencia.php">Inasistencias</a>
+        </li>
       <?php } ?>
       <?php if ($es_mesa) { ?>
         <li class="nav-item">
           <a class="nav-link" href="../documentacion/index.php">Documentacion</a>
+        </li>
+      <?php } ?>
+      <?php if ($es_admin) { ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../jornada/privilegios.php">Privilegios</a>
         </li>
       <?php } ?>
     </ul>

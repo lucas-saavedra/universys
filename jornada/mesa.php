@@ -1,13 +1,12 @@
 <?php include("navbar.php");
-
-if (!isset($_SESSION['agente'])) {
+if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true' ) {
     header("Location: ../index.php ");
 }
 ?>
 <div class="container">
     <div class="row">
         <div class="col">
-            <div class="card mb-4">
+            <div class="card mb-4 mt-4">
                 <div class="card-header">
                     <h2 class="card-title text-center h-4">Mesa de examen docentes</h2>
                 </div>

@@ -2,12 +2,11 @@
 require '../includes/db.php';
 include("../jornada/navbar.php");
 
-$time = $_POST['tiempo'];
-$fecha_string = $_POST['fecha'];
+$Object = new DateTime();
+$time  = $Object->format("h:i:s a");
+$fecha = date("Y-n-j");
+
 $usuario_id = $_SESSION['agente_id'];
-
-$fecha = date("Y-n-j", $fecha_string);
-
 $query_fecha_dia = "select weekday ('$fecha')";
 $result_fecha_dia = mysqli_query($conexion, $query_fecha_dia);
 while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {

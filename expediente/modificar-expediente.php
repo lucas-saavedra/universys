@@ -1,7 +1,7 @@
 <title>Modificar Expediente</title>
 <?php 
-include ("../includes/header.php");
-include ("../includes/menu.php");
+
+include ("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/validaciones.php");
 include ("./includes/asignar-planilla-prod.php");
@@ -22,7 +22,7 @@ function get_campos_modificados($array1, $array2, $convertir=array()){
         $converted = empty($convertir[$campo]) ? $campo: $convertir[$campo];
         if ($array1[$campo] != $array2[$campo]){
             if ($array2[$campo] === ""){
-                $modificaciones[$campo] = "{$campo}=NULL";
+                $modificaciones[$campo] = "{$converted}=NULL";
                 continue;
             }
             $modificaciones[$converted] = "{$converted}='{$array2[$campo]}'";
@@ -118,8 +118,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 $filtros = [];
 if (!is_null($expdte['expdte_docente_id'])) $filtros[] = "es_docente=1";
 if (!is_null($expdte['expdte_no_docente_id'])) $filtros[] = "es_no_docente=1";
+$filtros[] = "id!={$ID_COD_SIN_AVISO}";
 
 $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
+$cod_sin_aviso = get_codigos_inasis($conexion, "id={$ID_COD_SIN_AVISO}")[0];
+
+// En los expedientes con el codigo sin aviso hay campos q no se pueden modificar
+$expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly = '';
 ?>
 
 <div class="container">
@@ -190,14 +195,14 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
                             <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
                             <div class="col-sm-10">
                                 <input type="datetime-local" class="form-control" name="aviso[aviso_fecha]" 
-                                value="<?=$expdte['aviso_fecha']?>" required />
+                                value="<?=$expdte['aviso_fecha']?>" <?=$readonly?> required/>
                             </div>
                         </div>
 
                         <div class="mb-3 row">
                             <label for="" class="col-sm-2 form-label">Descripción</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" name="aviso[aviso_desc]"><?=$expdte['aviso_desc']?></textarea>
+                                <textarea class="form-control" name="aviso[aviso_desc]" <?=$readonly?>><?=$expdte['aviso_desc']?></textarea>
                             </div>
                         </div>
                     </div>
@@ -205,7 +210,7 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Documentación</label>
                     <div class="col-sm-8">
-                        <select class="form-control form-control-sm" name="expdte[doc_justificada_id]">
+                        <select class="form-control form-control-sm" name="expdte[doc_justificada_id]" <?=$readonly?>>
                             <option value="" <?=!$expdte['doc_justificada_id'] ? 'selected': ''?>></option>
 
                             <?php foreach(get_docs_sin_expdte($conexion, $expdte) as $doc): ?>
@@ -228,17 +233,23 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 form-label">Código</label>
                     <div class="col-sm-7">
-                        <select class="form-control" name="expdte[codigo_id]" required>
-                            <?php if (!$expdte['codigo_id']): ?>
-                                <option value="" selected disabled>Seleccione un código</option>
-                            <?php endif; ?>
+                        <?php if (!$readonly): ?>
+                            <select class="form-control" name="expdte[codigo_id]" required>
+                                <?php if (!$expdte['codigo_id']): ?>
+                                    <option value="" selected disabled>Seleccione un código</option>
+                                <?php endif; ?>
 
-                            <?php foreach ($codigos as $codigo):?>
-                                <option value="<?=$codigo['id']?>" <?=$codigo['id'] === $expdte['codigo_id'] ? 'selected': ''?>>
-                                    <?="{$codigo['referencia']} - {$codigo['nombre']}"?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                                <?php foreach ($codigos as $codigo):?>
+                                    <option value="<?=$codigo['id']?>" <?=$codigo['id'] === $expdte['codigo_id'] ? 'selected': ''?>>
+                                        <?="{$codigo['referencia']} - {$codigo['nombre']}"?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <select class="form-control" name="expdte[codigo_id]" required readonly>
+                                <option value="<?=$cod_sin_aviso['id']?>"><?=$cod_sin_aviso['nombre']?></option>
+                            </select>
+                        <?php endif; ?>
                     </div>
                     <div class="col-sm-3 d-flex align-items-center">
                         <div class="form-check">

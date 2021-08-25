@@ -1,4 +1,7 @@
 <?php 
+
+    $ID_COD_SIN_AVISO = 2;
+
     function get_agentes($bd){
         $sql = "SELECT p.id, p.nombre, d.id AS docente_id, nd.id AS no_docente_id FROM 
         persona AS p 
