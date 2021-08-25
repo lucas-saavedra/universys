@@ -1,7 +1,7 @@
 <title>Modificar Expediente</title>
 <?php 
-include ("../includes/header.php");
-include ("../includes/menu.php");
+
+include ("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include ("./includes/validaciones.php");
 include ("./includes/asignar-planilla-prod.php");

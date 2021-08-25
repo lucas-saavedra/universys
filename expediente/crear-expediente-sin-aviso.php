@@ -1,5 +1,4 @@
-<?php include("../includes/header.php"); ?>
-<?php include("../includes/menu.php");
+<?php include("../jornada/navbar.php");
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   $tipo_agente = "Docente";
@@ -52,7 +51,7 @@ if (isset($_GET['del_expdte_id'])) {
             $docente_id = $row_docente['id'];
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
   ?>
-            <table class="table table-striped table-dark">
+            <table class="table table-striped table-dark table-sm ">
               <thead>
                 <tr>
                   <th scope="col">Agente</th>
@@ -64,7 +63,7 @@ if (isset($_GET['del_expdte_id'])) {
               </thead>
               <tbody>
 
-                <tr>
+                <tr class="table-secondary text-dark">
                   <td><?php echo $row_docente['nombre'] ?></td>
                   <td class="text-center"><?php echo $days[$fecha_dia], ' ', $fecha ?></td>
                   <?php
@@ -93,7 +92,7 @@ if (isset($_GET['del_expdte_id'])) {
                   }
               ?>
               <tr>
-                <table class="table table-striped ml-5">
+                <table class="table table-striped ml-3 table-sm ">
                   <thead>
                     <tr>
                       <th scop="col">ID</th>

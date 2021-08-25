@@ -43,9 +43,7 @@ $agente = $_SESSION['agente'];
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
       <?php if ($es_personal) {  ?>
-        <li class="nav-item ">
-          <a class="nav-link" href="../expediente/crear-expediente-sin-aviso.php">Inasistencias</a>
-        </li>
+        
         <li class="nav-item ">
           <a class="nav-link" href="../expediente/">Productividad</a>
         </li>
@@ -63,8 +61,12 @@ $agente = $_SESSION['agente'];
             Expedientes
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="../expediente/crear-expediente.php">Crear expediente</a>
+            <a class="dropdown-item" href="../expediente/crear-expediente.php">Cargar expediente</a>
+            <a class="dropdown-item" href="../expediente/expediente-pendiente-doc.php">Sin documentacion</a>
           </div>
+        </li>
+        <li class="nav-item ">
+          <a class="nav-link" href="../expediente/generar_inasistencia.php">Inasistencias</a>
         </li>
       <?php } ?>
       <?php if ($es_mesa) { ?>
