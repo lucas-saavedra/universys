@@ -46,7 +46,7 @@ while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
                     $query_asistencia = "SELECT *FROM asistencia_docente WHERE detalle_jornada_id = '$id_detalle' AND fecha = '$fecha_anterior' and docente_id='$docente'";
                     $result_asistencia = mysqli_query($conexion,$query_asistencia);
                     if (mysqli_num_rows($result_asistencia) == 0){
-                        $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior' AND confirmado='1'";
+                        $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior'";
                         $result_expediente = mysqli_query($conexion,$query_expediente);
                         if (mysqli_num_rows($result_expediente) == 0){
 
@@ -104,7 +104,7 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                 $result_asistencia = mysqli_query($conexion,$query_asistencia);
                 if (mysqli_num_rows($result_asistencia) == 0){
 
-                    $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior' AND confirmado='1'";
+                    $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior'";
                     $result_expediente = mysqli_query($conexion,$query_expediente);
                     if (mysqli_num_rows($result_expediente) == 0){
 
@@ -171,7 +171,7 @@ while ($row_jornada_docente = mysqli_fetch_array($result_jornada_docente)){
                     $result_asistencia = mysqli_query($conexion,$query_asistencia);
                     if (mysqli_num_rows($result_asistencia) == 0){
                        
-                        $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior' AND confirmado='1'";
+                        $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior'";
                         $result_expediente = mysqli_query($conexion,$query_expediente);
                         if (mysqli_num_rows($result_expediente) == 0){
 

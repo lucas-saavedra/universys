@@ -1,14 +1,14 @@
+<?php
+ob_start();
+?>
 <?php include("../jornada/navbar.php");
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
   $tipo_agente = "Docente";
 } else {
   $tipo_agente = $_POST['select'];
 }
 
-if (isset($_GET['del_expdte_id'])) {
-  $msg = ['content' => "La inasistencia ha sido eliminada", 'type' => 'success'];
-}
 ?>
 <div class="container-fluid">
   <div class="row">
@@ -116,13 +116,16 @@ if (isset($_GET['del_expdte_id'])) {
                         <td><?php echo $row_inasist['hora_fin'] ?></td>
                         <td>
                           <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
-                            <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
+                              <input type="hidden" name=docente_id value="<?= $docente_id ?>">
+                              <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">
+                              <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
+                              <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
+                              <input type="hidden" name=fecha value="<?=  $fecha ?>">
+                              <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar? ')">
                               <i class="fa fa-trash"></i>
-                            </button>
+                          </button>
                           </form>
                         </td>
-                        <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
-              <td><button type="button" class="task-delete_docente btn btn-danger">Eliminar</button></td>-->
                       <?php
                     }
                       ?>
@@ -138,7 +141,7 @@ if (isset($_GET['del_expdte_id'])) {
       }
     } ?>
     <form action="" method="post">
-      <button class="btn btn-secondary pull-right" type="submit" name="generar">Generar expedientes</button>
+      <button class="btn btn-secondary pull-right" type="submit" name="generar" onclick="return confirm('Se crearan expedientes para las inasistencias docentes.¿Desea continuar?')">Generar expedientes</button>
     </form>
     <?php
   } else {
@@ -159,7 +162,7 @@ if (isset($_GET['del_expdte_id'])) {
             $no_docente_id = $row_no_docente['id'];
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
     ?>
-            <table class="table table-striped table-dark">
+            <table class="table table-striped table-dark table-sm ">
               <thead>
                 <tr>
                   <th scope="col">Agente</th>
@@ -170,7 +173,7 @@ if (isset($_GET['del_expdte_id'])) {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+              <tr class="table-secondary text-dark">
                   <td><?php echo $row_no_docente['nombre'] ?></td>
                   <td class="text-center"><?php echo $days[$fecha_dia], ' ', $fecha ?></td>
                   <?php
@@ -196,7 +199,7 @@ if (isset($_GET['del_expdte_id'])) {
                 </tr>
               <?php } ?>
               <tr>
-                <table class="table table-striped ml-5">
+                <table class="table table-striped ml-3 table-sm ">
                   <thead>
                     <tr>
                       <th scop="col">id</ht>
@@ -219,14 +222,16 @@ if (isset($_GET['del_expdte_id'])) {
                         <td><?php echo $row_inasist['hora_fin'] ?></td>
                         <td>
                           <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
-                            <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Seguro que desea eliminar la inasistencia de ID <?= $row_inasist['id'] ?>?')">
-                              <i class="fa fa-trash"></i>
-                            </button>
+                          <input type="hidden" name=no_docente_id value="<?= $no_docente ?>">
+                          <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">
+                          <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
+                          <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
+                          <input type="hidden" name=fecha value="<?=  $fecha ?>">
+                          <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar?')">
+                          <i class="fa fa-trash"></i>
+                      </button>
                           </form>
                         </td>
-                        <!--<td><button type="button" class="fas fa-info-circle fa-lg fa-fw"></button></td>
-                <td><button type="button" class="task-delete_no_docente btn btn-danger">Eliminar</button></td>-->
-
                       <?php  } ?>
                       </tr>
                   </tbody>
@@ -240,7 +245,7 @@ if (isset($_GET['del_expdte_id'])) {
       }
     } ?>
     <form action="" method="post">
-      <button class="btn btn-secondary pull-right" type="submit" name="generar_no_docente">Generar expedientes</button>
+      <button class="btn btn-secondary pull-right" type="submit" name="generar_no_docente" onclick="return confirm('Se crearan expedientes para las inasistencias no docentes.¿Desea continuar?')">Generar expedientes</button>
     </form>
 
   <?php }
@@ -316,14 +321,9 @@ if (isset($_GET['del_expdte_id'])) {
       $result_planilla_expdt = mysqli_query($conexion, $planilla_expdt) or die("error" . mysqli_error($conexion));
       $result_pprod = mysqli_query($conexion, $query_pprod) or die("error" . mysqli_error($conexion));
     }
-  ?>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>Expedientes generados</strong>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  <?php
+   
+    $ActualizarDespuesDe = 1;
+    header('Refresh: '.$ActualizarDespuesDe);
   }
   if (isset($_POST['generar_no_docente'])) {
     $query_generar = "SELECT no_docente_id, fecha,expediente_no_docente_id FROM `inasistencia_sin_aviso_no_docente` where expediente_no_docente_id is NULL GROUP BY no_docente_id, fecha";
@@ -395,16 +395,10 @@ if (isset($_GET['del_expdte_id'])) {
       $result_planilla_expdt = mysqli_query($conexion, $planilla_expdt) or die("error" . mysqli_error($conexion));
       $result_pprod = mysqli_query($conexion, $query_pprod) or die("error" . mysqli_error($conexion));
     }
-  ?>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>Expedientes generados</strong>
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  <?php
+    $ActualizarDespuesDe = 1;
+    header('Refresh: '.$ActualizarDespuesDe);
   }
-  // mysqli_close($conexion);
+ 
 
   ?>
   </tbody>
@@ -413,3 +407,6 @@ if (isset($_GET['del_expdte_id'])) {
 </div>
 
 <?php include("../includes/footer.php") ?>
+<?php
+ob_end_flush();
+?>

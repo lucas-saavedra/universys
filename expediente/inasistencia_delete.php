@@ -8,8 +8,7 @@
     $docente = $_POST['docente_id'];
     $fecha = $_POST['fecha'];
     $no_docente = $_POST['no_docente_id'];
-    
-   
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['id_docente'])) header("Location:crear-expediente-sin-aviso.php");
     
         $result = mysqli_query($conexion, "DELETE FROM inasistencia_sin_aviso_docente WHERE id={$_POST['id_docente']}");
