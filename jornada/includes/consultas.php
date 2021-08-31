@@ -167,21 +167,22 @@ function get_jornadasmesa_docentes_hoy($conexion, $docente_id)
   return mysqli_query($conexion, $query_jornadas_mesa_hoy);
 }
 
-function get_roles($conexion){
-  $sql="SELECT persona.nombre as persona,rol.nombre as rol from persona_rol 
+function get_roles($conexion)
+{
+  $sql = "SELECT persona.nombre as persona,rol.nombre as rol from persona_rol 
   left join rol on persona_rol.rol_id = rol.id
   left join persona on persona.id = persona_rol.persona_id ORDER by persona.nombre";
   return mysqli_query($conexion, $sql);
 }
 
 
-$sql="SELECT DISTINCT j.fecha_inicio,j.fecha_fin, docente.persona_id,docente_id,jornada_id, catedra_id 
+$sql = "SELECT DISTINCT j.fecha_inicio,j.fecha_fin, docente.persona_id,docente_id,jornada_id, catedra_id 
 FROM jornada_docente 
 LEFT JOIN docente on docente.id = jornada_docente.docente_id 
 LEFT JOIN jornada as j on j.id = jornada_docente.jornada_id";
 
 
-$query_jornada_no_docente="SELECT
+$query_jornada_no_docente = "SELECT
 jornada_no_docente.jornada_id AS jornada_id,
 detalle_jornada.id as detalle_id,
 hora_inicio,
@@ -199,12 +200,9 @@ LEFT JOIN persona ON persona.id = no_docente.persona_id
 LEFT JOIN jornada ON jornada.id = jornada_no_docente.jornada_id
 LEFT JOIN detalle_jornada ON detalle_jornada.jornada_id = jornada_no_docente.jornada_id
 LEFT JOIN area ON area.id = jornada_no_docente.area_id
-/* WHERE
-detalle_jornada.dia =(
-SELECT
-WEEKDAY(NOW())) -1 */";
+ ";
 
-$query_jornada_docente="SELECT
+$query_jornada_docente = "SELECT
 jornada_docente.jornada_id AS jornada_id,
 detalle_jornada.id AS detalle_id,
 hora_inicio,
@@ -224,25 +222,23 @@ LEFT JOIN jornada ON jornada.id = jornada_docente.jornada_id
 LEFT JOIN detalle_jornada ON detalle_jornada.jornada_id = jornada_docente.jornada_id
 LEFT JOIN catedra ON catedra.id = jornada_docente.catedra_id
 LEFT JOIN carrera ON carrera.id = catedra.carrera_id
-/*WHERE
-detalle_jornada.dia =(
-SELECT
-WEEKDAY(NOW()))-1*/";
-$query_jornada_mesa="SELECT
-docente_nombre.nombre AS docente,
-hora_inicio,
-hora_fin,
-dia.nombre AS dia_nombre,
-dia.id AS dia_id,
-mesa_examen_jornada.id AS mesa_examen_id,
-mesa_examen_jornada.carrera_nombre,
-jornada.fecha_inicio,
-jornada.fecha_fin,
-persona.id AS persona_id,
-jdm.docente_id AS agente_id,
-detalle_jornada.id as det_jornada_id
+ ";
+
+$query_jornada_mesa = "SELECT
+ docente_nombre.nombre AS docente,
+ hora_inicio,
+ hora_fin,
+ dia.nombre AS dia_nombre,
+ dia.id AS dia_id,
+ mesa_examen_jornada.id AS mesa_examen_id,
+ mesa_examen_jornada.carrera_nombre,
+ jornada.fecha_inicio,
+ jornada.fecha_fin,
+ persona.id AS persona_id,
+ jdm.docente_id AS agente_id,
+ detalle_jornada.id AS det_jornada_id
 FROM
-jornada_docente_mesa AS jdm
+ jornada_docente_mesa AS jdm
 LEFT JOIN docente ON docente.id = jdm.docente_id
 LEFT JOIN persona ON persona.id = docente.persona_id
 LEFT JOIN detalle_jornada ON jdm.det_jornada_id = detalle_jornada.id
@@ -251,22 +247,25 @@ LEFT JOIN docente_nombre ON jdm.docente_id = docente_nombre.id
 LEFT JOIN dia ON detalle_jornada.dia = dia.id
 LEFT JOIN jornada ON mesa_examen_jornada.jornada_id = jornada.id";
 
-function get_asistencias_num_rows($conexion,$id_detalle,$fecha_anterior,$agente_id,$tipo_agente){
- 
-  $query_asistencia = "SELECT * FROM asistencia_".$tipo_agente." WHERE detalle_jornada_id = '$id_detalle' AND fecha = '$fecha_anterior' and docente_id='$agente_id'";
+
+
+function get_asistencias_num_rows($conexion, $id_detalle, $fecha_anterior, $agente_id, $tipo_agente)
+{
+
+  $query_asistencia = "SELECT * FROM asistencia_" . $tipo_agente . " WHERE detalle_jornada_id = '$id_detalle' AND fecha = '$fecha_anterior' and " . $tipo_agente . "_id='$agente_id'";
   return mysqli_num_rows(mysqli_query($conexion, $query_asistencia)) == 0;
 }
 
-function get_exp_num_rows($conexion,$persona,$fecha_anterior){
+function get_exp_num_rows($conexion, $persona, $fecha_anterior)
+{
   $query_expediente = "SELECT *FROM expediente WHERE persona_id='$persona' and fecha_inicio <= '$fecha_anterior' and fecha_fin >= '$fecha_anterior'";
   return mysqli_num_rows(mysqli_query($conexion, $query_expediente)) == 0;
 }
 
-function get_inasistencias_num_rows($conexion,$agente_id,$hora_inicio,$fecha_anterior,$hora_fin,$tipo_agente){
+function get_inasistencias_num_rows($conexion, $agente_id, $hora_inicio, $fecha_anterior, $hora_fin, $tipo_agente)
+{
 
-  $query_inasistencia = "SELECT * FROM inasistencia_sin_aviso_".$tipo_agente." WHERE 
-  fecha='$fecha_anterior' AND ".$tipo_agente."_id='$agente_id' AND hora_inicio='$hora_inicio' AND hora_fin='$hora_fin'";
+  $query_inasistencia = "SELECT * FROM inasistencia_sin_aviso_" . $tipo_agente . " WHERE 
+  fecha='$fecha_anterior' AND " . $tipo_agente . "_id='$agente_id' AND hora_inicio='$hora_inicio' AND hora_fin='$hora_fin'";
   return mysqli_num_rows(mysqli_query($conexion, $query_inasistencia)) == 0;
 }
-
-

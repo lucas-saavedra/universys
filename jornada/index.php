@@ -56,7 +56,7 @@ $fecha_string = (strtotime($fecha));
                                         while ($row_jornadas = mysqli_fetch_array($result_jornadas_mesa)) {
                                             $fecha_inicio = $row_jornadas['fecha_inicio'];
                                             $fecha_fin    = $row_jornadas['fecha_fin'];
-                                            if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)) {
+                                            if (strtotime($fecha_inicio) <= strtotime($fecha) and strtotime($fecha_fin) >= strtotime($fecha)) {
                                         ?>
                                                 <tr>
                                                     <td> <?php echo date("H:i", strtotime($row_jornadas['hora_inicio'])) . ' hs' ?> </td>
@@ -66,7 +66,7 @@ $fecha_string = (strtotime($fecha));
                                                     <td> <?php echo '<span class="badge badge-success">Activa</span>' ?></td>
 
                                                 </tr>
-                                            <?php  } ?>
+                                            <?php   }  ?>
                                         <?php  } ?>
                                     </tbody>
                                 </table>
@@ -99,7 +99,7 @@ $fecha_string = (strtotime($fecha));
                                         while ($row_jornadas = mysqli_fetch_array($result_jornadas)) {
                                             $fecha_inicio = $row_jornadas['fecha_inicio'];
                                             $fecha_fin    = $row_jornadas['fecha_fin'];
-                                            if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)) {
+                                            if (strtotime($fecha_inicio) <= strtotime($fecha) and strtotime($fecha_fin) >= strtotime($fecha)) {
                                         ?>
                                                 <tr>
                                                     <td> <?php echo date("H:i", strtotime($row_jornadas['hora_inicio'])) . ' hs' ?> </td>
@@ -147,7 +147,7 @@ if (mysqli_num_rows($result_no_docente) !== 0) {
         <div class="card">
             <div class="card-header text-center">No docente <form action="../expediente/registrar-asistencia_no_docente.php" method="POST" class="py-3">
                     <button class="btn btn-primary" type="submit">Registrar asistencia</button>
-                  
+
                 </form>
             </div>
             <div class="card-body">
