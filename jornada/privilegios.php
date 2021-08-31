@@ -4,7 +4,6 @@ if (!isset($_SESSION['admin']) || $_SESSION['admin'] <> 'true' ) {
     header("Location: ../index.php ");
 }
 
-
 ?>
 <div class="container-fluid">
     <div class="row">

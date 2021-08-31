@@ -1,4 +1,4 @@
-<?php 
+<?php
 include("../jornada/navbar.php");
 include("./includes/consultas.php");
 
@@ -18,8 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if (isset($_SESSION['elim_expdte_msg'])) {
     $msg = $_SESSION['elim_expdte_msg'];
     unset($_SESSION['elim_expdte_msg']);
-}
-elseif (isset($_SESSION['crear_expdte_msg'])) {
+} elseif (isset($_SESSION['crear_expdte_msg'])) {
     $msg = $_SESSION['crear_expdte_msg'];
     unset($_SESSION['crear_expdte_msg']);
 }
@@ -68,7 +67,7 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
             if ($row_planilla > 0) {
                 $planilla_id = $row_planilla['id']
     ?>
-                <table class="table table-striped table-dark table-sm">
+                <table class="table table-dark table-sm my-3">
                     <thead>
                         <tr>
                             <th scope="col">UNIVERSIDAD AUTÓNOMA DE ENTRE RÍOS</th>
@@ -96,14 +95,14 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
             ?>
 
                 <table class="table table-striped table-dark table-sm">
-                    <thead class="col-md-12">
+                    <!--    <thead class="col-md-12">
                         <tr>
                             <th class="text-center" scope="col">DNI</th>
                             <th class="text-center" scope="col">Agente</th>
                             <th class="text-center" scope="col">Horas descontadas</th>
                             <th class="text-center" scope="col">Total horas/antiguedad</th>
                         </tr>
-                    </thead>
+                    </thead>  -->
                     <tbody>
                         <?php
                         $total_hs = '0';
@@ -116,13 +115,13 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
                         }
                         ?>
                         <tr>
-                            <td scope="row"><?php echo $row_docente['dni'] ?></td>
-                            <td class="text-center"><?php echo $row_docente['nombre'] ?></td>
-                            <td class="text-center"><?php echo $total_hs ?></td>
-                            <td class="text-center"><?php echo $row_docente['antiguedad'] ?></td>
+                            <td class=""><?php echo $row_docente['nombre'] ?></td>
+                            <td><?php echo 'DNI: ' . $row_docente['dni'] ?></td>
+                            <td class=""><?php echo 'Horas descontadas: ' . $total_hs ?></td>
+                            <td class=""><?php echo $row_docente['antiguedad'] ?></td>
                         </tr>
                         <tr>
-                            <table class="table table-striped ml-4">
+                            <table class="table table-striped ml-4 table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col">Codigo</th>
@@ -194,7 +193,7 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
                     if ($row_planilla > 0) {
                         $planilla_id = $row_planilla['id'];
                 ?>
-                        <table class="table table-striped table-dark">
+                        <table class="table table-striped table-dark table-sm">
                             <thead>
                                 <tr>
                                     <th scope="col">UNIVERSIDAD AUTÓNOMA DE ENTRE RÍOS</th>
@@ -220,14 +219,14 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
                             $no_docente_id = $row_no_docente['id']
 
                         ?>
-                            <table class="table table-striped table-dark">
-                                <thead class="col-md-12">
+                            <table class="table table-striped table-dark table-sm">
+                                <!-- <thead class="col-md-12">
                                     <tr>
                                         <th scope="col">DNI</th>
                                         <th scope="col">Agente</th>
                                         <th scope="col">Horas descontadas</th>
                                         <th scope="col">Total horas/antiguedad</th>
-                                    </tr>
+                                    </tr> -->
                                 </thead>
                                 <tbody>
                                     <?php
@@ -243,13 +242,14 @@ elseif (isset($_SESSION['crear_expdte_msg'])) {
                                     }
                                     ?>
                                     <tr>
-                                        <td scope="row"><?php echo  $row_no_docente['dni'] ?></td>
+                                        
                                         <td><?php echo $row_no_docente['nombre'] ?></td>
-                                        <td><?php echo $total_hs ?></td>
-                                        <td><?php echo $row_no_docente['antiguedad'] ?></td>
+                                        <td><?php echo  'DNI:'.$row_no_docente['dni'] ?></td>
+                                        <td><?php echo 'Horas descontadas: '.$total_hs ?></td>
+                                        <td><?php echo 'Total horas: '.$row_no_docente['antiguedad'] ?></td>
                                     </tr>
                                     <tr>
-                                        <table class="table table-striped ml-4">
+                                        <table class="table table-striped ml-4  table-sm ">
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Codigo</th>

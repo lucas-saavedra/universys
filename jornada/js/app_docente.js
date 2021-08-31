@@ -542,7 +542,6 @@ $(document).ready(function () {
     }
 
 
-
     $(document).on('click', '.horario_mesa_i_add_agente', function () {
         let element = $(this)[0].parentElement;
         $('#horario_id').val($(element).attr('horario_id'));
