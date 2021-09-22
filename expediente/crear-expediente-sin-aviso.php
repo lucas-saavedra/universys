@@ -1,7 +1,9 @@
 <?php include("../jornada/navbar.php");
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  $tipo_agente = "Docente";
+
+
+if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
+  $tipo_agente = "docente";
 } else {
   $tipo_agente = $_POST['select'];
 }
@@ -18,8 +20,8 @@ if (isset($_GET['del_expdte_id'])) {
           <h2 class="col-md-12 text-center">Buscar expedientes sin aviso</h2>
           <div class=" row m-auto col">
             <select name="select" class="form-control mr-sm-2 col-3" required>
-              <option value="Docente" <?= $tipo_agente == 'Docente' ? 'selected' : '' ?>>Docente</option>
-              <option value="No docente" <?= $tipo_agente == 'No docente' ? 'selected' : '' ?>>No docente</option>
+              <option value="docente" <?= $tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
+              <option value="no_docente" <?= $tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
             </select>
             <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit">BUSCAR.</button>
           </div>
@@ -31,7 +33,7 @@ if (isset($_GET['del_expdte_id'])) {
 
 
 
-  if ($tipo_agente == 'Docente') {
+  if ($tipo_agente == 'docente') {
     $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
     $result_fecha = mysqli_query($conexion, $query_fecha);
 
