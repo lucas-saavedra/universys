@@ -54,7 +54,7 @@ if (isset($_GET['del_expdte_id'])) {
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
   ?>
             <table class="table table-sm ">
-             <!--  <thead>
+              <!--  <thead>
                 <tr>
                   <th scope="col">Agente</th>
                   <th class="text-center" scope="col">Dia</th>
@@ -72,7 +72,7 @@ if (isset($_GET['del_expdte_id'])) {
                   $contador_docente = mysqli_query($conexion, $contador);
                   while ($row_contador = mysqli_fetch_array($contador_docente)) {
                   ?>
-                    <td class="text-center"><?php echo 'Inasistencias: ' .$row_contador[0] ?></td>
+                    <td class="text-center"><?php echo 'Inasistencias: ' . $row_contador[0] ?></td>
 
                     <?php
                     $query_total = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha = '$fecha' and docente_id='$docente'";
@@ -86,7 +86,7 @@ if (isset($_GET['del_expdte_id'])) {
                       $total += ($val_fin - $val_inicio);
                     }
                     ?>
-                    <td class="text-center"><?php echo 'Horas totales: '.$total ?></td>
+                    <td class="text-center"><?php echo 'Horas totales: ' . $total ?></td>
 
                 </tr>
               <?php
@@ -161,7 +161,7 @@ if (isset($_GET['del_expdte_id'])) {
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
     ?>
             <table class="table table-striped table-dark">
-           <!--    <thead>
+              <!--    <thead>
                 <tr>
                   <th scope="col">Agente</th>
                   <th class="text-center" scope="col">Dia</th>
@@ -179,7 +179,7 @@ if (isset($_GET['del_expdte_id'])) {
                   $contador_no_docente = mysqli_query($conexion, $contador);
                   while ($row_contador = mysqli_fetch_array($contador_no_docente)) {
                   ?>
-                    <td class="text-center"><?php echo 'Inasistencias: '.$row_contador[0] ?></td>
+                    <td class="text-center"><?php echo 'Inasistencias: ' . $row_contador[0] ?></td>
                     <?php
                     $query_total = "SELECT * FROM inasistencia_sin_aviso_no_docente WHERE fecha = '$fecha' and no_docente_id='$no_docente'";
                     $result_total = mysqli_query($conexion, $query_total);
@@ -192,7 +192,7 @@ if (isset($_GET['del_expdte_id'])) {
                       $total += ($val_fin - $val_inicio);
                     }
                     ?>
-                    <td class="text-center"><?php echo'Horas totales'. $total ?></td>
+                    <td class="text-center"><?php echo 'Horas totales' . $total ?></td>
 
                 </tr>
               <?php } ?>
