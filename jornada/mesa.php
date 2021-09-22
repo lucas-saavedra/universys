@@ -15,11 +15,11 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="fecha_inicio">Incio de la jornada</label>
-                                <input required type="date" value="2021-07-01" class="form-control" id="fechaInicioMesa">
+                                <input required type="date"  class="form-control" id="fechaInicioMesa">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="fecha_fin">Fin de la jornada</label>
-                                <input required type="date" value="2021-07-30" class="form-control" id="fechaFinMesa">
+                                <input required type="date"  class="form-control" id="fechaFinMesa">
                             </div>
 
                             <div class="form-group col-md-4">

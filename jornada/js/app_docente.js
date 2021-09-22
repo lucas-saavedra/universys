@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    
+
     let editar = false;
     array_horarios = [];
     let filtros = {};
@@ -86,7 +86,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 let agentes = JSON.parse(response);
-                
+
                 let template = " ";
                 let href = '';
                 let container = '';
@@ -179,9 +179,9 @@ $(document).ready(function () {
             descripcion: $('#descripcion').val(),
             catedraId: $('#catedraIdInput').val(),
             area_id: $('#area_id').val(),
-            dias_horas:array_dias,
+            dias_horas: array_dias,
         };
-        
+
         e.preventDefault();
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
         $.post(url, jornadaAgente, function (response) {
@@ -194,7 +194,7 @@ $(document).ready(function () {
                 editar = false;
             }
 
-        }); 
+        });
 
     });
     $(document).on('click', '.jornada-item', function () {
@@ -214,7 +214,7 @@ $(document).ready(function () {
         let jornada_id = $(element).attr('jornada_id');
         let agente_id = $(element).attr('agente_id');
         editar = true;
-       
+
         $('#id_agente').val(agente_id);
 
         obtener_agente(agente_id, tipo_agente);
@@ -380,7 +380,7 @@ $(document).ready(function () {
         $('#catedraIdInput').val('');
     }
 
-    function listar_jornadas_agente(agente_id,jornada_agente_id) {
+    function listar_jornadas_agente(agente_id, jornada_agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
             '../jornada/backend/listar_jornada.php', {
@@ -390,7 +390,7 @@ $(document).ready(function () {
             },
             function (response) {
                 let jornadas = JSON.parse(response);
-               
+
                 let template = " "
                 if (jornadas == '') {
                     template = ` <option selected value="" disabled >No contiene jornadas</option>`;
@@ -440,7 +440,7 @@ $(document).ready(function () {
             filtroAreaId: $('#filtroAreaId').val(),
             tipo_agente: tipo_agente
         };
-        
+
         listar_jornadas(filtros)
     })
 
@@ -513,7 +513,7 @@ $(document).ready(function () {
                             <tr>
                            
 
-                                <td class="badge badge-primary p-1"> ${detalle.nombre}</td>
+                            <td> <strong>${detalle.nombre}</strong> </td>
                                <td> ${detalle.hora_inicio}</td>
                                <td> ${detalle.hora_fin}</td>
                                <td horario_id="${detalle.id}" jornada_agente_id="${jornada.jornada_agente_id}" agente_id="${jornada.agente_id}"
@@ -554,8 +554,8 @@ $(document).ready(function () {
         let template = ' ';
         template += `
                     <div class="alert alert-${msg.type}  alert-dismissible fade show" role="alert">`;
-                  template += `${msg.name}`
-                    template += `</div>`;
+        template += `${msg.name}`
+        template += `</div>`;
 
         $('#toast_notif').html(template);
         $("#toastNotif").toast('show');
