@@ -124,6 +124,11 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                               <i class="fa fa-trash"></i>
                           </button>
                           </form>
+                          <form class="d-inline-block" action="eliminar_inasis.php" method="POST">
+                              <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Se eliminar la inasistencia ID <?= $row_inasist['id'] ?>')">
+                              <i class="fa fa-edit"></i>
+                          </button>
+                          </form>
                         </td>
                       <?php
                     }
