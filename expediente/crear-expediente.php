@@ -22,8 +22,8 @@ function crear_expediente($bd){
         
         $id_aviso = mysqli_insert_id($bd);
 
-        $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id, cupo_superado) VALUES
-        ({$expdte['persona_id']}, '{$expdte['fecha_inicio']}', '{$expdte['fecha_fin']}', {$id_aviso}, {$expdte['codigo_id']}, {$expdte['cupo_superado']})";
+        $sql_expdte = "INSERT INTO expediente (persona_id, fecha_inicio, fecha_fin, aviso_id, codigo_id, cupo_superado, confirmado) VALUES
+        ({$expdte['persona_id']}, '{$expdte['fecha_inicio']}', '{$expdte['fecha_fin']}', {$id_aviso}, {$expdte['codigo_id']}, {$expdte['cupo_superado']}, {$expdte['confirmado']})";
     
         if (!$result = mysqli_query($bd, $sql_expdte)) throw new Exception(mysqli_error($bd));
         
@@ -177,6 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
 
                 <div class="mb-3 row">
                     <div class="col text-center">
+                        <input type="hidden" name="expdte[confirmado]" value="0">
                         <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
                     </div>
                 </div>
