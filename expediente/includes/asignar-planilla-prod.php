@@ -41,6 +41,7 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
     $meses = get_meses_entre_fechas($expdte['fecha_inicio'], $expdte['fecha_fin']);
 
     if (!empty($expdte['expdte_docente_id'])){
+        $rel_ids = [];
         foreach ($meses as list($anio, $mes)) {
 
             if (!$planilla = get_p_prod_docente($bd, $anio, $mes)){
@@ -50,18 +51,31 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
                 $id_planilla = $planilla['id'];
             }
 
-            $sql_insert = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id)
-            VALUES ({$id_planilla}, {$expdte['expdte_docente_id']})";
+            $rel_existente = get_rel_planilla($bd, $id_planilla, $expdte['expdte_docente_id'], 'docente');
 
-            if (!$result = mysqli_query($bd, $sql_insert)){
-                $error = mysqli_error($bd);
-                throw new Exception("Error al asignar expdte a planilla: {$error}");
+            if ($rel_existente){
+                $rel_ids[] = $rel_existente['id'];
             }
-            
+            else{
+                $sql_insert = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id, hs_descontadas)
+                VALUES ({$id_planilla}, {$expdte['expdte_docente_id']}, 0)";
+    
+                if (!$result = mysqli_query($bd, $sql_insert)){
+                    $error = mysqli_error($bd);
+                    throw new Exception("Error al asignar expdte a planilla: {$error}");
+                }
+
+                $rel_ids[] = mysqli_insert_id($bd);
+            }
+
         }
+
+        $expdte_planilla_ids = implode(',',$rel_ids);
+        mysqli_query($bd, "DELETE FROM expediente_planilla_docente WHERE expediente_docente_id={$expdte['expdte_docente_id']} AND id NOT IN ({$expdte_planilla_ids})");
     }
 
     if (!empty($expdte['expdte_no_docente_id'])){
+        $rel_ids = [];
         foreach ($meses as list($anio, $mes)) {
 
             if (!$planilla = get_p_prod_no_docente($bd, $anio, $mes)){
@@ -71,16 +85,29 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
                 $id_planilla = $planilla['id'];
             }
 
-            $sql_insert = "INSERT INTO expediente_planilla_no_docente 
-            (planilla_productividad_no_docente_id, expediente_no_docente_id)
-            VALUES ({$id_planilla}, {$expdte['expdte_no_docente_id']})";
+            $rel_existente = get_rel_planilla($bd, $id_planilla, $expdte['expdte_no_docente_id'], 'no_docente');
 
-            if (!$result = mysqli_query($bd, $sql_insert)){
-                $error = mysqli_error($bd);
-                throw new Exception("Error al asignar expdte a planilla: {$error}");
+            if ($rel_existente){
+                $rel_ids[] = $rel_existente['id'];
             }
+            else{
+                $sql_insert = "INSERT INTO expediente_planilla_no_docente 
+                (planilla_productividad_no_docente_id, expediente_no_docente_id, hs_descontadas)
+                VALUES ({$id_planilla}, {$expdte['expdte_no_docente_id']}, 0)";
+    
+                if (!$result = mysqli_query($bd, $sql_insert)){
+                    $error = mysqli_error($bd);
+                    throw new Exception("Error al asignar expdte a planilla: {$error}");
+                }
+
+                $rel_ids[] = mysqli_insert_id($bd);
+            }
+
             
         }
+
+        $expdte_planilla_ids = implode(',',$rel_ids);
+        mysqli_query($bd, "DELETE FROM expediente_planilla_no_docente WHERE expediente_no_docente_id={$expdte['expdte_no_docente_id']} AND id NOT IN ({$expdte_planilla_ids})");
     }
 }
 

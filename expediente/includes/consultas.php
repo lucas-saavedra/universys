@@ -100,4 +100,11 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+    function get_rel_planilla($bd, $id_planilla, $id_expdte, $tipo){
+        $sql = "SELECT id from expediente_planilla_{$tipo} WHERE planilla_productividad_{$tipo}_id={$id_planilla} AND expediente_{$tipo}_id={$id_expdte}";
+
+        return mysqli_fetch_array(mysqli_query($bd, $sql));
+
+    }
+
 ?>

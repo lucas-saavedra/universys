@@ -94,17 +94,6 @@ function modificar_expdte($bd, $expdte){
 }
 
 function on_update_fechas_expdte($bd, $id_expdte){
-    $expdte = get_expdte($bd, $id_expdte);
-
-    if (isset($expdte['expdte_docente_id'])){
-        $sql_delete = "DELETE FROM expediente_planilla_docente WHERE expediente_docente_id={$expdte['expdte_docente_id']}";
-        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
-    }
-    if (isset($expdte['expdte_no_docente_id'])){
-        $sql_delete = "DELETE FROM expediente_planilla_no_docente WHERE expediente_no_docente_id={$expdte['expdte_no_docente_id']}";
-        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
-    }
-
     asignar_expdte_a_planillas_prod($bd, $id_expdte);
 }
 
