@@ -130,6 +130,8 @@ if (isset($_SESSION['elim_expdte_msg'])) {
                                         <th scope="col">Desde</th>
                                         <th scope="col">Hasta</th>
                                         <th scope="col">Descuento</th>
+                                        <th scope="col">Total inasis.</th>
+                                        <th scope="col">Hs a descontar</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
@@ -165,6 +167,12 @@ if (isset($_SESSION['elim_expdte_msg'])) {
                                                 } else {
                                                     echo "Sin descuento";
                                                 } ?></td>
+                                            <td>
+                                                <?=get_inasis_expdte($conexion, $row_expediente['id'] , 'docente')?>
+                                            </td>
+                                            <td>
+                                                <?=get_hs_descontadas($conexion, $row_expediente['id'], 'docente')?>
+                                            </td>
                                             <td>
                                                 <a class="btn btn-sm btn-primary" href=<?= "modificar-expediente.php?id={$row_expediente['expediente_id']}" ?>>
                                                     <i class="fa fa-edit"></i>
@@ -258,6 +266,8 @@ if (isset($_SESSION['elim_expdte_msg'])) {
                                                     <th scope="col">Desde</th>
                                                     <th scope="col">Hasta</th>
                                                     <th scope="col">Descuento</th>
+                                                    <th scope="col">Total Inasis.</th>
+                                                    <th scope="col">Hs a descontar</th>
                                                     <th scope="col">Acciones</th>
                                                 </tr>
                                             </thead>
@@ -293,7 +303,14 @@ if (isset($_SESSION['elim_expdte_msg'])) {
                                                                 echo "Con descuento";
                                                             } else {
                                                                 echo "Sin descuento";
-                                                            } ?></td>
+                                                            } ?>
+                                                        </td>
+                                                        <td>
+                                                            <?=get_inasis_expdte($conexion, $row_expediente['id'] , 'no_docente')?>
+                                                        </td>
+                                                        <td>
+                                                            <?=get_hs_descontadas($conexion, $row_expediente['id'], 'no_docente')?>
+                                                        </td>
                                                         <td>
                                                             <a class="btn btn-sm btn-primary" href=<?= "modificar-expediente.php?id={$row_expediente['expediente_id']}" ?>>
                                                                 <i class="fa fa-edit"></i>

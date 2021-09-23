@@ -100,6 +100,31 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+    function get_inasis_expdte($bd, $id, $tipo){
+        $sql = "
+        SELECT
+            e.id,
+            COUNT(i.id) as cantidad
+        FROM
+            expediente_{$tipo} AS e
+        LEFT JOIN inasistencia_sin_aviso_{$tipo} AS i
+        ON
+            e.id = i.expediente_{$tipo}_id
+        GROUP BY
+            e.id
+        HAVING
+            e.id={$id}
+        ";
+
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql))['cantidad'];
+    }
+
+    function get_hs_descontadas($bd, $id, $tipo){
+        $sql = "SELECT hs_descontadas FROM expediente_planilla_{$tipo} WHERE expediente_{$tipo}_id={$id}";
+
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql))['hs_descontadas'];
+    }
+
     function get_rel_planilla($bd, $id_planilla, $id_expdte, $tipo){
         $sql = "SELECT id from expediente_planilla_{$tipo} WHERE planilla_productividad_{$tipo}_id={$id_planilla} AND expediente_{$tipo}_id={$id_expdte}";
 
