@@ -251,8 +251,10 @@ LEFT JOIN jornada ON mesa_examen_jornada.jornada_id = jornada.id";
 
 function get_asistencias_num_rows($conexion, $id_detalle, $fecha_anterior, $agente_id, $tipo_agente)
 {
-
-  $query_asistencia = "SELECT * FROM asistencia_" . $tipo_agente . " WHERE detalle_jornada_id = '$id_detalle' AND fecha = '$fecha_anterior' and " . $tipo_agente . "_id='$agente_id'";
+  $query_asistencia = "SELECT * FROM asistencia_" . $tipo_agente . " 
+  WHERE detalle_jornada_id = '$id_detalle' 
+  AND fecha = '$fecha_anterior' 
+  AND " . $tipo_agente . "_id='$agente_id'";
   return mysqli_num_rows(mysqli_query($conexion, $query_asistencia)) == 0;
 }
 
