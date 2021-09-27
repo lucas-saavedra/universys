@@ -116,12 +116,6 @@
         return mysqli_fetch_assoc(mysqli_query($bd, $sql))['cantidad'];
     }
 
-    function get_hs_descontadas($bd, $id, $tipo){
-        $sql = "SELECT hs_descontadas FROM expediente_planilla_{$tipo} WHERE expediente_{$tipo}_id={$id}";
-
-        return mysqli_fetch_assoc(mysqli_query($bd, $sql))['hs_descontadas'];
-    }
-
     function get_rel_planilla($bd, $id_planilla, $id_expdte, $tipo){
         $sql = "SELECT id from expediente_planilla_{$tipo} WHERE planilla_productividad_{$tipo}_id={$id_planilla} AND expediente_{$tipo}_id={$id_expdte}";
 
@@ -129,4 +123,27 @@
 
     }
 
+    function get_expdtes_por_agente($bd, $id_planilla, $tipo){
+        $sql = "SELECT e.*, et.id as expdte_{$tipo}_id, p.nombre as agente_nombre, p.dni as agente_dni, 
+                ta.antiguedad as agente_antiguedad, c.referencia as cod, ti.nombre as cod_tipo, c.descripcion as cod_desc, 
+                c.con_descuento, epa.hs_descontadas
+                FROM expediente as e 
+                INNER JOIN expediente_{$tipo} as et ON e.id=et.expediente_id
+                INNER JOIN persona as p on p.id=e.persona_id
+                INNER JOIN {$tipo} as ta on ta.id=et.{$tipo}_id
+                INNER JOIN codigo as c on c.id=e.codigo_id
+                INNER JOIN tipo_inasistencia as ti on ti.id=c.tipo_inasistencia_id
+                INNER JOIN expediente_planilla_{$tipo} epa on epa.expediente_{$tipo}_id=et.id
+                WHERE epa.planilla_productividad_{$tipo}_id = {$id_planilla}
+                ";
+        
+        $expdtes = mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
+
+        $result = [];
+        foreach ($expdtes as $expdte) {
+            $result[$expdte['persona_id']][] = $expdte;
+        }
+
+        return $result;
+    }
 ?>
