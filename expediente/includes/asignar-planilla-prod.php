@@ -44,7 +44,7 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
         $rel_ids = [];
         foreach ($meses as list($anio, $mes)) {
 
-            if (!$planilla = get_p_prod_docente($bd, $anio, $mes)){
+            if (!$planilla = get_p_prod($bd, $anio, $mes, 'docente')){
                 $id_planilla = crear_p_prod($bd, $anio, $mes, 'docente');
             }
             else{
@@ -78,7 +78,7 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
         $rel_ids = [];
         foreach ($meses as list($anio, $mes)) {
 
-            if (!$planilla = get_p_prod_no_docente($bd, $anio, $mes)){
+            if (!$planilla = get_p_prod($bd, $anio, $mes, 'no_docente')){
                 $id_planilla = crear_p_prod($bd, $anio, $mes, 'no docente');
             }
             else{

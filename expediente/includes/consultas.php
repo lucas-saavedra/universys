@@ -59,14 +59,11 @@
         return mysqli_fetch_assoc(mysqli_query($bd, $sql_expdte));
     }
 
-    function get_p_prod_docente($bd, $anio, $mes){
-        $sql_planilla = "SELECT * FROM planilla_productividad_docente where anio={$anio} and mes_id={$mes}";
-        return mysqli_fetch_assoc(mysqli_query($bd, $sql_planilla));
-    }
+    function get_p_prod($bd, $anio, $id_mes, $tipo){
+        $sql = "SELECT p.*, mes.nombre FROM planilla_productividad_{$tipo} as p 
+        LEFT JOIN mes on mes.id=mes_id where anio={$anio} and mes_id={$id_mes}";
 
-    function get_p_prod_no_docente($bd, $anio, $mes){
-        $sql_planilla = "SELECT * FROM planilla_productividad_no_docente where anio={$anio} and mes_id={$mes}";
-        return mysqli_fetch_assoc(mysqli_query($bd, $sql_planilla));
+        return mysqli_fetch_assoc(mysqli_query($bd, $sql));
     }
 
     function get_p_prod_asociadas($bd, $id_expdte){
