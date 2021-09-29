@@ -112,7 +112,7 @@ $planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
                                         <td><?=$_expdte['cod_desc']?></td>
                                         <td><?=date("d-m-Y", strtotime($_expdte['fecha_inicio']))?></td>
                                         <td><?=date("d-m-Y", strtotime($_expdte['fecha_fin']))?></td>
-                                        <td class="text-center">
+                                        <td class="align-middle text-center">
                                             <i class="fa fa-lg fa-<?=$_expdte['con_descuento']? 'check': 'times'?>"></i>
                                         </td>
                                         <td><?=get_inasis_expdte($conexion, $_expdte["expdte_{$tipo_agente}_id"], $tipo_agente)?></td>

@@ -11,7 +11,7 @@ if (isset($_GET['id']) && $id = intval($_GET['id'])){
     $expdte = get_expdte($conexion, $id);
 }
 
-if (!isset($expdte)) header("Location:crear-expediente.php");
+if (!isset($expdte)) return;
 
 
 function get_campos_modificados($array1, $array2, $convertir=array()){
@@ -204,7 +204,7 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
 
                             <?php foreach(get_docs_sin_expdte($conexion, $expdte) as $doc): ?>
                                 <option value="<?=$doc['id']?>" <?=$doc['id'] === $expdte['doc_justificada_id'] ? 'selected': ''?>>
-                                    <?="{$doc['id']} / {$doc['fecha_recepcion']} - {$doc['nom_tipo_just']}"?>
+                                    <?="{$doc['id']} / ". date("d-m-Y", strtotime($doc['fecha_recepcion'])). " - {$doc['nom_tipo_just']}"?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
