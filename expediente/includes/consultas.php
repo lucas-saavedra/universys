@@ -44,6 +44,17 @@
         return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
     }
 
+    function get_docs($bd){
+        $sql = "SELECT doc.*, tj.descripcion as nom_tipo_just, p.nombre as agente_nombre, e.id as expediente_id  
+        FROM documentacion_justificada as doc
+        INNER JOIN tipo_justificacion as tj ON doc.tipo_justificacion_id=tj.id
+        LEFT JOIN persona as p ON p.id = doc.persona_id
+        LEFT JOIN expediente as e ON e.doc_justificada_id=doc.id";
+
+        $result = mysqli_query($bd, $sql);
+        return mysqli_fetch_all(mysqli_query($bd, $sql), MYSQLI_ASSOC);
+    }
+
     function get_expdte($bd, $id){
         $sql_expdte = "SELECT e.*, p.nombre as nom_agente, DATE_FORMAT(av.fecha_recepcion, '%Y-%m-%dT%T') as aviso_fecha, 
         av.descripcion as aviso_desc, av.validez as aviso_validez, doc.entrega_en_termino as doc_validez,
