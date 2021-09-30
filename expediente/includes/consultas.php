@@ -136,7 +136,14 @@
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
+    function get_catedra($bd,$catedra_id){
+        $query_catedra = "SELECT *FROM catedra WHERE 
+                             id ='$catedra_id'";
+                            
 
+        $result = mysqli_query($bd, $query_catedra);
+        return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    }
 
     
 ?>

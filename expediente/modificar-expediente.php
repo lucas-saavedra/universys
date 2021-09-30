@@ -31,7 +31,25 @@ function get_campos_modificados($array1, $array2, $convertir=array()){
 
     return $modificaciones;
 }
+// ale //
+function get_campos_ant_modificados($array1, $array2, $convertir=array()){
+    $campos = array_keys($array2);
+    $modificaciones = [];
 
+    foreach ($campos as $campo) {
+        $converted = empty($convertir[$campo]) ? $campo: $convertir[$campo];
+        if ($array1[$campo] != $array2[$campo]){
+            if ($array2[$campo] === ""){
+                $modificaciones[$campo] = "{$converted}=NULL";
+                continue;
+            }
+            $modificaciones[$converted] = "{$converted}='{$array1[$campo]}'";
+        }
+    }
+
+    return $modificaciones;
+}
+//----------------------------------------//
 function modificar_expdte($bd, $expdte){
     $modifs_en_expdte = get_campos_modificados($expdte, $_POST['expdte']);
 
@@ -52,13 +70,35 @@ function modificar_expdte($bd, $expdte){
         }
     
         if (!empty($modifs_en_expdte)){
+            $ant_modifs = get_campos_ant_modificados($expdte, $_POST['expdte']);
             $update_string = implode(', ', $modifs_en_expdte);
-            $sql_update_expdte = "UPDATE expediente SET {$update_string} WHERE id={$expdte['id']}";
-    
+
+
+            if (!empty($ant_modifs)){
+                $ant_update_string = implode(', ', $ant_modifs);
+                $dia = date("Y-m-d H:i:s");
+                $cambios= $expdte['cambios'];
+                $modif = $cambios . '\n'.'Modificación del '. date("Y-m-d"). ' (';
+                $largo = strlen($ant_update_string);
+                for ($x=0; $x <  $largo; $x++) {
+                    if ($ant_update_string[$x]== "'"){
+
+                    }else{
+                        $modif = $modif . $ant_update_string[$x];
+                    }
+                }
+            }
+            $modif = $modif .').';
+
+
+
+            $sql_update_expdte = "UPDATE expediente SET {$update_string}, cambios='$modif', ult_cambio='$dia' WHERE id={$expdte['id']}";
+           
             if (!$result = mysqli_query($bd, $sql_update_expdte)){
                 $error = mysqli_error($bd);
                 throw new Exception("Error al modificar expediente: {$error}");
             }
+           
         }
         
         $modificacion_fechas_expdte = isset($modifs_en_expdte['fecha_inicio']) || isset($modifs_en_expdte['fecha_fin']);
@@ -284,9 +324,20 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
                             <span class="badge badge-info"><?="$mes - $anio"?></span>
                         <?php endforeach; ?>
                     </div>
-
                 </div>
             <?php endforeach; ?>
+
+            <div class="card border-primary mb-3">
+                <div class="card-header">Ultima actualización</div>
+                    <div class="card-body">
+                            <span class="badge badge-info"><?php echo $expdte['ult_cambio']?></span>
+                    </div>
+                </div> 
+                <div class="card border-primary mb-3">
+                    <div class="card-header">Modificaciones</div>
+                            <textarea rows="7" cols="40"><?php echo $expdte['cambios']?></textarea>
+                    </div> 
+            </div>                    
         </div>
     </div>
 </div>

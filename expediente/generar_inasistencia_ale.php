@@ -40,8 +40,9 @@ while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
     $query_jornada_docente = "SELECT DISTINCT docente_id,jornada_id, catedra_id FROM jornada_docente";
     $result_jornada_docente = mysqli_query($conexion,$query_jornada_docente);
     while ($row_jornada_docente = mysqli_fetch_array($result_jornada_docente)){
-        $docente =  $row_jornada_docente['docente_id'];
+        $docente = $row_jornada_docente['docente_id'];
         $jornada = $row_jornada_docente['jornada_id'];
+        $catedra = $row_jornada_docente['catedra_id'];
         
         $query_persona = "SELECT *FROM docente WHERE id='$docente'";
         $result_persona = mysqli_query($conexion,$query_persona);
@@ -77,8 +78,8 @@ while($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
                             $result_inasistencia = mysqli_query($conexion,$query_inasistencia);
                             if (mysqli_num_rows($result_inasistencia) == 0){
 
-                                $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia) 
-                                                        VALUES('$docente','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia')";
+                                $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia,catedra_id) 
+                                                        VALUES('$docente','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$catedra')";
                                 if (($result_insert_falta = mysqli_query($conexion,$insert_falta)) === false) {
                                 die(mysqli_error($conexion));  
                                 }

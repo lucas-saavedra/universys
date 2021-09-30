@@ -1,6 +1,6 @@
 <?php include("../includes/header.php"); ?>
-
 <?php include('../jornada/includes/consultas.php'); ?>
+<?php include('includes/consultas.php'); ?>
 
 <?php
 
@@ -53,11 +53,19 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
                 $hora_inicio = $jdm['hora_inicio'];
                 $hora_fin = $jdm['hora_fin'];
                 $agente_id = $jdm['agente_id'];
+                $jornada_id = $jdm['jornada_id'];
+                foreach (get_jornada($conexion,$jornada_id)as $get_jornada):
+                    $tipo_jornada_id = $get_jornada['tipo_jornada_id'];
+                  endforeach;
+                  foreach (get_tipo_jornada($conexion,$tipo_jornada_id)as $get_tipo_jornada):
+                    $tipo_jornada = $get_tipo_jornada['nombre'];
+                  endforeach;
+
                 if (get_asistencias_num_rows($conexion, $jdm['det_jornada_id'], $fecha_anterior,  $agente_id, 'docente')) {
                     if (get_exp_num_rows($conexion, $jdm['persona_id'], $fecha_anterior)) {
                         if (get_inasistencias_num_rows($conexion,  $agente_id, $hora_inicio, $fecha_anterior, $hora_fin, 'docente')) {
-                            $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia) 
-                                VALUES('$agente_id','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia')";
+                            $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia,descripcion) 
+                                VALUES('$agente_id','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$tipo_jornada' )";
                             if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
                                 die(mysqli_error($conexion));
                             }
@@ -71,14 +79,23 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
         while ($jd = mysqli_fetch_array($result_jornada_docente)) {
             $hora_inicio = $jd['hora_inicio'];
             $hora_fin = $jd['hora_fin'];
+            $catedra = $jd['catedra_id'];
+            $jornada = $jd['jornada_id'];
+
+            foreach (get_jornada($conexion,$jornada)as $get_jornada):
+                $tipo_jornada_id = $get_jornada['tipo_jornada_id'];
+              endforeach;
+              foreach (get_tipo_jornada($conexion,$tipo_jornada_id)as $get_tipo_jornada):
+                $tipo_jornada = $get_tipo_jornada['nombre'];
+              endforeach;
 
             if (get_asistencias_num_rows($conexion, $jd['detalle_id'], $fecha_anterior, $jd['agente_id'], 'docente')) {
 
                 if (get_exp_num_rows($conexion, $jd['persona_id'], $fecha_anterior, 'docente')) {
 
                     if (get_inasistencias_num_rows($conexion, $jd['agente_id'], $hora_inicio, $fecha_anterior, $hora_fin, 'docente')) {
-                        $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia) 
-                                        VALUES('{$jd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia')";
+                        $insert_falta = "INSERT INTO inasistencia_sin_aviso_docente (docente_id,fecha,hora_inicio,hora_fin,dia, catedra_id, descripcion) 
+                                        VALUES('{$jd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$catedra','$tipo_jornada')";
                         if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
                             die(mysqli_error($conexion));
                         }
@@ -92,24 +109,25 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
 
     //                                          JORNADA NO DOCENTE
 
-    $query_jornada_docente_i = $query_jornada_no_docente . "
+    $query_jornada_no_docente_i = $query_jornada_no_docente . "
         WHERE
         detalle_jornada.dia = '$fecha_dia' 
         and fecha_inicio <= '$fecha_anterior' 
         and fecha_fin >= '$fecha_anterior'";
-    $result_jornada_no_docente = mysqli_query($conexion, $query_jornada_docente_i);
+    $result_jornada_no_docente = mysqli_query($conexion, $query_jornada_no_docente_i);
 
     while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
         $hora_inicio = $jnd['hora_inicio'];
         $hora_fin = $jnd['hora_fin'];
+        $area = $jnd['area'];
 
         if (get_asistencias_num_rows($conexion, $jnd['detalle_id'], $fecha_anterior, $jnd['agente_id'], 'no_docente')) {
 
             if (get_exp_num_rows($conexion, $jnd['persona_id'], $fecha_anterior, 'no_docente')) {
 
                 if (get_inasistencias_num_rows($conexion, $jnd['agente_id'], $hora_inicio, $fecha_anterior, $hora_fin, 'no_docente')) {
-                    $insert_falta = "INSERT INTO inasistencia_sin_aviso_no_docente (no_docente_id,fecha,hora_inicio,hora_fin,dia) 
-                                VALUES('{$jnd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia')";
+                    $insert_falta = "INSERT INTO inasistencia_sin_aviso_no_docente (no_docente_id,fecha,hora_inicio,hora_fin,dia,area) 
+                                VALUES('{$jnd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$area')";
                     if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
                         die(mysqli_error($conexion));
                     }

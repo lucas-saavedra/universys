@@ -2,6 +2,9 @@
 ob_start();
 ?>
 <?php include("../jornada/navbar.php");
+include ("./includes/consultas.php");
+include "../includes/db.php";
+
 
 if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
   $tipo_agente = "Docente";
@@ -15,7 +18,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
     <div class="col-lg-5 m-auto">
       <form action="" method="post">
         <div class="form-group text-center">
-          <h2 class="col-md-12 text-center">Buscar expedientes sin aviso</h2>
+          <h2 class="col-md-12 text-center">Inasistencias</h2>
           <div class=" row m-auto col">
             <select name="select" class="form-control mr-sm-2 col-3" required>
               <option value="Docente" <?= $tipo_agente == 'Docente' ? 'selected' : '' ?>>Docente</option>
@@ -32,6 +35,10 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
 
 
   if ($tipo_agente == 'Docente') {
+    ?>
+<p>Las inasistencias de un mismo diá se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencias que contiene y la cantidad de horas que se ausento el docente ese diá<p>
+<?php
     $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
     $result_fecha = mysqli_query($conexion, $query_fecha);
 
@@ -44,14 +51,19 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
 
         while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
           $fecha_dia = $row_fecha_dia[0];
-          $query_docente = "SELECT persona.nombre, m1.id FROM persona, (SELECT persona_id, id FROM docente,(SELECT DISTINCT docente_id, fecha from inasistencia_sin_aviso_docente where fecha = '$fecha' and docente_id='$docente' ) as m2 WHERE docente.id = m2.docente_id ) as m1 Where m1.persona_id = persona.id;";
+          $query_docente = "SELECT persona.nombre, m1.id FROM persona, 
+                            (SELECT persona_id, id FROM docente,
+                            (SELECT DISTINCT docente_id, fecha from inasistencia_sin_aviso_docente 
+                            where fecha = '$fecha' and docente_id='$docente' ) as m2 
+                            WHERE docente.id = m2.docente_id ) as m1 
+                            Where m1.persona_id = persona.id;";
           $result_docente = mysqli_query($conexion, $query_docente);
 
           while ($row_docente = mysqli_fetch_array($result_docente)) {
             $docente_id = $row_docente['id'];
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
   ?>
-            <table class="table table-sm ">
+            <table class="table table-striped table-dark">
              <!--  <thead>
                 <tr>
                   <th scope="col">Agente</th>
@@ -62,15 +74,15 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                 </tr>
               </thead> -->
               <tbody>
-                <tr class="table-secondary text-dark table-sm">
-                  <td><?php echo $row_docente['nombre'] ?></td>
-                  <td class="text-center"><?php echo $days[$fecha_dia], ' ', $fecha ?></td>
+                <tr class="table-secondary text-dark">
+                  <td class="col-3 pl-4"><?php echo $row_docente['nombre'] ?></td>
+                  <td class="text-center col-3"><?php echo $days[$fecha_dia], ' ( ', $fecha,' )' ?></td>
                   <?php
                   $contador = "SELECT COUNT(docente_id) from inasistencia_sin_aviso_docente where fecha= '$fecha' and docente_id='$docente'";
                   $contador_docente = mysqli_query($conexion, $contador);
                   while ($row_contador = mysqli_fetch_array($contador_docente)) {
                   ?>
-                    <td class="text-center"><?php echo 'Inasistencias: ' .$row_contador[0] ?></td>
+                    <td class="text-center col-3"><?php echo 'Inasistencias: ' .$row_contador[0] ?></td>
 
                     <?php
                     $query_total = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha = '$fecha' and docente_id='$docente'";
@@ -84,7 +96,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                       $total += ($val_fin - $val_inicio);
                     }
                     ?>
-                    <td class="text-center"><?php echo 'Horas totales: '.$total ?></td>
+                    <td class="text-center col-3"><?php echo 'Horas faltadas: '.$total ?></td>
 
                 </tr>
               <?php
@@ -95,7 +107,8 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                   <thead>
                     <tr>
                       <th scop="col">ID</th>
-                      <th scope="col">Fecha</th>
+                      <th scope="col">Catedra</th>
+                      <th scope="col">Jornada</th>
                       <th scope="col">Hora de ingreso</th>
                       <th scope="col">Horas fin</th>
                       <th scope="col">Acciones</th>
@@ -106,14 +119,25 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                     $query_inasist = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha='$fecha' and docente_id='$docente'";
                     $result_inasist = mysqli_query($conexion, $query_inasist);
                     while ($row_inasist = mysqli_fetch_array($result_inasist)) {
-
+                      $catedra_id = $row_inasist['catedra_id'];
+                      foreach (get_catedra($conexion,$catedra_id)as $get_catedra):
+                        $catedra = $get_catedra['nombre'];
+                      endforeach;
                     ?>
-                      <tr inasistencia_id="<?php echo $row_inasist['id'] ?>">
-                        <td><?php echo $row_inasist['id'] ?></td>
-                        <td><?php echo $row_inasist['fecha'] ?></td>
-                        <td><?php echo $row_inasist['hora_inicio'] ?></td>
-                        <td><?php echo $row_inasist['hora_fin'] ?></td>
-                        <td>
+                      <tr>
+                        <td class="col-1"><?php echo $row_inasist['id'] ?></td>
+                        <td class="col-2"><?php 
+                        if ($catedra_id == null) {
+                          echo "... ";
+                        }else{
+                        echo $catedra;
+                        }
+                        
+                        ?></td>
+                        <td class="col-2"><?php echo $row_inasist['descripcion'] ?></td>
+                        <td class="col-2"><?php echo $row_inasist['hora_inicio'] ?></td>
+                        <td class="col-2"><?php echo $row_inasist['hora_fin'] ?></td>
+                        <td class="col-2">
                           <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
                               <input type="hidden" name=docente_id value="<?= $docente_id ?>">
                               <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">
@@ -149,6 +173,10 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
     </form>
     <?php
   } else {
+    ?>
+<p>Las inasistencias de un mismo dia se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencais que contiene y la cantidad de horas que se ausento el no docente ese dia<p>
+<?php
     $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente";
     $result_fecha = mysqli_query($conexion, $query_fecha);
     while ($row_fecha = mysqli_fetch_array($result_fecha)) {
@@ -178,14 +206,14 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
               </thead> -->
               <tbody>
               <tr class="table-secondary text-dark">
-                  <td><?php echo $row_no_docente['nombre'] ?></td>
-                  <td class="text-center"><?php echo $days[$fecha_dia], ' ', $fecha ?></td>
+                  <td class="col-3 pl-4"><?php echo $row_no_docente['nombre'] ?></td>
+                  <td class="text-center col-3"><?php echo $days[$fecha_dia], ' ( ', $fecha,' )' ?></td>
                   <?php
                   $contador = "SELECT COUNT(no_docente_id) from inasistencia_sin_aviso_no_docente where fecha= '$fecha' and no_docente_id='$no_docente'";
                   $contador_no_docente = mysqli_query($conexion, $contador);
                   while ($row_contador = mysqli_fetch_array($contador_no_docente)) {
                   ?>
-                    <td class="text-center"><?php echo 'Inasistencias: '.$row_contador[0] ?></td>
+                    <td class="text-center col-3"><?php echo 'Inasistencias: '.$row_contador[0] ?></td>
                     <?php
                     $query_total = "SELECT * FROM inasistencia_sin_aviso_no_docente WHERE fecha = '$fecha' and no_docente_id='$no_docente'";
                     $result_total = mysqli_query($conexion, $query_total);
@@ -198,16 +226,16 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                       $total += ($val_fin - $val_inicio);
                     }
                     ?>
-                    <td class="text-center"><?php echo'Horas totales'. $total ?></td>
+                    <td class="text-center col-3"><?php echo'Horas faltadas: '. $total ?></td>
 
                 </tr>
               <?php } ?>
               <tr>
-                <table class="table table-striped ml-3 table-sm ">
+                <table class="table ml-3 table-sm ">
                   <thead>
                     <tr>
                       <th scop="col">id</ht>
-                      <th scope="col">Fecha</th>
+                      <th scope="col">Area</th>
                       <th scope="col">Hora de ingreso</th>
                       <th scope="col">Horas fin</th>
                       <th scope="col">Acciones</th>
@@ -219,12 +247,12 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                     $result_inasist = mysqli_query($conexion, $query_inasist);
                     while ($row_inasist = mysqli_fetch_array($result_inasist)) {
                     ?>
-                      <tr inasistencia_id="<?php echo $row_inasist['id'] ?>">
-                        <td><?php echo $row_inasist['id'] ?></td>
-                        <td><?php echo $row_inasist['fecha'] ?></td>
-                        <td><?php echo $row_inasist['hora_inicio'] ?></td>
-                        <td><?php echo $row_inasist['hora_fin'] ?></td>
-                        <td>
+                      <tr>
+                        <td class="col-1"><?php echo $row_inasist['id'] ?></td>
+                        <td class="col-3"><?php echo $row_inasist['area'] ?></td>
+                        <td class="col-3"><?php echo $row_inasist['hora_inicio'] ?></td>
+                        <td class="col-3"><?php echo $row_inasist['hora_fin'] ?></td>
+                        <td class="col-2">
                           <form class="d-inline-block" action="inasistencia_delete.php" method="POST">
                           <input type="hidden" name=no_docente_id value="<?= $no_docente ?>">
                           <input type="hidden" name=hora_inicio value="<?= $row_inasist['hora_inicio'] ?>">

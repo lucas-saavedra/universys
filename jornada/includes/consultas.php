@@ -211,6 +211,7 @@ dia,
 fecha_inicio,
 fecha_fin,
 catedra.nombre AS catedra,
+catedra.id AS catedra_id,
 carrera.nombre AS carrera,
 jornada_docente.docente_id AS agente_id,
 persona.id AS persona_id
@@ -232,6 +233,7 @@ $query_jornada_mesa = "SELECT
  dia.id AS dia_id,
  mesa_examen_jornada.id AS mesa_examen_id,
  mesa_examen_jornada.carrera_nombre,
+ mesa_examen_jornada.jornada_id,
  jornada.fecha_inicio,
  jornada.fecha_fin,
  persona.id AS persona_id,
@@ -268,4 +270,15 @@ function get_inasistencias_num_rows($conexion, $agente_id, $hora_inicio, $fecha_
   $query_inasistencia = "SELECT * FROM inasistencia_sin_aviso_" . $tipo_agente . " WHERE 
   fecha='$fecha_anterior' AND " . $tipo_agente . "_id='$agente_id' AND hora_inicio='$hora_inicio' AND hora_fin='$hora_fin'";
   return mysqli_num_rows(mysqli_query($conexion, $query_inasistencia)) == 0;
+}
+
+
+//          ale    //
+
+
+function get_tipo_jornada($bd,$tipo_jornada){
+  $query_jornada ="SELECT *FROM tipo_jornada WHERE id='$tipo_jornada'";
+  $result = mysqli_query($bd, $query_jornada);
+  
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }

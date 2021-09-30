@@ -343,6 +343,11 @@ create table inasistencia_sin_aviso_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
+    /*-------- nuevo ---------*/
+    descripcion varchar(100),
+    catedra_id int,
+    FOREIGN KEY (catedra_id) REFERENCES catedra(id)
+    /*-------- nuevo --------- */
     PRIMARY key (id),
     FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
@@ -356,6 +361,9 @@ create table inasistencia_sin_aviso_no_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
+    /*------- NUEVO    -------*/
+    area VARCHAR (60)
+    /*------- NUEVO  -------- */
     PRIMARY key (id),
     FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)

@@ -51,7 +51,7 @@ if (isset($_SESSION['elim_expdte_msg'])) {
                         </select>
                         <input class="form-control mr-sm-2 col" type="number" name="anio" placeholder="Ingrese el año" value="<?= $anio ?>" required>
                         <button class="btn btn-outline-success my-2 my-sm-0 d-inline-block" type="submit"><i class="fa fa-search"></i> BUSCAR</button>
-                        <!--<a href="desc_exel.php" class="btn btn-outline-success">descargar</a> -->
+                        <a href="desc_exel.php" class="btn btn-outline-success">Descargar</a>
                     </div>
                 </div>
             </form>
