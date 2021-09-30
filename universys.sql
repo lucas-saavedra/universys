@@ -299,6 +299,10 @@ create table expediente (
     doc_justificada_id int,
     aviso_id int,
     codigo_id int,
+    /* --------------- Nuevo ------------*/
+    cambios varchar(500)
+    ult_cambio varchar(60)
+    /* --------------- Nuevo ------------*/
     PRIMARY key (id),
     FOREIGN KEY (doc_justificada_id) REFERENCES documentacion_justificada(id),
     FOREIGN KEY (aviso_id) REFERENCES aviso(id),
