@@ -365,7 +365,7 @@ create table inasistencia_sin_aviso_no_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
-    /*------- NUEVO    -------*/
+    /*------- actualizacion ale 30/9/202 (que la inasistencia tenga area)    -------*/
     area VARCHAR (60)
     /*------- NUEVO  -------- */
     PRIMARY key (id),
