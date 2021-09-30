@@ -299,7 +299,7 @@ create table expediente (
     doc_justificada_id int,
     aviso_id int,
     codigo_id int,
-    /* --------------- Nuevo ------------*/
+    /* --------------- actualizacion ale 30/9/2021 (historial de cambios del expediente)------------*/
     cambios varchar(500)
     ult_cambio varchar(60)
     /* --------------- Nuevo ------------*/
@@ -347,7 +347,7 @@ create table inasistencia_sin_aviso_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
-    /*-------- nuevo ---------*/
+    /*-------- actualizacion ale 30/9/202 (que la inasistencia tenga catedra y jornada)---------*/
     descripcion varchar(100),
     catedra_id int,
     FOREIGN KEY (catedra_id) REFERENCES catedra(id)
