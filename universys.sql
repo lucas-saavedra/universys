@@ -299,6 +299,10 @@ create table expediente (
     doc_justificada_id int,
     aviso_id int,
     codigo_id int,
+    /* --------------- actualizacion ale 30/9/2021 (historial de cambios del expediente)------------*/
+    cambios varchar(500)
+    ult_cambio varchar(60)
+    /* --------------- Nuevo ------------*/
     PRIMARY key (id),
     FOREIGN KEY (doc_justificada_id) REFERENCES documentacion_justificada(id),
     FOREIGN KEY (aviso_id) REFERENCES aviso(id),
@@ -343,6 +347,11 @@ create table inasistencia_sin_aviso_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
+    /*-------- actualizacion ale 30/9/202 (que la inasistencia tenga catedra y jornada)---------*/
+    descripcion varchar(100),
+    catedra_id int,
+    FOREIGN KEY (catedra_id) REFERENCES catedra(id)
+    /*-------- nuevo --------- */
     PRIMARY key (id),
     FOREIGN KEY (expediente_docente_id) REFERENCES expediente_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (docente_id) REFERENCES docente(id)
@@ -356,6 +365,9 @@ create table inasistencia_sin_aviso_no_docente (
     hora_inicio time,
     hora_fin time,
     dia int,
+    /*------- actualizacion ale 30/9/202 (que la inasistencia tenga area)    -------*/
+    area VARCHAR (60)
+    /*------- NUEVO  -------- */
     PRIMARY key (id),
     FOREIGN KEY (expediente_no_docente_id) REFERENCES expediente_no_docente(id) ON DELETE CASCADE,
     FOREIGN KEY (no_docente_id) REFERENCES no_docente(id)

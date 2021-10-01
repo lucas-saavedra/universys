@@ -50,7 +50,7 @@
             while ($row_sin_doc = mysqli_fetch_array($result_sin_doc)) {
                 $persona =  $row_sin_doc['persona_id'];
                 $expdt_id = $row_sin_doc['id'];
-
+            
                 $query_tipo_agente = "SELECT *FROM expediente_docente WHERE expediente_id ='$expdt_id'";
                 $result_tipo_agente = mysqli_query($conexion, $query_tipo_agente);
                 while ($row_tipo_agente = mysqli_fetch_array($result_tipo_agente)) {

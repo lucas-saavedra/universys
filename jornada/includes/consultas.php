@@ -217,6 +217,7 @@ dia,
 fecha_inicio,
 fecha_fin,
 catedra.nombre AS catedra,
+catedra.id AS catedra_id,
 carrera.nombre AS carrera,
 jornada_docente.docente_id AS agente_id,
 persona.id AS persona_id
@@ -238,6 +239,7 @@ $query_jornada_mesa = "SELECT
  dia.id AS dia_id,
  mesa_examen_jornada.id AS mesa_examen_id,
  mesa_examen_jornada.carrera_nombre,
+ mesa_examen_jornada.jornada_id,
  jornada.fecha_inicio,
  jornada.fecha_fin,
  persona.id AS persona_id,
@@ -407,4 +409,15 @@ function isOverlapedSqlMesa($conexion, $jornada_mesa)
     $dia = get_dia_string($conexion, $jornada_mesa->dia_id);
     return throw new Exception('Ya existe el registro del día: ' . $dia['nombre'] . ' que se solapa con este horario');
   }
+}
+
+
+//          ale    //
+
+
+function get_tipo_jornada($bd,$tipo_jornada){
+  $query_jornada ="SELECT *FROM tipo_jornada WHERE id='$tipo_jornada'";
+  $result = mysqli_query($bd, $query_jornada);
+  
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }

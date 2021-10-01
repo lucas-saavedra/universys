@@ -12,7 +12,8 @@ $result_fecha_dia = mysqli_query($conexion, $query_fecha_dia);
 while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
         $fecha_dia = $row_fecha_dia[0];
 }
-
+$marc_bol=false;
+$sin_det_jornada=true;
 
 $query_docente = "SELECT id from docente where persona_id = '$usuario_id'";
 $result_docente = mysqli_query($conexion, $query_docente);
@@ -24,6 +25,7 @@ $query_jornada_mesa = "SELECT *FROM jornada_docente_mesa WHERE docente_id='$doce
 $result_jornada_mesa = mysqli_query($conexion, $query_jornada_mesa);
 while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
         $mesa = $row_jornada_mesa['mesa_examen_id'];
+        $marc_bol=true;
 
         $query_mesa_examen = "SELECT *FROM mesa_examen WHERE id='$mesa'";
         $result_mesa_examen = mysqli_query($conexion, $query_mesa_examen);
@@ -44,6 +46,7 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
                         if (mysqli_num_rows($result_detalle_jornada) == 0) {
                                
                         } else {
+                                $sin_det_jornada = false;
                                 while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)) {
                                         $detalle_id = $row_detalle_jornada['id'];
                                         $hora_inicio = $row_detalle_jornada['hora_inicio'];
@@ -86,8 +89,8 @@ $last_id = mysqli_insert_id($conexion);
 
 
 if ($last_id == 0) {
-        $marc_bol=false;
-        $sin_det_jornada=true;
+        
+       
         $query_jornada = "SELECT *FROM jornada_docente WHERE docente_id='$docente_id'";
         $result_jornada = mysqli_query($conexion, $query_jornada);
         while ($row_jornada = mysqli_fetch_array($result_jornada)) {
