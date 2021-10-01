@@ -1,4 +1,3 @@
-
 <div class="container">
     <div class="row">
         <div class="col">
@@ -8,12 +7,13 @@
                     <div class="form-group col-md-6 ">
                         <input class="form-control" readonly aria-describedby="inputGroupPrepend" type="text" id="agente_horarios" placeholder="Click en buscar para seleccionar el agente" aria-label="">
                     </div>
+                    <input type="text" hidden id="id_agente">
                     <div class="form-group col-md-6">
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span data-toggle="collapse" role="button" type="submit" href="#agente_tabla_horarios" class="btn btn-outline-success input-group-text" id="inputGroupPrepend"><i class="fas fa-search"></i></span>
                             </div>
-                            <input autocomplete="off"  class="form-control  input-group-text" aria-describedby="inputGroupPrepend" autofocus type="search" id="search-agente-horario" placeholder="Ingrese el nombre del agente" aria-label="Search">
+                            <input autocomplete="off" class="form-control  input-group-text" aria-describedby="inputGroupPrepend" autofocus type="search" id="search-agente-horario" placeholder="Ingrese el nombre del agente" aria-label="Search">
                         </div>
                     </div>
 
@@ -35,29 +35,34 @@
                         </select>
                     </div>
                 </div>
+                <div class="card my-1">
+                    <div class="card-body p-2">
+                        <?php foreach (get_dia($conexion, $tipo_agente) as $e) : ?>
+                            <div class="form-row d-flex align-items-center">
+                                <div class="form-group col-md-4 m-0">
+                                    <div class="checkbox_dias_horarios" required>
+                                        <label class="m-0">
+                                            <input type="checkbox" name="dias_horarios" value="<?= $e['id'] ?>">
+                                            <?= $e['nombre'] ?> </label>
+                                    </div>
+                                </div>
+                                <div class="form-group  m-0 col-md-4 col-md-4 d-flex align-items-center"><label class="mx-2">Inicio </label>
+                                    <input type="time" name="inicio_horarios[]" class="form-control timepicker my-1 mr-sm-2" value="16:00" step="1800">
+
+                                </div>
+                                <div class="form-group  m-0 col-md-4 col-md-4 d-flex align-items-center">
+                                    <label class="mx-2">Fin</label>
+                                    <input type="time" name="fin_horarios[]" class="form-control timepicker my-1 mr-sm-2" value="19:00" step="1800">
+                                </div>
+                            </div>
+
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
+               
+
                 <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="">Seleccione el dia</label>
-                        <select class="form-control" id="dia_id" required>
-                            <option selected value="" disabled>Elija un dia</option>
-                            <?php foreach (get_dia($conexion) as $dia) : ?>
-                                <option value="<?= $dia['id'] ?>">
-                                    <?= "{$dia['nombre']}" ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-
-                    </div>
-                    <input type="hidden" id="horario_id">
-                    <div class="form-group col-md-4">
-                        <label for="hora_inicio">Inicio</label>
-                        <input type="time" class="form-control timepicker" step="1800" id="hora_inicio">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="hora_fin">Fin</label>
-                        <input type="time" class="form-control timepicker" step="1800" id="hora_fin">
-                    </div>
-
                     <div class="form-group col-md-12">
                         <label for="">Descripcion de la jornada</label>
                         <div class="form-floating">
