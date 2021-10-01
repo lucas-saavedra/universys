@@ -144,15 +144,15 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                               <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
                               <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
                               <input type="hidden" name=fecha value="<?=  $fecha ?>">
-                              <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar? ')">
-                              <i class="fa fa-trash"></i>
+                              <button class="btn btn-sm btn-success" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar? ')">
+                              <i class="fas fa-plus"> Generar asistencia</i>
                           </button>
-                          </form>
+                         <!-- </form>
                           <form class="d-inline-block" action="eliminar_inasis.php" method="POST">
                               <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Se eliminar la inasistencia ID <?= $row_inasist['id'] ?>')">
                               <i class="fa fa-edit"></i>
                           </button>
-                          </form>
+                          </form> -->
                         </td>
                       <?php
                     }
@@ -259,15 +259,15 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                           <input type="hidden" name=hora_fin value="<?= $row_inasist['hora_fin']?>">
                           <input type="hidden" name=fecha_dia value="<?=  $fecha_dia ?>">
                           <input type="hidden" name=fecha value="<?=  $fecha ?>">
-                          <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar?')">
-                          <i class="fa fa-trash"></i>
+                          <button class="btn btn-sm btn-success" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar?')">
+                          <i class="fas fa-plus"> Generar asistencia</i>
                       </button>
-                          </form>
+                         <!-- </form>
                           <form class="d-inline-block" action="eliminar_inasis.php" method="POST">
                               <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Se eliminar la inasistencia ID <?= $row_inasist['id'] ?>')">
                               <i class="fa fa-edit"></i>
                           </button>
-                          </form>
+                          </form> -->
                         </td>
                       <?php  } ?>
                       </tr>
