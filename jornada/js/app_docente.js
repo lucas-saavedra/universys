@@ -99,8 +99,8 @@ $(document).ready(function () {
                 }
                 agentes.forEach(agente => {
                     template += ` 
-                    <tr tipo_agente=${tipo_agente} agente_id=${agente.id} nombre_agente='${agente.nombre}' >  
-                    <th  > ${agente.nombre} </th>
+                    <tr tipo_agente=${tipo_agente} agente_id=${agente.id} persona_id=${agente.persona_id}  nombre_agente='${agente.nombre}' >  
+                    <th > ${agente.nombre} </th>
                     <td class="d-flex justify-content-end">
                     <a class="agente btn btn-info" data-toggle="collapse" role="button" type="button" href="#${href}">Aceptar</a>
                     </td>
@@ -118,6 +118,7 @@ $(document).ready(function () {
         let element = $(this)[0].parentElement.parentElement;
         let agente_id = $(element).attr('agente_id');
         let tipo_agente = $(element).attr('tipo_agente');
+
         obtener_agente(agente_id, tipo_agente);
         listar_jornadas_agente(agente_id);
     })
@@ -131,6 +132,7 @@ $(document).ready(function () {
             $('#agente').val(agente[0].nombre);
             $('#agente_horarios').val(agente[0].nombre);
             $('#id_agente').val(agente[0].id);
+            $('#persona_id').val(agente[0].persona_id);
         })
     };
 
@@ -180,11 +182,14 @@ $(document).ready(function () {
             catedraId: $('#catedraIdInput').val(),
             area_id: $('#area_id').val(),
             dias_horas: array_dias,
+            persona_id: $('#persona_id').val()
         };
-
+        console.log(jornadaAgente);
         e.preventDefault();
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
+
         $.post(url, jornadaAgente, function (response) {
+            console.log(response);
             listar_jornadas(filtros);
             const msg = JSON.parse(response);
             notif(msg);
@@ -192,15 +197,36 @@ $(document).ready(function () {
                 resetEditForm('jornada');
                 $('#modal_jornadas').modal('hide');
                 editar = false;
+                $("#fechaInicio").removeAttr("disabled", "");
+                $("#fechaFin").removeAttr("disabled", "");
+                $("#search-agente").removeAttr("disabled", "");
             }
 
         });
 
     });
+
     $(document).on('click', '.jornada-item', function () {
         let element = $(this)[0].parentElement.parentElement;
         let jornada_agente_id = $(element).attr('jornada_agente_id');
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
+
+        $.post('../jornada/backend/listar_jornada.php', {
+            jornada_agente_id,
+            tipo_agente
+        }, function (response) {
+            let jornada = JSON.parse(response);
+            jornada.forEach(e => {
+                bool = e.detalle_jornada != '';
+            });
+            if (bool) {
+                $("#fechaInicio").attr("disabled", "");
+                $("#fechaFin").attr("disabled", "");
+                $("#search-agente").attr("disabled", "");
+            }
+
+        })
+
         obtener_jornada(jornada_agente_id, tipo_agente);
         editar = true;
         $('#modal_jornadas').modal('show');
@@ -222,6 +248,7 @@ $(document).ready(function () {
         listar_jornadas_agente(agente_id, jornada_agente_id);
 
     })
+
     $(document).on('click', '.horario_item_borrar', function () {
         let element = $(this)[0].parentElement;
         let horario_id = $(element).attr('horario_id');
@@ -333,24 +360,68 @@ $(document).ready(function () {
 
     };
 
-
-
-    $('#horario').submit(function (e) {
+    $('#horarios_one').submit(function (e) {
         e.preventDefault();
-        let tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        const horarioAgente = {
+
+        const horarioAgenteOne = {
             tipo_agente: tipo_agente,
             jornadaId: $('#jornada_agente').val(),
+            id_agente: $('#id_agente').val(),
             horario_id: $('#horario_id').val(),
-            descripcion: $('#descripcion_horario').val(),
             hora_inicio: $('#hora_inicio').val(),
             hora_fin: $('#hora_fin').val(),
             dia_id: $('#dia_id').val()
         };
+        console.log(horarioAgenteOne);
+
+        $.post('../jornada/backend/upd-horario.php',
+            horarioAgenteOne,
+            function (response) {
+                console.log(response);
+                const msg = JSON.parse(response);
+                notif(msg);
+                listar_jornadas(filtros)
+                if (msg.success === true) {
+                    $('#horario_one').trigger('reset');
+                    editar = false;
+                    $('#modal_horarios_one').modal('hide');
+                }
+
+            });
+    });
+
+    $('#horario').submit(function (e) {
+        e.preventDefault();
+        let tipo_agente = $('#tipo_agente').attr('tipo_agente');
+        var selected_dias = [];
+        var array_dias = [];
+        let dia;
+        let inicio = document.getElementsByName('inicio_horarios[]');
+        let fin = document.getElementsByName('fin_horarios[]');
+        $('.checkbox_dias_horarios input:checked').each(function () {
+            selected_dias.push(Number($(this).val()));
+        });
+        for (var i = 0; i < selected_dias.length; i++) {
+            dia = {
+                dia_id: selected_dias[i],
+                hora_inicio: inicio[selected_dias[i]].value,
+                hora_fin: fin[selected_dias[i]].value,
+            };
+            array_dias.push(dia);
+        }
+        const horarioAgente = {
+            tipo_agente: tipo_agente,
+            jornadaId: $('#jornada_agente').val(),
+            id_agente: $('#id_agente').val(),
+            descripcion: $('#descripcion_horario').val(),
+            dias_horas: array_dias,
+        };
+        console.log(horarioAgente);
         let url2 = editar === false ? '../jornada/backend/insertar-horario.php' : '../jornada/backend/upd-horario.php';
         $.post(url2,
             horarioAgente,
             function (response) {
+                console.log(response);
                 const msg = JSON.parse(response);
                 notif(msg);
                 listar_jornadas(filtros)
@@ -366,6 +437,8 @@ $(document).ready(function () {
     $(document).on('click', '.reset', function () {
         let element = $(this)[0].parentElement.parentElement.parentElement;
         resetEditForm($(element).attr('id'))
+        $("#mesa_horario_inicio").removeAttr("disabled", "");
+        $("#mesa_horario_fin").removeAttr("disabled", "");
     })
 
     function resetEditForm(form) {
@@ -378,6 +451,9 @@ $(document).ready(function () {
         $('#agente_horarios').val('');
         $('#id_agente').val('');
         $('#catedraIdInput').val('');
+        $("#fechaInicio").removeAttr("disabled", "");
+        $("#fechaFin").removeAttr("disabled", "");
+        $("#search-agente").removeAttr("disabled", "");
     }
 
     function listar_jornadas_agente(agente_id, jornada_agente_id) {
@@ -518,7 +594,7 @@ $(document).ready(function () {
                                <td> ${detalle.hora_fin}</td>
                                <td horario_id="${detalle.id}" jornada_agente_id="${jornada.jornada_agente_id}" agente_id="${jornada.agente_id}"
                                 jornada_id="${detalle.jornada_id}"> 
-                                    <button type="button" class="horario_item btn" data-toggle="modal" data-target="#modal_horarios"><i class=" fas fa-pen"></i></button>
+                                    <button type="button" class="horario_item btn" data-toggle="modal" data-target="#modal_horarios_one"><i class=" fas fa-pen"></i></button>
                                     <button type="button" class="horario_item_borrar btn"><i class=" fas fa-trash"></i></button>
                                 </td>
                                 </tr>
@@ -545,6 +621,8 @@ $(document).ready(function () {
     $(document).on('click', '.horario_mesa_i_add_agente', function () {
         let element = $(this)[0].parentElement;
         $('#horario_id').val($(element).attr('horario_id'));
+        $('#hora_inicio_agente').val($(element).attr('hora_inicio'));
+        $('#hora_fin_agente').val($(element).attr('hora_fin'));
         $('#mesa_id').val($(element).attr('mesa_id'));
 
     })
@@ -573,14 +651,17 @@ $(document).ready(function () {
         });
         let agentes = {
             horario_id: $('#horario_id').val(),
+            hora_inicio: $('#hora_inicio_agente').val(),
+            hora_fin: $('#hora_fin_agente').val(),
             mesa_id: $('#mesa_id').val(),
             docentes_mesa_id: selected_agente
         }
-
+        console.log(agentes);
         $.post(
             '../jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
+                console.log(response)
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -597,11 +678,25 @@ $(document).ready(function () {
     $(document).on('click', '.horario_mesa_i', function () {
         $('#upd_detalle_mesa').modal('show');
         let element = $(this)[0].parentElement;
-
         $('#upd_mesa_horario_dia').val($(element).attr('horario_id'));
         $('#mesa_horario_inicio').val($(element).attr('hora_inicio'));
         $('#mesa_horario_fin').val($(element).attr('hora_fin'));
+        $('#hora_inicio_agente').val($(element).attr('hora_inicio'));
+        $('#hora_fin_agente').val($(element).attr('hora_fin'));
         $('#upd_mesa_dia').val($(element).attr('dia'));
+
+        const horario_id = $(element).attr('horario_id');
+
+        $.post('../jornada/backend/consulta_mesa_horario.php', {
+            horario_id
+        }, function (response) {
+            let res = JSON.parse(response);
+            if (res != null) {
+                $("#mesa_horario_inicio").attr("disabled", "");
+                $("#mesa_horario_fin").attr("disabled", "");
+            }
+
+        })
 
     })
 
@@ -617,7 +712,6 @@ $(document).ready(function () {
         $.post('../jornada/backend/upd-horario.php',
             dia_hora,
             function (response) {
-
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -800,7 +894,7 @@ $(document).ready(function () {
                 }
             })
 
-    })
+    });
     listar_jornadas_mesa();
 
     function listar_jornadas_mesa(filtros) {

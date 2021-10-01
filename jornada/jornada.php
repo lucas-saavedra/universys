@@ -7,7 +7,7 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label for="fecha_inicio">Fecha de incio de la jornada</label>
-                        <input required type="date" class="form-control" id="fechaInicio">
+                        <input required type="date" class="form-control" id="fechaInicio" >
                     </div>
                     <div class="form-group col-md-4">
                         <label for="fecha_fin">Fecha de fin de la jornada</label>

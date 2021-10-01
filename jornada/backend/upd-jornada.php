@@ -1,5 +1,7 @@
 <?php
 include('../includes/db.php');
+include('../includes/consultas.php');
+
 
 $jornadaId =  $_POST["jornadaId"];
 $id_agente =  $_POST["id_agente"];
@@ -40,6 +42,17 @@ try {
 
     $array_dias = $_POST['dias_horas'];
     foreach ($array_dias as $array_dias) {
+      $jornada = new stdClass();
+      $jornada->hora_inicio = $array_dias['hora_inicio'];
+      $jornada->hora_fin = $array_dias['hora_fin'];
+      $jornada->id_agente = $id_agente;
+      $jornada->dia_id = $array_dias['dia_id'];
+      $jornada->fecha_inicio = $fechaInicio;
+      $jornada->fecha_fin = $fechaFin;
+      $jornada->tipo_agente = $tipo_agente;
+
+      isOverlapedSql($conexion, $jornada);
+
       $query_detalle = "INSERT INTO detalle_jornada ( jornada_id, hora_inicio, hora_fin, dia) 
     VALUES ( '$jornadaId','{$array_dias['hora_inicio']}' , '{$array_dias['hora_fin']}', '{$array_dias['dia_id']}');";
       if (!$result = mysqli_query($conexion, $query_detalle)) throw new Exception(mysqli_error($conexion));
@@ -47,7 +60,7 @@ try {
   }
   mysqli_commit($conexion);
   $json[] = array(
-    'name' => 'La jornada docente <strong>[ ' . $jornada_agente_id . ' ]</strong> ha sido actualizada',
+    'name' => 'La jornada <strong>[' . $jornada_agente_id . ']</strong> ha sido actualizada',
     'type' => 'info',
     'success' => true
   );

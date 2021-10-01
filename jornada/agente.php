@@ -1,8 +1,9 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true' ) {
+if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true') {
   header("Location: ../index.php ");
 }
 $agente = $_SESSION['agente'];
+
 ?>
 
 <div class="jumbotron jumbotron-fluid">
@@ -22,38 +23,7 @@ $agente = $_SESSION['agente'];
           </div>
         </div>
       </div>
-     <!--  <div class="col-md-6">
-        <div class="col-md-12">
-          <form action="" method="POST" id="filtroJornada">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label for="fecha_inicio">Inicio del ciclo lectivo</label>
-                <input required type="date" class="form-control" id="filtroFechaInicio">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="fecha_fin">Inicio del ciclo lectivo</label>
-                <input required type="date" class="form-control " id="filtroFechaFin">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="fecha_inicio">Fin del 1er cuatrimestre</label>
-                <input required type="date" class="form-control" id="filtroFechaInicio">
-              </div>
-              <div class="form-group col-md-6">
-                <label for="fecha_fin">Inicio del 2er cuatrimestre</label>
-                <input required type="date" class="form-control " id="filtroFechaFin">
-              </div>
-                <div class="form-group col-md-3 ">
-                  <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
-                </div>
-                <div class="form-group col-md-3 ">
-                  <button type="reset" class="filtro_reset btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
-                </div>
-            </div>
 
-          </form>
-
-        </div>
-      </div> -->
     </div>
     <hr class="my-4">
     <div class="row d-flex justify-content-center">
@@ -75,7 +45,7 @@ $agente = $_SESSION['agente'];
           <div class="card text-center" style="width: 15rem;">
             <div class="card-body">
               <h5 class="card-title">Mesa de Examen</h5>
-              <button class="btn" type="submit"> <a class="btn" href="mesa.php?tipo_agente=<?php echo $tipo_agente ?>"><i class="fas fa-user fa-7x"></i></a></button>
+              <button class="btn" type="submit"> <a class="btn" href="mesa.php?tipo_agente=<?php echo $tipo_agente ?>"><i class="fas fa-users-class fa-7x"></i></a></button>
             </div>
           </div>
         <?php } ?>
@@ -96,7 +66,7 @@ $agente = $_SESSION['agente'];
 
 <!-- Modal -->
 <div class="modal fade " id="modal_jornadas" data-backdrop="static" tabindex="-1" aria-labelledby="modal_jornadas" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+  <div class="modal-dialog modal-xl modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-center" id="modal_jornadas">Jornada Agente</h5>
@@ -115,7 +85,7 @@ $agente = $_SESSION['agente'];
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="text-center">Detalle de la jornada</h5>
+        <h5 class="text-center">Detalle de la jornada test</h5>
       </div>
       <div class="modal-body">
         <?php include("horario.php");  ?>
@@ -123,6 +93,64 @@ $agente = $_SESSION['agente'];
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="modal_horarios_one" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="text-center">Detalle de la jornada test</h5>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" id="horarios_one">
+          <div class="form-row justify-content-center">
+            <div class="form-group col-md-4">
+              <label for="">Seleccione el dia</label>
+              <select class="form-control" id="dia_id" required>
+                <option selected value="" disabled>Elija un dia</option>
+                <?php foreach (get_dia($conexion) as $dia) : ?>
+                  <option value="<?= $dia['id'] ?>">
+                    <?= "{$dia['nombre']}" ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+
+            </div>
+            <input type="hidden" id="horario_id">
+            <div class="form-group col-md-4">
+              <label for="hora_inicio">Inicio</label>
+              <input type="time" class="form-control timepicker" step="1800" id="hora_inicio">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="hora_fin">Fin</label>
+              <input type="time" class="form-control timepicker" step="1800" id="hora_fin">
+            </div>
+          </div>
+
+          <div class="form-row justify-content-center">
+            <div class="form-group col-md-6">
+              <button type="submit" class="btn btn-primary btn-lg btn-block" name="enviar">Aceptar</button>
+            </div>
+            <div class="form-group col-md-6">
+              <button type="reset" data-dismiss="modal" class="btn btn-secondary btn-lg btn-block reset">Cancelar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
