@@ -19,7 +19,7 @@
             $fecha_inicio = $get_jornada['fecha_inicio'];
             $fecha_fin = $get_jornada['fecha_fin'];
 
-            if (strtotime($fecha_inicio) < strtotime($fecha) and strtotime($fecha_fin) > strtotime($fecha)) {
+            if (strtotime($fecha_inicio) <= strtotime($fecha) and strtotime($fecha_fin) >= strtotime($fecha)) {
             
                 foreach (get_det_jornada($conexion, $jornada_id, $hora_inicio, $hora_fin, $fecha_dia) as $det_jornada):
                 $det_jornada_id = $det_jornada['id'];
