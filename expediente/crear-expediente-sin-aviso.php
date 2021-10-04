@@ -6,8 +6,10 @@ include ("./includes/consultas.php");
 include "../includes/db.php";
 
 
+
+
 if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
-  $tipo_agente = "Docente";
+  $tipo_agente = "docente";
 } else {
   $tipo_agente = $_POST['select'];
 }
@@ -21,8 +23,8 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
           <h2 class="col-md-12 text-center">Inasistencias</h2>
           <div class=" row m-auto col">
             <select name="select" class="form-control mr-sm-2 col-3" required>
-              <option value="Docente" <?= $tipo_agente == 'Docente' ? 'selected' : '' ?>>Docente</option>
-              <option value="No docente" <?= $tipo_agente == 'No docente' ? 'selected' : '' ?>>No docente</option>
+              <option value="docente" <?= $tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
+              <option value="no_docente" <?= $tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
             </select>
             <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit">BUSCAR.</button>
           </div>
@@ -34,7 +36,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
 
 
 
-  if ($tipo_agente == 'Docente') {
+  if ($tipo_agente == 'docente') {
     ?>
 <p>Las inasistencias de un mismo diá se agrupan en un solo expediente, este dice la cantidad de 
   inasistencias que contiene y la cantidad de horas que se ausento el docente ese diá<p>
@@ -63,7 +65,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
             $docente_id = $row_docente['id'];
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
   ?>
-            <table class="table table-striped table-dark">
+            <table class="table table-striped table-dark table-sm">
              <!--  <thead>
                 <tr>
                   <th scope="col">Agente</th>
@@ -82,7 +84,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                   $contador_docente = mysqli_query($conexion, $contador);
                   while ($row_contador = mysqli_fetch_array($contador_docente)) {
                   ?>
-                    <td class="text-center col-3"><?php echo 'Inasistencias: ' .$row_contador[0] ?></td>
+                    <td class="text-center"><?php echo 'Inasistencias: ' . $row_contador[0] ?></td>
 
                     <?php
                     $query_total = "SELECT * FROM inasistencia_sin_aviso_docente WHERE fecha = '$fecha' and docente_id='$docente'";
@@ -195,7 +197,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
             $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
     ?>
             <table class="table table-striped table-dark">
-           <!--    <thead>
+              <!--    <thead>
                 <tr>
                   <th scope="col">Agente</th>
                   <th class="text-center" scope="col">Dia</th>

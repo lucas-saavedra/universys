@@ -48,6 +48,12 @@ function get_dia($conexion)
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+function get_dia_string($conexion, $dia_id)
+{
+  $sql = "SELECT nombre FROM dia where id ='$dia_id' ";
+  $result = mysqli_query($conexion, $sql);
+  return mysqli_fetch_assoc($result);
+}
 
 
 function obtener_jornadas($conexion, $fecha_inicio, $fecha_fin, $tipo_jornada_id)
@@ -253,8 +259,10 @@ LEFT JOIN jornada ON mesa_examen_jornada.jornada_id = jornada.id";
 
 function get_asistencias_num_rows($conexion, $id_detalle, $fecha_anterior, $agente_id, $tipo_agente)
 {
-
-  $query_asistencia = "SELECT * FROM asistencia_" . $tipo_agente . " WHERE detalle_jornada_id = '$id_detalle' AND fecha = '$fecha_anterior' and " . $tipo_agente . "_id='$agente_id'";
+  $query_asistencia = "SELECT * FROM asistencia_" . $tipo_agente . " 
+  WHERE detalle_jornada_id = '$id_detalle' 
+  AND fecha = '$fecha_anterior' 
+  AND " . $tipo_agente . "_id='$agente_id'";
   return mysqli_num_rows(mysqli_query($conexion, $query_asistencia)) == 0;
 }
 
@@ -270,6 +278,137 @@ function get_inasistencias_num_rows($conexion, $agente_id, $hora_inicio, $fecha_
   $query_inasistencia = "SELECT * FROM inasistencia_sin_aviso_" . $tipo_agente . " WHERE 
   fecha='$fecha_anterior' AND " . $tipo_agente . "_id='$agente_id' AND hora_inicio='$hora_inicio' AND hora_fin='$hora_fin'";
   return mysqli_num_rows(mysqli_query($conexion, $query_inasistencia)) == 0;
+}
+function isOverlaped($conexion, $jornada)
+{
+  extract(get_object_vars($jornada));
+  $sql = "SELECT * FROM jornada_docente_vista AS jdv WHERE jdv.agente_id = '$id_agente' 
+  AND '$hora_inicio' < jdv.hora_fin AND '$hora_fin' > jdv.hora_inicio AND jdv.dia = '$dia_id'
+  AND '$fecha_inicio' <= jdv.fecha_fin  AND '$fecha_fin' >= jdv.fecha_inicio ";
+  if (mysqli_num_rows(mysqli_query($conexion, $sql)) != 0) {
+    $dia = get_dia_string($conexion, $jornada->dia_id);
+    return throw new Exception('Ya existe el registro del día: ' . $dia['nombre'] . ' que se solapa con este horario');
+  }
+}
+
+function isOverlapedUpd($conexion, $jornada)
+{
+  extract(get_object_vars($jornada));
+  $sql = "SELECT * FROM jornada_docente_vista AS jdv WHERE jdv.agente_id = '$id_agente' 
+  AND '$hora_inicio' < jdv.hora_fin AND '$hora_fin' > jdv.hora_inicio AND jdv.dia = '$dia_id'
+  AND '$fecha_inicio' <= jdv.fecha_fin  AND '$fecha_fin' >= jdv.fecha_inicio 
+  AND jdv.detalle_id <> '$detalle_id'";
+  if (mysqli_num_rows(mysqli_query($conexion, $sql)) != 0) {
+    $dia = get_dia_string($conexion, $jornada->dia_id);
+    return throw new Exception('Ya existe el registro del día: ' . $dia['nombre'] . ' que se solapa con este horario');
+  }
+}
+
+function get_fecha($conexion, $jornadaId)
+{
+  $queryFecha = "SELECT jornada.fecha_inicio, jornada.fecha_fin from jornada 
+  WHERE jornada.id = '$jornadaId';";
+  $result = mysqli_query($conexion, $queryFecha);
+  return mysqli_fetch_assoc($result);
+}
+function get_persona_id($conexion, $agente_id, $tipo_agente)
+{
+  $sql = "SELECT persona.id as persona_id from persona
+  LEFT join $tipo_agente on " . $tipo_agente . ".persona_id = persona.id
+  WHERE " . $tipo_agente . ".id = '$agente_id'";
+  $result = mysqli_fetch_assoc(mysqli_query($conexion, $sql));
+  return $result['persona_id'];
+};
+
+
+
+function isOverlapedSql($conexion, $jornada)
+{
+  extract(get_object_vars($jornada));
+  $persona_id = get_persona_id($conexion, $id_agente, $tipo_agente);
+
+  $sql_is_both = "SELECT DISTINCT persona.id,persona.nombre,docente.id  as docente_id,no_docente.id as no_docente_id from persona
+  inner JOIN docente on docente.persona_id = persona.id
+  inner JOIN no_docente on no_docente.persona_id = persona.id
+  WHERE persona.id = '$persona_id'";
+
+  $sql_both = "SELECT jornada.fecha_inicio,jornada.fecha_fin,
+    jornada.id as jornada_id,
+    detalle_jornada.hora_inicio,
+    detalle_jornada.hora_fin,
+    detalle_jornada.dia as dia_id,
+    jornada_docente.id,
+    jornada_no_docente.id,
+    docente.id as docId,
+    no_docente.id as noDocId,
+    detalle_jornada.id AS detalle_id
+    FROM detalle_jornada
+    LEFT JOIN jornada on jornada.id = detalle_jornada.jornada_id
+    LEFT join jornada_no_docente on jornada_no_docente.jornada_id = jornada.id
+    LEFT join jornada_docente on jornada_docente.jornada_id = jornada.id
+    left JOIN docente on docente.id = jornada_docente.docente_id 
+    left JOIN no_docente on no_docente.id = jornada_no_docente.no_docente_id
+    WHERE '$hora_inicio' < hora_fin AND '$hora_fin' > hora_inicio AND dia = '$dia_id'
+    AND '$fecha_inicio' <= fecha_fin  AND '$fecha_fin' >= fecha_inicio";
+
+  if (mysqli_num_rows(mysqli_query($conexion, $sql_is_both)) != 0) {
+    $res = mysqli_fetch_assoc(mysqli_query($conexion, $sql_is_both));
+    $sql_both =  $sql_both . " AND (no_docente.id = '{$res['no_docente_id']}' or docente.id = '{$res['docente_id']}')";
+  } else {
+    $sql_is_only = "SELECT DISTINCT persona.id,persona.nombre,docente.id  as docente_id,no_docente.id as no_docente_id from persona
+    LEFT JOIN docente on docente.persona_id = persona.id
+    LEFT JOIN no_docente on no_docente.persona_id = persona.id
+    WHERE persona.id = '$persona_id'";
+    $oneTipeAgente = mysqli_fetch_assoc(mysqli_query($conexion, $sql_is_only));
+    if ($oneTipeAgente['docente_id'] != null) {
+      $sql_both =  $sql_both . " AND (docente.id = '{$oneTipeAgente['docente_id']}')";
+    } else {
+      $sql_both =  $sql_both . " AND (no_docente.id = '{$oneTipeAgente['no_docente_id']}')";
+    }
+  }
+  if (isset($horario_id)) {
+    $sql_both = $sql_both . " AND detalle_jornada.id <> '$horario_id'";
+  }
+  $query = mysqli_query($conexion, $sql_both);
+  if (mysqli_num_rows($query) != 0) {
+    $dia = get_dia_string($conexion, $jornada->dia_id);
+    return throw new Exception('Ya existe el registro del día: ' . $dia['nombre'] . ' que se solapa con este horario');
+  }
+}
+////////////////////////////////
+function isOverlapedSqlMesa($conexion, $jornada_mesa)
+{
+  extract(get_object_vars($jornada_mesa));
+
+  $sql_mesa = "SELECT DISTINCT
+    jornada.fecha_inicio,
+    jornada.fecha_fin,
+    jornada.id AS jornada_id,
+    jdm.docente_id,
+    jdm.mesa_examen_id,
+    detalle_jornada.hora_inicio,
+    detalle_jornada.hora_fin,
+    detalle_jornada.dia,
+    detalle_jornada.id as detalle_id
+    FROM
+    jornada_docente_mesa AS jdm
+    LEFT JOIN mesa_examen ON mesa_examen.id = jdm.mesa_examen_id
+    LEFT JOIN detalle_jornada ON detalle_jornada.id = jdm.det_jornada_id
+    LEFT JOIN jornada ON jornada.id = mesa_examen.jornada_id
+    WHERE '$hora_inicio' < hora_fin AND '$hora_fin' > hora_inicio AND dia = '$dia_id'
+    AND '$fecha_inicio' <= fecha_fin  AND '$fecha_fin' >= fecha_inicio
+    AND jdm.docente_id = '$id_agente'";
+
+
+  if (isset($horario_id)) {
+    $sql_both = $sql_both . " AND detalle_jornada.id <> '$horario_id'";
+  }
+
+  $query = mysqli_query($conexion, $sql_mesa);
+  if (mysqli_num_rows($query) != 0) {
+    $dia = get_dia_string($conexion, $jornada_mesa->dia_id);
+    return throw new Exception('Ya existe el registro del día: ' . $dia['nombre'] . ' que se solapa con este horario');
+  }
 }
 
 

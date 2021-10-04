@@ -1,5 +1,5 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true' ) {
+if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true') {
     header("Location: ../index.php ");
 }
 ?>
@@ -15,11 +15,11 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                         <div class="form-row">
                             <div class="form-group col-md-4">
                                 <label for="fecha_inicio">Incio de la jornada</label>
-                                <input required type="date" value="2021-07-01" class="form-control" id="fechaInicioMesa">
+                                <input required type="date" class="form-control" id="fechaInicioMesa">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="fecha_fin">Fin de la jornada</label>
-                                <input required type="date" value="2021-07-30" class="form-control" id="fechaFinMesa">
+                                <input required type="date" class="form-control" id="fechaFinMesa">
                             </div>
 
                             <div class="form-group col-md-4">
@@ -66,7 +66,7 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                             <div class="form-group col-md-12">
                                 <label for="">Descripcion de la jornada</label>
                                 <div class="form-floating">
-                                    <textarea id='descripcion_mesa' class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 10em;">test</textarea>
+                                    <textarea id='descripcion_mesa' class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 10em;"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -105,6 +105,8 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                             <div class="card-body">
                                 <div data-spy="scroll" data-target="#navbar-example2" data-offset="0">
                                     <input type="text" id="horario_id" hidden>
+                                    <input type="text" id="hora_inicio_agente" hidden>
+                                    <input type="text" id="hora_fin_agente" hidden>
                                     <input type="text" id="mesa_id" hidden>
                                     <?php foreach (get_docentes($conexion) as $e) : ?>
                                         <div required class="checkbox_docentes">
@@ -153,7 +155,7 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label class="mx-2" for="">Carerra</label>
-                            <select class="form-control" id="carrera_id_updt" required>
+                            <select class="form-control" id="carrera_id_updt" disabled required>
                                 <option selected value="" disabled>Escoja una carrera</option>
                                 <?php foreach (get_carreras($conexion) as $e) : ?>
                                     <option value="<?= $e['id'] ?>">
@@ -168,7 +170,7 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                         <div class="form-group col-md-6">
                             <label for="">Llamado</label>
                             <select class="form-control" id="llamado_id_updt" required>
-                                <option selected value="" disabled>Escoja un llamado</option>
+                                <option selected value="">Escoja un llamado</option>
                                 <?php foreach (get_llamado($conexion) as $e) : ?>
                                     <option value="<?= $e['id'] ?>">
                                         <?= "{$e['nombre']}" ?>
@@ -178,11 +180,11 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                         </div>
                         <div class="form-group col-md-6">
                             <label for="fecha_inicio">Fecha de incio de la jornada</label>
-                            <input required type="date" class="form-control" id="fechaInicioMesaUpdt">
+                            <input required type="date" disabled class="form-control" id="fechaInicioMesaUpdt">
                         </div>
                         <div class="form-group col-md-6">
                             <label for="fecha_fin">Fecha de fin de la jornada</label>
-                            <input required type="date" class="form-control" id="fechaFinMesaUpdt">
+                            <input required type="date" disabled class="form-control" id="fechaFinMesaUpdt">
                         </div>
 
 

@@ -1,5 +1,6 @@
 <?php
 include('../includes/db.php');
+include('../includes/consultas.php');
 $json = array();
 
 
@@ -34,7 +35,6 @@ if (isset($_POST['llamado_id'])) {
 
 
         foreach ($dia_id as $id) {
-
             $query_detalle = "INSERT INTO detalle_jornada ( jornada_id, hora_inicio, hora_fin, dia) 
             VALUES ( '$jornadaCreadaId','$hora_inicio' , '$hora_fin', '$id');";
             if (!$result = mysqli_query($conexion, $query_detalle)) throw new Exception(mysqli_error($conexion));
@@ -63,15 +63,32 @@ if (isset($_POST['llamado_id'])) {
     $detalle_jornada_id = $_POST['horario_id'];
     $mesa_examen_id = $_POST['mesa_id'];
 
+    $query = "select detalle_jornada.id as horario_id,hora_inicio,hora_fin,dia,fecha_inicio,fecha_fin from mesa_examen 
+    LEFT JOIN jornada on jornada.id = mesa_examen.jornada_id
+    LEFT JOIN detalle_jornada on detalle_jornada.jornada_id = mesa_examen.jornada_id
+    WHERE mesa_examen.id = '$mesa_examen_id' and detalle_jornada.id = '$detalle_jornada_id'";
+    $res = mysqli_fetch_assoc(mysqli_query($conexion, $query));
+
     foreach ($array_agente as $id) {
+
+        $jornada_mesa = new stdClass();
+        $jornada_mesa->hora_inicio = $res['hora_inicio'];
+        $jornada_mesa->hora_fin = $res['hora_fin'];
+        $jornada_mesa->dia_id = $res['dia'];
+        $jornada_mesa->id_agente = $id;
+        $jornada_mesa->fecha_inicio = $res['fecha_inicio'];
+        $jornada_mesa->fecha_fin = $res['fecha_fin'];
+        $jornada_mesa->tipo_agente = 'docente';
 
         $sql = "SELECT * FROM jornada_docente_mesa where docente_id = '$id' and det_jornada_id='$detalle_jornada_id' and mesa_examen_id ='$mesa_examen_id'";
         $consulta = mysqli_query($conexion, $sql);
         if (!mysqli_num_rows($consulta) > 0) {
+
             $query_mesa = " INSERT INTO jornada_docente_mesa
             (docente_id,det_jornada_id, mesa_examen_id) VALUES
             ($id, '$detalle_jornada_id', '$mesa_examen_id'); ";
             try {
+                isOverlapedSqlMesa($conexion, $jornada_mesa);
                 if (!$result = mysqli_query($conexion, $query_mesa)) throw new Exception(mysqli_error($conexion));
                 $json[] = array(
                     'name' => 'Los docentes han sido agregados',
@@ -86,7 +103,6 @@ if (isset($_POST['llamado_id'])) {
                 );
             }
         } else {
-
             $json[] = array(
                 'name' => 'Exito! Algunos docentes ya estaban previamente agregados!',
                 'type' => 'info',
@@ -94,7 +110,7 @@ if (isset($_POST['llamado_id'])) {
             );
         }
     }
-}else{
+} else {
     $json[] = array(
         'name' => 'Debe agregar al menos un docente',
         'type' => 'warning',

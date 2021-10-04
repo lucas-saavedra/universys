@@ -8,6 +8,6 @@ $result = mysqli_query($conexion, "DELETE FROM documentacion_justificada WHERE i
 
 if ($result) header("Location:index.php");
 
-exit(mysqli_error($result));
+exit(mysqli_error($conexion));
 
 ?>

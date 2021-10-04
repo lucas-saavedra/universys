@@ -11,7 +11,7 @@ if (isset($_GET['id']) && $id = intval($_GET['id'])){
     $expdte = get_expdte($conexion, $id);
 }
 
-if (!isset($expdte)) header("Location:crear-expediente.php");
+if (!isset($expdte)) return;
 
 
 function get_campos_modificados($array1, $array2, $convertir=array()){
@@ -134,17 +134,6 @@ function modificar_expdte($bd, $expdte){
 }
 
 function on_update_fechas_expdte($bd, $id_expdte){
-    $expdte = get_expdte($bd, $id_expdte);
-
-    if (isset($expdte['expdte_docente_id'])){
-        $sql_delete = "DELETE FROM expediente_planilla_docente WHERE expediente_docente_id={$expdte['expdte_docente_id']}";
-        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
-    }
-    if (isset($expdte['expdte_no_docente_id'])){
-        $sql_delete = "DELETE FROM expediente_planilla_no_docente WHERE expediente_no_docente_id={$expdte['expdte_no_docente_id']}";
-        if (!$result = mysqli_query($bd, $sql_delete)) throw new Exception(mysqli_error($bd));
-    }
-
     asignar_expdte_a_planillas_prod($bd, $id_expdte);
 }
 
@@ -255,7 +244,7 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
 
                             <?php foreach(get_docs_sin_expdte($conexion, $expdte) as $doc): ?>
                                 <option value="<?=$doc['id']?>" <?=$doc['id'] === $expdte['doc_justificada_id'] ? 'selected': ''?>>
-                                    <?="{$doc['id']} / {$doc['fecha_recepcion']} - {$doc['nom_tipo_just']}"?>
+                                    <?="{$doc['id']} / ". date("d-m-Y", strtotime($doc['fecha_recepcion'])). " - {$doc['nom_tipo_just']}"?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

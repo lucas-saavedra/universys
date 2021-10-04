@@ -58,6 +58,10 @@ function subir_documentacion($bd){
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $msg = subir_documentacion($conexion);
 }
+else if (isset($_SESSION['modif_doc_msg'])){
+    $msg = $_SESSION['modif_doc_msg'];
+    unset($_SESSION['modif_doc_msg']);
+}
 
 $agentes = get_agentes($conexion);
 ?>
@@ -151,7 +155,9 @@ $agentes = get_agentes($conexion);
         <div class="col">
             <div class="card">
                 <div class="card-header py-3">
-                    <h4>Documentación sin expediente asignado</h4>
+                    <h4>
+                        <i class="fa fa-lg fa-file-alt mr-3"></i>Documentación
+                    </h4>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -163,34 +169,52 @@ $agentes = get_agentes($conexion);
                                     <th>Agente</th>
                                     <th>Fecha de recepción</th>
                                     <th>Descripción</th>
+                                    <th>Expdte</th>
                                     <th class="text-center">Archivo</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach(get_docs_sin_expdte($conexion) as $doc):?>
+                                <?php foreach(get_docs($conexion) as $doc):?>
                                     <tr>
                                         <td class="align-middle"><?=$doc['id']?></td>
                                         <td class="align-middle"><?=$doc['nom_tipo_just']?></td>
                                         <td class="align-middle"><?=$doc['agente_nombre']?></td>
-                                        <td class="align-middle"><?=$doc['fecha_recepcion']?></td>
-                                        <td class="align-middle"><?=$doc['descripcion']?></td>
+                                        <td class="align-middle fecha-rec"><?=$doc['fecha_recepcion']?></td>
+                                        <td class="align-middle desc"><?=$doc['descripcion']?></td>
+                                        <td class="align-middle text-center">
+                                            <?php if ($doc['expediente_id'] != ''): ?>
+                                                <a href="../expediente/modificar-expediente.php?id=<?=$doc['expediente_id']?>">
+                                                    <i class="fa fa-lg fa-external-link-alt"></i>
+                                                </a>
+                                            <?php else: ?>
+                                                Sin expdte
+                                            <?php endif; ?>
+                                        </td>
                                         <td class="align-middle text-center">
                                             <a href=<?="uploads/{$doc['archivo']}"?>>
                                                 <i class="fa fa-lg fa-download"></i>
                                             </a>
                                         </td>
-                                        <td class="align-middle text-center">
-                                            <form class="m-0" action="eliminar.php" method="POST">
-                                                <button 
-                                                    class="btn btn-danger" 
-                                                    type="submit" name="id" 
-                                                    value="<?=$doc['id']?>"
-                                                    onclick="return confirm('Seguro que desea eliminar la documentación de ID <?= $doc['id'] ?>?')"
-                                                >
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
+                                        <td class="d-flex justify-content-around">
+                                            <?php if ($doc['expediente_id'] == ''): ?>
+                                                <form class="m-0" action="eliminar.php" method="POST">
+                                                    <button 
+                                                        class="btn btn-danger" 
+                                                        type="submit" name="id" 
+                                                        value="<?=$doc['id']?>"
+                                                        onclick="return confirm('Seguro que desea eliminar la documentación de ID <?= $doc['id'] ?>?')"
+                                                    >
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                            <button class="btn btn-info btn-edit" 
+                                                data-id=<?=$doc['id']?> 
+                                                data-expdteid=<?=$doc['expediente_id']?>
+                                            >
+                                                <i class="fa fa-edit"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -205,6 +229,54 @@ $agentes = get_agentes($conexion);
 
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modif-doc-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modificar documentación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="modificar.php" method="POST">
+            <div class="mb-3 row align-items-center">
+                <label for="" class="col-auto form-label font-weight-bold">Documentación a modificar</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="id" required readonly/>
+                </div>
+                <label for="" class="col-auto form-label font-weight-bold">Expdte</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" name="expdte_id" required readonly/>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="" class="col-sm-2 form-label">Fecha de recepción</label>
+                <div class="col-sm-10">
+                    <input type="datetime-local" class="form-control" name="fecha_recepcion" required/>
+                </div>
+            </div>
+
+            <div class="mb-4 row">
+                <label for="" class="col-sm-2 form-label">Descripción</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" name="descripcion"></textarea>
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <div class="col text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+                </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../expediente/js/modificar_doc.js"></script>
 <script src="../expediente/js/filtro_agentes.js"></script>
 <script>
     filtro_agentes(<?=json_encode($agentes)?>);

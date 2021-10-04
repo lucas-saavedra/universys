@@ -33,6 +33,7 @@ $agente = $_SESSION['agente'];
 <input type="hidden" id="tipo_agente" tipo_agente="<?php echo $tipo_agente ?>">
 <input type="hidden" id="id_agente">
 <input type="hidden" id="jornada_agente_id">
+<input type="hidden" id="persona_id">
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/universys/jornada">Universys</a>
@@ -43,7 +44,6 @@ $agente = $_SESSION['agente'];
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
       <?php if ($es_personal) {  ?>
-        
         <li class="nav-item ">
           <a class="nav-link" href="../expediente/">Productividad</a>
         </li>
