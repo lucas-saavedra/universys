@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label for="">Llamado</label>
-                            <select class="form-control" id="filtroLlamadoId" >
+                            <select class="form-control" id="filtroLlamadoId">
                                 <option selected value="">Todos</option>
                                 <?php foreach (get_llamado($conexion) as $e) : ?>
                                     <option value="<?= $e['id'] ?>">
@@ -50,6 +50,9 @@
                         </div>
                         <div class="form-group col-md-1 d-flex align-items-end">
                             <button type="reset" class="filtro_reset_mesa btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
+                        </div>
+                        <div class="form-group col-md-4 mx-auto d-flex align-items-end">
+                            <button type="reset" class="filtro_reset btn btn-success  btn-block"><i class="fas fa-download"></i> Descargar horarios</button>
                         </div>
                     </div>
                 </form>
@@ -83,8 +86,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-

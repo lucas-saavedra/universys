@@ -184,12 +184,11 @@ $(document).ready(function () {
             dias_horas: array_dias,
             persona_id: $('#persona_id').val()
         };
-        console.log(jornadaAgente);
         e.preventDefault();
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
 
         $.post(url, jornadaAgente, function (response) {
-            console.log(response);
+            
             listar_jornadas(filtros);
             const msg = JSON.parse(response);
             notif(msg);
@@ -372,12 +371,12 @@ $(document).ready(function () {
             hora_fin: $('#hora_fin').val(),
             dia_id: $('#dia_id').val()
         };
-        console.log(horarioAgenteOne);
+      
 
         $.post('../jornada/backend/upd-horario.php',
             horarioAgenteOne,
             function (response) {
-                console.log(response);
+               
                 const msg = JSON.parse(response);
                 notif(msg);
                 listar_jornadas(filtros)
@@ -416,12 +415,12 @@ $(document).ready(function () {
             descripcion: $('#descripcion_horario').val(),
             dias_horas: array_dias,
         };
-        console.log(horarioAgente);
+        
         let url2 = editar === false ? '../jornada/backend/insertar-horario.php' : '../jornada/backend/upd-horario.php';
         $.post(url2,
             horarioAgente,
             function (response) {
-                console.log(response);
+                ;
                 const msg = JSON.parse(response);
                 notif(msg);
                 listar_jornadas(filtros)
@@ -656,12 +655,12 @@ $(document).ready(function () {
             mesa_id: $('#mesa_id').val(),
             docentes_mesa_id: selected_agente
         }
-        console.log(agentes);
+     
         $.post(
             '../jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
-                console.log(response)
+                
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -684,6 +683,8 @@ $(document).ready(function () {
         $('#hora_inicio_agente').val($(element).attr('hora_inicio'));
         $('#hora_fin_agente').val($(element).attr('hora_fin'));
         $('#upd_mesa_dia').val($(element).attr('dia'));
+        $('#upd_mesa_dia_id').val($(element).attr('dia_id'));
+        $('#upd_mesa_id').val($(element).attr('mesa_id'));
 
         const horario_id = $(element).attr('horario_id');
 
@@ -701,17 +702,20 @@ $(document).ready(function () {
     })
 
     $('#upd_mesa_horario').submit(function (e) {
-        dia_hora = {
-            id: $('#upd_mesa_horario_dia').val(),
-            inicio: $('#mesa_horario_inicio').val(),
-            fin: $('#mesa_horario_fin').val(),
-            dia: $('#upd_mesa_dia').val()
-        }
 
+        data = {
+            horario_id: $('#upd_mesa_horario_dia').val(),
+            hora_inicio: $('#mesa_horario_inicio').val(),
+            hora_fin: $('#mesa_horario_fin').val(),
+            dia_id: $('#upd_mesa_dia_id').val(),
+            mesa_id: $('#upd_mesa_id').val(),
+        }
+        
         e.preventDefault();
         $.post('../jornada/backend/upd-horario.php',
-            dia_hora,
+            data,
             function (response) {
+               
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -719,6 +723,8 @@ $(document).ready(function () {
                     $('#upd_mesa_horario').trigger('reset');
                     $('#upd_detalle_mesa').modal('hide');
                     editar = false;
+                    $("#mesa_horario_inicio").removeAttr("disabled", "");
+                    $("#mesa_horario_fin").removeAttr("disabled", "");
                 }
 
 
@@ -957,7 +963,7 @@ $(document).ready(function () {
                             })
                             template += `
                                  </td>
-                                    <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}" dia="${horarios.nombre}">
+                                    <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}"dia_id="${horarios.dia_id}" dia="${horarios.nombre}">
                                         <button type="button" class="horario_mesa_i btn" data-bs-toggle="modal"><i class=" fas fa-pen"></i></button>
                                         <button type="button" class="horario_mesa_i_add_agente btn" data-toggle="modal" data-target="#add_agente"><i class="fas fa-user-plus"></i> </button>
                                 </td>

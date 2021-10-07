@@ -39,7 +39,7 @@ function get_jornadas_mesa($conexion)
 
 function get_jornadas_horarios($conexion, $jornada_id)
 {
-  $sql =  "SELECT detalle_jornada.jornada_id ,detalle_jornada.id as det_jorn_id, hora_inicio,hora_fin, dia.nombre,descripcion  
+  $sql =  "SELECT detalle_jornada.jornada_id ,detalle_jornada.id as det_jorn_id, hora_inicio,hora_fin, dia.nombre,descripcion ,detalle_jornada.dia as dia_id 
   from  detalle_jornada left join dia on detalle_jornada.dia = dia.id where jornada_id ='$jornada_id' order by detalle_jornada.dia";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
@@ -60,6 +60,7 @@ foreach (get_jornadas_mesa($conexion) as $mesa) :
     $json_detalle_jornada[] = array(
       'nombre' => $horarios['nombre'],
       'hora_inicio' => $horarios['hora_inicio'],
+      'dia_id' => $horarios['dia_id'],
       'hora_fin' => $horarios['hora_fin'],
       'det_jorn_id' => $horarios['det_jorn_id'],
       'docentes' => $json_agente_dia_mesa

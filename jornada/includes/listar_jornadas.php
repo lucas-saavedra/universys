@@ -1,4 +1,3 @@
-
 <input type="hidden" id="jornadaId">
 <div class="card">
     <div class="card-header">
@@ -32,25 +31,25 @@
                     </div>
                 <?php } else { ?>
 
-                        <div class="form-group col-md-2">
-                            <label for="">Area</label>
-                            <select class="form-control" id="filtroAreaId" required>
-                                <option selected value="">Todas</option>
-                                <?php foreach (get_areas($conexion) as $areas) : ?>
-                                    <option value="<?= $areas['id'] ?>">
-                                        <?= "{$areas['nombre']}" ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    
+                    <div class="form-group col-md-2">
+                        <label for="">Area</label>
+                        <select class="form-control" id="filtroAreaId" required>
+                            <option selected value="">Todas</option>
+                            <?php foreach (get_areas($conexion) as $areas) : ?>
+                                <option value="<?= $areas['id'] ?>">
+                                    <?= "{$areas['nombre']}" ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                 <?php }  ?>
 
 
                 <div class="form-group col-md-2">
                     <label for="">Tipo de jornada</label>
                     <select class="form-control" id="filtroTipoJornadaId">
-                        <option selected value="" >Todos</option>
+                        <option selected value="">Todos</option>
                         <?php foreach (get_tipo_jornadas($conexion, $tipo_agente) as $tipo_jornadas) : ?>
                             <option value="<?= $tipo_jornadas['id'] ?>">
                                 <?= "{$tipo_jornadas['nombre']}" ?>
@@ -64,6 +63,9 @@
                 </div>
                 <div class="form-group col-md-1 d-flex align-items-end">
                     <button type="reset" class="filtro_reset btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                <div class="form-group col-md-4 mx-auto d-flex align-items-end">
+                    <button type="reset" class="filtro_reset btn btn-success  btn-block"><i class="fas fa-download"></i> Descargar horarios</button>
                 </div>
             </div>
 

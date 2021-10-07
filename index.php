@@ -36,6 +36,12 @@ if ($_POST) {
           case 'coordinacion':
             $_SESSION['agente_coord'] = true;
             break;
+          case 'director_de_carrera':
+            $_SESSION['agente_director_de_carrera'] = true;
+            break;
+          case 'alumnado':
+            $_SESSION['agente_alumnado'] = true;
+            break;
           default:
             $_SESSION['agente_personal'] = false;
             $_SESSION['agente_mesa_entrada'] = false;
@@ -58,6 +64,8 @@ if ($_POST) {
 
 <head>
   <title>Universys-Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 </head>
 
 <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
@@ -75,7 +83,8 @@ if ($_POST) {
           <input type="password" name="clave" id="inputPassword" class="form-control" placeholder="Contraseña" required="">
         </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Ingresar</button>
-        <p class="mt-5 mb-3 text-muted">© 2021-2021</p>
+        <button class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#exampleModal" id="biometric" type="button">Ingresar con lector biométrico</button>
+
       </form>
 
       <?php if (isset($_SESSION['message'])) { ?>
@@ -92,4 +101,24 @@ if ($_POST) {
   </div>
 
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="fas fa-fingerprint fa-10x"></i>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <?php include('includes/footer.php'); ?>
