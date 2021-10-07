@@ -65,6 +65,18 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                                         <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
+                                        <div class="row alert alert-secondary alert-dismissible fade show">
+                                                <div class="col text-center">
+                                                        <h4>¿Cerrar sesión?</h4>
+                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                        </button>
+                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                        </button>        
+                                                                        
+                                                </div>         
+                                        </div>
                                         
                                         <?php
                                 }else{
@@ -74,6 +86,19 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                 </button>
+                                        </div>
+                                        
+                                        <div class="row alert alert-secondary alert-dismissible fade show">
+                                                <div class="col text-center">
+                                                        <h4>¿Cerrar sesión?</h4>
+                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                        </button>
+                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                        </button>        
+                                                                        
+                                                </div>         
                                         </div>
                                       <?php
                                 }
@@ -100,8 +125,20 @@ if ($marc_bol == false) {
                                 <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
+                <div class="row alert alert-secondary alert-dismissible fade show">
+                        <div class="col text-center">
+                                <h4>¿Cerrar sesión?</h4>
+                                <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                        <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                </button>
+                                <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                        <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                </button>        
+                                                
+                        </div>         
+                </div>
 
                 <?php
         }
 }
-?>
+include("../includes/footer.php"); ?>

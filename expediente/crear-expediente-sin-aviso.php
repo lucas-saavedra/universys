@@ -63,7 +63,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
 
           while ($row_docente = mysqli_fetch_array($result_docente)) {
             $docente_id = $row_docente['id'];
-            $days = array('Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
+            $days = array('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo');
   ?>
             <table class="table table-striped table-dark table-sm">
              <!--  <thead>
@@ -149,12 +149,12 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                               <button class="btn btn-sm btn-success" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar? ')">
                               <i class="fas fa-plus"> Generar asistencia</i>
                           </button>
-                         <!-- </form>
+                          </form>
                           <form class="d-inline-block" action="eliminar_inasis.php" method="POST">
                               <button class="btn btn-sm btn-danger" type="submit" name="id_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Se eliminar la inasistencia ID <?= $row_inasist['id'] ?>')">
                               <i class="fa fa-edit"></i>
                           </button>
-                          </form> -->
+                          </form> 
                         </td>
                       <?php
                     }
@@ -264,12 +264,12 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                           <button class="btn btn-sm btn-success" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Al eliminar la inasistencia ID <?= $row_inasist['id'] ?> generara una asistencia para el registro ¿Desea continuar?')">
                           <i class="fas fa-plus"> Generar asistencia</i>
                       </button>
-                         <!-- </form>
+                          </form>
                           <form class="d-inline-block" action="eliminar_inasis.php" method="POST">
                               <button class="btn btn-sm btn-danger" type="submit" name="id_no_docente" value="<?= $row_inasist['id'] ?>" onclick="return confirm('Se eliminar la inasistencia ID <?= $row_inasist['id'] ?>')">
                               <i class="fa fa-edit"></i>
                           </button>
-                          </form> -->
+                          </form>
                         </td>
                       <?php  } ?>
                       </tr>

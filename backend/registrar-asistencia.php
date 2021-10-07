@@ -14,6 +14,7 @@ while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
 }
 $marc_bol=false;
 $sin_det_jornada=true;
+$tiene_mesa=false;
 
 $query_docente = "SELECT id from docente where persona_id = '$usuario_id'";
 $result_docente = mysqli_query($conexion, $query_docente);
@@ -46,6 +47,7 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
                         if (mysqli_num_rows($result_detalle_jornada) == 0) {
                                
                         } else {
+                                $tiene_mesa = true;
                                 $sin_det_jornada = false;
                                 while ($row_detalle_jornada = mysqli_fetch_array($result_detalle_jornada)) {
                                         $detalle_id = $row_detalle_jornada['id'];
@@ -62,6 +64,18 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
                                                         <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
+                                        <div class="row alert alert-secondary alert-dismissible fade show">
+                                                <div class="col text-center">
+                                                        <h4>¿Cerrar sesión?</h4>
+                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                        </button>
+                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                        </button>        
+                                                                        
+                                                </div>         
+                                        </div>
                                         <?php
 
                                                 $query_marcacion = "INSERT into marcacion_docente(docente_id, fecha, hora_registro,  dia, estado) VALUES ('$docente_id', now(),'$time',  $fecha_dia, 'entrada')";
@@ -76,6 +90,18 @@ while ($row_jornada_mesa = mysqli_fetch_array($result_jornada_mesa)) {
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                 </button>
+                                        </div>
+                                        <div class="row alert alert-secondary alert-dismissible fade show">
+                                                <div class="col text-center">
+                                                        <h4>¿Cerrar sesión?</h4>
+                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                        </button>
+                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                        </button>        
+                                                                        
+                                                </div>         
                                         </div>
                                         <?php
                                         }
@@ -128,7 +154,19 @@ if ($last_id == 0) {
                                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                                 <span aria-hidden="true">&times;</span>
                                                         </button>
-                                        </div>
+                                                </div>
+                                                <div class="row alert alert-secondary alert-dismissible fade show">
+                                                        <div class="col text-center">
+                                                                <h4>¿Cerrar sesión?</h4>
+                                                                <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                        <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                                </button>
+                                                                <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                        <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                                </button>        
+                                                                        
+                                                        </div>         
+                                                </div>
                                                 <?php
 
                                                 $query_marcacion = "INSERT into marcacion_docente(docente_id, fecha, hora_registro,  dia, estado) VALUES ('$docente_id', now(),'$time',  $fecha_dia, 'entrada')";
@@ -138,15 +176,30 @@ if ($last_id == 0) {
                                                 $result_asistencia = mysqli_query($conexion, $query_asistencia);
                                         } 
                                         else {
+                                        if ($tiene_mesa == false) {
                                         ?>
+                                        
                                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                                 <strong>Ya realizo esta marcación!!!</strong>
                                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                 </button>
                                         </div>
+                                        <div class="row alert alert-secondary alert-dismissible fade show">
+                                                <div class="col text-center">
+                                                        <h4>¿Cerrar sesión?</h4>
+                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                                                        </button>
+                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                                        </button>        
+                                                                        
+                                                </div>         
+                                        </div>
                                         <?php
                                         }
+                                }
                                 }
                         }
                 }
@@ -162,6 +215,18 @@ if ($marc_bol == false) {
                         <span aria-hidden="true">&times;</span>
                 </button>
         </div>
+        <div class="row alert alert-secondary alert-dismissible fade show">
+                <div class="col text-center">
+                        <h4>¿Cerrar sesión?</h4>
+                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
+                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
+                        </button>
+                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                        </button>        
+                                        
+                </div>         
+        </div>
         <?php 
 }else{
         if ($sin_det_jornada == true) {
@@ -172,91 +237,19 @@ if ($marc_bol == false) {
                                 <span aria-hidden="true">&times;</span>
                         </button>
                 </div>
-
+                <div class="row alert alert-secondary alert-dismissible fade show">
+                        <div class="col text-center">
+                                <h4>¿Cerrar sesión?</h4>
+                                <button style =" width: 100px" type="button" class="btn btn-success text-center ">
+                                        <a class="text-white" href="../includes/logout.php"><strong>Si</strong></a>
+                                </button>
+                                <button style =" width: 100px" type="button" class="btn btn-primary text-center">
+                                        <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
+                                </button>                 
+                        </div>         
+                </div>
                 <?php
         }
 }
-
-
-
-/*
-if (mysqli_query($conexion, $query2)) {
-        $last_id = mysqli_insert_id($conexion);
-        echo "New record created successfully. Last inserted ID is: " . $last_id;
-        echo "<br>";
-        $consulta = mysqli_query($conexion, "SELECT * FROM marcacion_docente where id=$last_id");
-
-        $marcacion_insertada = mysqli_fetch_assoc($consulta);
-        $hora_registro = $marcacion_insertada['hora_registro'];
-
-        if ($marcacion_insertada['estado'] == 'entrada'){
-                $det_jornada_actual_query = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
-                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada 
-                inner join cargo on cargo.id = detalle_jornada.cargo_id WHERE 
-                docente_id = $id_docente and
-                now() >= fecha_inicio and
-                now() <=fecha_fin and
-                WEEKDAY(now()) = detalle_jornada.dia AND 
-                '$hora_registro' >= ADDTIME(detalle_jornada.hora_inicio, '-00:15:00') AND 
-                '$hora_registro' <= ADDTIME(detalle_jornada.hora_inicio, '00:30:00')"; 
-
-                $det_jornada_actual = mysqli_query($conexion,$det_jornada_actual_query);
-                $det_jornada_id = mysqli_fetch_assoc($det_jornada_actual)['det_jornada_id'];
-
-                mysqli_query($conexion, "UPDATE marcacion SET detalle_jornada_id=$det_jornada_id WHERE id=$last_id");
-
-                echo "La marcacion es una entrada y se ha actualizado con la id $det_jornada_id";
-        }
-        else{
-                $det_jornada_actual_query = "SELECT detalle_jornada.id as det_jornada_id, detalle_jornada.hora_inicio,detalle_jornada.hora_fin FROM
-                jornada inner join detalle_jornada ON jornada.id = detalle_jornada.id_jornada 
-                inner join cargo on cargo.id = detalle_jornada.cargo_id WHERE 
-                docente_id = $id_docente and 
-                now() >= fecha_inicio and
-                now() <=fecha_fin and
-                WEEKDAY(now()) = detalle_jornada.dia AND 
-                '$hora_registro' >= ADDTIME(detalle_jornada.hora_fin, '-00:15:00') AND 
-                '$hora_registro' <= ADDTIME(detalle_jornada.hora_fin, '00:15:00')"; 
-
-                $det_jornada_actual = mysqli_query($conexion,$det_jornada_actual_query);
-                $det_jornada_id = mysqli_fetch_assoc($det_jornada_actual)['det_jornada_id'];
-
-                mysqli_query($conexion, "UPDATE marcacion SET detalle_jornada_id=$det_jornada_id WHERE id=$last_id");
-
-                echo "La marcacion es una salida y se ha actualizado con la id $det_jornada_id";
-        }
-
-} else {
-        echo "Error: " . $query2 . "<br>" . mysqli_error($conexion);
-}
-
-$marcaciones_entrada = mysqli_query($conexion, 
-"SELECT * FROM marcaciones where estado='entrada' and docente_id=$id_docente");*/
-
-/* $q= 'SELECT TIMEDIFF(marcacion.hora_inicio,detalle_jornada.hora_fin) as cont FROM marcacion,detalle_jornada';
-$consulta = mysqli_query($conexion,$q);
-$con = mysqli_query($conexion,$q);
-while ($row = mysqli_fetch_assoc($consulta)) {
-  
-        echo "Row1";
-        echo $row['cont'];
-        echo "<br>"; */
-/*     
-} */
-
-// $q = "select id from docentes where usuario_id = '$usuario_id'";
-
-// $consulta = mysqli_query($conexion,$q);
-// $array = mysqli_fetch_assoc($consulta);
-
-// $q = "INSERT into marcacion(fecha,hora_inicio,hola_fin,docente_id) VALUES ('2021-04-20', '10:15:00', '10:30:00', 3)"
-
-// if(mysqli_num_rows($consulta) > 0){
-//     $_SESSION['username']= $usuario;
-//     $_SESSION['usuario_id']= $array['id'];
-//     header("location: index.php");
-// }else{
-//     echo 'Datos incorrectos';
-// }
 
 include("../includes/footer.php"); ?>
