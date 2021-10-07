@@ -71,7 +71,7 @@ $agente = $_SESSION['agente'];
       <?php } ?>
       <?php if ($es_mesa) { ?>
         <li class="nav-item">
-          <a class="nav-link" href="../documentacion/index.php">Documentacion</a>
+          <a class="nav-link" href="../documentacion/index.php">Documentación</a>
         </li>
       <?php } ?>
       <?php if ($es_admin) { ?>
