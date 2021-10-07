@@ -238,6 +238,8 @@ if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'tru
                         </div>
                     </div>
                     <input type="text" hidden id="upd_mesa_horario_dia">
+                    <input type="text" hidden id="upd_mesa_id">
+                    <input type="text" hidden id="upd_mesa_dia_id">
 
                     <div class="form-row justify-content-center">
                         <div class="form-group col-md-6">

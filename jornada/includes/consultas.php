@@ -138,6 +138,7 @@ function get_jornadas_docentes_hoy($conexion, $docente_id)
     left JOIN catedra on catedra.id = jornada_docente.catedra_id
     right JOIN carrera on carrera.id = catedra.carrera_id
     WHERE jornada_docente.docente_id = '$docente_id' and detalle_jornada.dia = (select weekday(now()))
+    
     order by hora_inicio";
 
   return mysqli_query($conexion, $query_jornadas);
@@ -151,11 +152,19 @@ function get_jornadas_no_docentes_hoy($conexion, $no_docente_id)
   LEFT JOIN detalle_jornada on detalle_jornada.jornada_id = jornada_no_docente.jornada_id
   left JOIN area on area.id = jornada_no_docente.area_id
   WHERE jornada_no_docente.no_docente_id = '$no_docente_id' and detalle_jornada.dia = (select weekday(now()))
+  and (select now())>=  jornada.fecha_inicio and  (select now()) <= jornada.fecha_fin
   order by hora_inicio";
   return mysqli_query($conexion, $query_jornadas);
 }
 
-function get_jornadasmesa_docentes_hoy($conexion, $docente_id)
+function hay_mesa_hoy($conexion)
+{
+  $sql = " SELECT * from mesa_examen_jornada WHERE
+   (select now())>= fecha_inicio and  (select now()) <= fecha_fin ";
+  return mysqli_num_rows(mysqli_query($conexion, $sql)) != 0;
+}
+
+function get_jornadasmesa_docentes_hoy($conexion, $docente_id, $consulta)
 {
   $query_jornadas_mesa_hoy = "SELECT 
   docente_nombre.nombre as docente,
@@ -169,7 +178,7 @@ function get_jornadasmesa_docentes_hoy($conexion, $docente_id)
   LEFT JOIN docente_nombre on jdm.docente_id = docente_nombre.id
   LEFT join dia on detalle_jornada.dia = dia.id 
   LEFT JOIN jornada on mesa_examen_jornada.jornada_id = jornada.id
-  WHERE jdm.docente_id = '$docente_id' and detalle_jornada.dia = (select weekday(now()))";
+  WHERE jdm.docente_id = '$docente_id'  and (select now())>=  jornada.fecha_inicio and  (select now()) <= jornada.fecha_fin $consulta";
   return mysqli_query($conexion, $query_jornadas_mesa_hoy);
 }
 
@@ -415,9 +424,10 @@ function isOverlapedSqlMesa($conexion, $jornada_mesa)
 //          ale    //
 
 
-function get_tipo_jornada($bd,$tipo_jornada){
-  $query_jornada ="SELECT *FROM tipo_jornada WHERE id='$tipo_jornada'";
+function get_tipo_jornada($bd, $tipo_jornada)
+{
+  $query_jornada = "SELECT *FROM tipo_jornada WHERE id='$tipo_jornada'";
   $result = mysqli_query($bd, $query_jornada);
-  
+
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }

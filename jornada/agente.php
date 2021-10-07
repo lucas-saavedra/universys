@@ -6,51 +6,57 @@ $agente = $_SESSION['agente'];
 
 ?>
 
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid p-0 pt-3">
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
-        <h1 class="display-4">¡Bienvenido! <?php echo $agente ?> </h1>
-        <h3 class="display-6">Tipo de agente seleccionado: <?php echo $tipo_agente == 'docente' ?  'Docente' : 'No Docente' ?> </h3>
-        <div class="dropdown">
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Tipo de agente
-          </a>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'docente' ?>">Docente</a>
-            <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'no_docente' ?>">No Docente</a>
-          </div>
-        </div>
-      </div>
+      <div class="col-md-12">
+        <h1 class="py-3 ">¡Bienvenid@! <?php echo $agente ?> </h1>
 
-    </div>
-    <hr class="my-4">
-    <div class="row d-flex justify-content-center">
-
-      <div class="card-deck">
-        <div class="card text-center" style="width: 15rem;">
-          <div class="card-body">
-            <h5 class="card-title">Jornadas</h5>
-            <button type="button" class="btn jornadaModal" data-toggle="modal" data-target="#modal_jornadas"><i class="fas fa-calendar-alt fa-7x"></i></button>
-          </div>
-        </div>
-        <div class="card text-center" style="width: 15rem;">
-          <div class="card-body">
-            <h5 class="card-title">Horarios</h5>
-            <button type="button" class="btn horarioModal" data-toggle="modal" data-target="#modal_horarios"><i class="fas fa-clock fa-7x"></i></a></button>
-          </div>
-        </div>
-        <?php if ($tipo_agente == 'docente') { ?>
-          <div class="card text-center" style="width: 15rem;">
-            <div class="card-body">
-              <h5 class="card-title">Mesa de Examen</h5>
-              <button class="btn" type="submit"> <a class="btn" href="mesa.php?tipo_agente=<?php echo $tipo_agente ?>"><i class="fas fa-users-class fa-7x"></i></a></button>
+        <div class="row">
+          <div class="dropdown ">
+            <a class="btn btn-secondary ml-1 py-2 mb-0 btn-lg dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Seleccione el tipo de agente
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'docente' ?>">Docente</a>
+              <a class="dropdown-item" href="agente.php?tipo_agente=<?php echo 'no_docente' ?>">No Docente</a>
             </div>
           </div>
-        <?php } ?>
+          <div class="mb-0 col-md-6 d-flex py-2 align-items-center">
+            <h5 class="h5">Tipo de agente seleccionado: <?php echo $tipo_agente == 'docente' ?  'Docente' : 'No Docente' ?> </h5>
+          </div>
+        </div>
+
 
       </div>
+    </div>
+    <hr class="my-4">
+    <div class="row d-flex justify-content-around">
+
+
+      <div class="text-center" style="width: 10rem;">
+        <div class="card-body">
+          <h5 class="card-title">Jornadas</h5>
+          <button type="button" class="btn jornadaModal" data-toggle="modal" data-target="#modal_jornadas"><i class="fas fa-calendar-alt fa-5x"></i></button>
+        </div>
+      </div>
+      <div class=" text-center" style="width: 10rem;">
+        <div class="card-body">
+          <h5 class="card-title">Horarios</h5>
+          <button type="button" class="btn horarioModal" data-toggle="modal" data-target="#modal_horarios"><i class="fas fa-clock fa-5x"></i></a></button>
+        </div>
+      </div>
+      <?php if ($tipo_agente == 'docente') { ?>
+        <div class=" text-center" style="width:10rem;">
+          <div class="card-body">
+            <h5 class="card-title">Mesa de Examen</h5>
+            <button class="btn" type="submit"> <a class="btn" href="mesa.php?tipo_agente=<?php echo $tipo_agente ?>"><i class="fas fa-users-class fa-5x"></i></a></button>
+          </div>
+        </div>
+      <?php } ?>
+
+
     </div>
   </div>
 </div>

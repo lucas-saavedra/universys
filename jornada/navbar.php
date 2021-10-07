@@ -43,7 +43,7 @@ $agente = $_SESSION['agente'];
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
-      <?php if ($es_personal) {  ?>
+      <?php if ($es_personal || $es_coord) {  ?>
         <li class="nav-item ">
           <a class="nav-link" href="../expediente/">Productividad</a>
         </li>
