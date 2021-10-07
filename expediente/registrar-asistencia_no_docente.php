@@ -68,12 +68,11 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                         <div class="row alert alert-secondary alert-dismissible fade show">
                                                 <div class="col text-center">
                                                         <h4>¿Cerrar sesión?</h4>
-                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
-                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
-                                                        </button>
-                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
-                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
-                                                        </button>        
+                                                        <a style =" width: 100px" type="button" class="btn btn-success text-center text-white"
+                                                                href="../includes/logout.php"><strong>Si<strong>
+                                                        </a>
+                                                        <a style =" width: 100px" type="button" class="btn btn-primary text-center text-white"
+                                                                 href="/universys/jornada"><strong>No</strong></a>         
                                                                         
                                                 </div>         
                                         </div>
@@ -91,13 +90,11 @@ while ($row_jornada_no_docente = mysqli_fetch_array($result_jornada_no_docente))
                                         <div class="row alert alert-secondary alert-dismissible fade show">
                                                 <div class="col text-center">
                                                         <h4>¿Cerrar sesión?</h4>
-                                                        <button style =" width: 100px" type="button" class="btn btn-success text-center">
-                                                                <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
-                                                        </button>
-                                                        <button style =" width: 100px" type="button" class="btn btn-primary text-center">
-                                                                <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
-                                                        </button>        
-                                                                        
+                                                        <a style =" width: 100px" type="button" class="btn btn-success text-center text-white"
+                                                                href="../includes/logout.php"><strong>Si<strong>
+                                                        </a>
+                                                        <a style =" width: 100px" type="button" class="btn btn-primary text-center text-white"
+                                                                 href="/universys/jornada"><strong>No</strong></a>                          
                                                 </div>         
                                         </div>
                                       <?php
@@ -128,12 +125,11 @@ if ($marc_bol == false) {
                 <div class="row alert alert-secondary alert-dismissible fade show">
                         <div class="col text-center">
                                 <h4>¿Cerrar sesión?</h4>
-                                <button style =" width: 100px" type="button" class="btn btn-success text-center">
-                                        <a class="text-white" href="../includes/logout.php"><strong>Si<strong></a>
-                                </button>
-                                <button style =" width: 100px" type="button" class="btn btn-primary text-center">
-                                        <a class="text-white" href="/universys/jornada"><strong>No</strong></a>
-                                </button>        
+                                <a style =" width: 100px" type="button" class="btn btn-success text-center text-white"
+                                        href="../includes/logout.php"><strong>Si<strong>
+                                </a>
+                                <a style =" width: 100px" type="button" class="btn btn-primary text-center text-white"
+                                                href="/universys/jornada"><strong>No</strong></a>      
                                                 
                         </div>         
                 </div>
