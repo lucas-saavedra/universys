@@ -1,6 +1,6 @@
 <title>Crear Expediente</title>
 <?php 
-include ("../jornada/navbar.php");
+include_once('../includes/db.php');
 include ("./includes/consultas.php");
 include ("./includes/asignar-planilla-prod.php");
 include ("./includes/validaciones.php");
@@ -72,10 +72,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
     $msg = crear_expediente($conexion);
 
     if ($msg['type'] == 'success'){
+        session_start();
         $_SESSION['crear_expdte_msg'] = $msg;
         header('Location:index.php');
     }
 }
+
+include ("../jornada/navbar.php");
 ?>
 <div class="container">
     <div class="row mt-4">
