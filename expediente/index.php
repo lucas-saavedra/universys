@@ -1,19 +1,25 @@
 <title>Planilla de productividad</title>
 <?php
-include("../jornada/navbar.php");
-include("./includes/consultas.php");
 
 $hoy = new DateTime('NOW');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $mes = $hoy->format('n');
     $anio = $hoy->format('Y');
-    $tipo_agente = "docente";
-} else {
+    $_tipo_agente = "docente";
+} 
+else {
     $mes = $_POST['mes'];
     $anio = $_POST['anio'];
-    $tipo_agente = $_POST['select'];
+    $_tipo_agente = $_POST['select'];
+    if (isset($_POST['desc-excel'])){
+        header("Location: desc_excel.php?mes={$mes}&anio={$anio}&tipo={$_tipo_agente}");
+    }
 }
+
+include("../jornada/navbar.php");
+include("./includes/consultas.php");
+
 
 if (isset($_SESSION['elim_expdte_msg'])) {
     $msg = $_SESSION['elim_expdte_msg'];
@@ -23,7 +29,7 @@ if (isset($_SESSION['elim_expdte_msg'])) {
     unset($_SESSION['crear_expdte_msg']);
 }
 
-$planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
+$planilla = get_p_prod($conexion, $anio, $mes, $_tipo_agente);
 
 ?>
 
@@ -39,8 +45,8 @@ $planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
                     </div>
                     <div class="row col text-center">
                         <select name="select" class="form-control mr-sm-2 col-3" required>
-                            <option value="docente" <?= $tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
-                            <option value="no_docente" <?= $tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
+                            <option value="docente" <?= $_tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
+                            <option value="no_docente" <?= $_tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
                         </select>
                         <select name="mes" class="form-control mr-sm-2 col-3" required>
                             <option value="" selected disabled>Seleccione un mes</option>
@@ -52,7 +58,9 @@ $planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
                         </select>
                         <input class="form-control mr-sm-2 col" type="number" name="anio" placeholder="Ingrese el año" value="<?= $anio ?>" required>
                         <button class="btn btn-outline-success my-2 my-sm-0 d-inline-block" type="submit"><i class="fa fa-search"></i> BUSCAR</button>
-                        <a href="desc_exel.php" class="btn btn-outline-success">Descargar</a>
+                        <button type="submit" name="desc-excel" class="btn btn-outline-success ml-2">
+                            <i class="fa fa-download"></i> Descargar
+                        </button>
                     </div>
                 </div>
             </form>
@@ -62,14 +70,14 @@ $planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
     <?php include "includes/msg-box.php"; ?>
 
     <?php if (isset($planilla['id'])): ?>
-        <?php $expdtes = get_expdtes_por_agente($conexion, $planilla['id'], $tipo_agente); ?>
+        <?php $expdtes = get_expdtes_por_agente($conexion, $planilla['id'], $_tipo_agente); ?>
         <table class="table table-dark table-sm my-3">
             <thead>
                 <tr>
                     <th scope="col">UNIVERSIDAD AUTÓNOMA DE ENTRE RÍOS</th>
                     <th scope="col">Facultad: Ciencia y Tecnología</th>
                     <th scope="col">Sede: Chajarí</th>
-                    <th scope="col">Planilla: <?= $tipo_agente ?></th>
+                    <th scope="col">Planilla: <?= $_tipo_agente ?></th>
                     <th scope="col">Mes: <?= $planilla['nombre'] ?></th>
                     <th scope="col">Año: <?= $planilla['anio'] ?></th>
                 </tr>
@@ -115,7 +123,7 @@ $planilla = get_p_prod($conexion, $anio, $mes, $tipo_agente);
                                         <td class="align-middle text-center">
                                             <i class="fa fa-lg fa-<?=$_expdte['con_descuento']? 'check': 'times'?>"></i>
                                         </td>
-                                        <td><?=get_inasis_expdte($conexion, $_expdte["expdte_{$tipo_agente}_id"], $tipo_agente)?></td>
+                                        <td><?=get_inasis_expdte($conexion, $_expdte["expdte_{$_tipo_agente}_id"], $_tipo_agente)?></td>
                                         <td><?=$_expdte['hs_descontadas']?></td>
                                         <td>
                                             <a 
