@@ -563,8 +563,7 @@ $(document).ready(function () {
                             <td> 
                                 <button class="jornada-item btn btn-info"><i class="fas fa-pen"></i></button>
                                 <button class="jornada_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
-                                <button type="button"class=" jornada-horario btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                <i class="fas fa-clock"></i></button> 
+                              
                             </td>     
                             </tr>
                             <tr>

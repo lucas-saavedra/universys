@@ -1,7 +1,14 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true') {
+
+
+if (
+  !$es_coord && !$es_admin &&
+  !$es_alumn && !$es_director && !$es_personal
+) {
   header("Location: ../index.php ");
 }
+
+
 $agente = $_SESSION['agente'];
 
 ?>
@@ -88,10 +95,10 @@ $agente = $_SESSION['agente'];
 
 <!-- Modal -->
 <div class="modal fade" id="modal_horarios" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="text-center">Detalle de la jornada test</h5>
+        <h5 class="text-center">Detalle de la jornada</h5>
       </div>
       <div class="modal-body">
         <?php include("horario.php");  ?>
@@ -105,7 +112,7 @@ $agente = $_SESSION['agente'];
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="text-center">Detalle de la jornada test</h5>
+        <h5 class="text-center">Detalle de la jornada</h5>
       </div>
       <div class="modal-body">
         <form action="" method="post" id="horarios_one">

@@ -3,5 +3,5 @@ $conexion = mysqli_connect(
     "localhost",
     "root",
     "",
-    "universys2"
+    "universys"
 );

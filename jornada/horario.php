@@ -39,18 +39,18 @@
                     <div class="card-body p-2">
                         <?php foreach (get_dia($conexion, $tipo_agente) as $e) : ?>
                             <div class="form-row d-flex align-items-center">
-                                <div class="form-group col-md-4 m-0">
+                                <div class="form-group col-2  mb-0">
                                     <div class="checkbox_dias_horarios" required>
                                         <label class="m-0">
                                             <input type="checkbox" name="dias_horarios" value="<?= $e['id'] ?>">
                                             <?= $e['nombre'] ?> </label>
                                     </div>
                                 </div>
-                                <div class="form-group  m-0 col-md-4 col-md-4 d-flex align-items-center"><label class="mx-2">Inicio </label>
+                                <div class="form-group  mb-0 col-5   d-flex align-items-center"><label class="mx-2">Inicio </label>
                                     <input type="time" name="inicio_horarios[]" class="form-control timepicker my-1 mr-sm-2" value="16:00" step="1800">
 
                                 </div>
-                                <div class="form-group  m-0 col-md-4 col-md-4 d-flex align-items-center">
+                                <div class="form-group  mb-0 col-5  d-flex align-items-center">
                                     <label class="mx-2">Fin</label>
                                     <input type="time" name="fin_horarios[]" class="form-control timepicker my-1 mr-sm-2" value="19:00" step="1800">
                                 </div>
