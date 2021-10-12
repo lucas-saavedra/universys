@@ -4,5 +4,5 @@ $conexion = mysqli_connect(
     "localhost",
     "root",
     "",
-    "universys2"
+    "universys"
 )or die(mysqli_error($mysqli));

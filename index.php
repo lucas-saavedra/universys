@@ -43,7 +43,10 @@ if ($_POST) {
             $_SESSION['agente_alumnado'] = true;
             break;
           default:
+            $_SESSION['agente_director_de_carrera'] = false;
+            $_SESSION['agente_alumnado'] = false;
             $_SESSION['agente_personal'] = false;
+            $_SESSION['agente_alumnado'] = false;
             $_SESSION['agente_mesa_entrada'] = false;
             $_SESSION['agente_coord'] = false;
             $_SESSION['admin'] = false;

@@ -16,6 +16,17 @@ $es_personal = false;
 $es_mesa = false;
 $es_coord = false;
 $es_admin = false;
+$es_alumn = false;
+$es_director = false;
+
+
+if (isset($_SESSION['agente_director_de_carrera'])) {
+  $es_director =  $_SESSION['agente_director_de_carrera'];
+}
+if (isset($_SESSION['agente_alumnado'])) {
+  $es_alumn =  $_SESSION['agente_alumnado'];
+}
+
 if (isset($_SESSION['admin'])) {
   $es_admin =  $_SESSION['admin'];
 }
@@ -43,10 +54,7 @@ $agente = $_SESSION['agente'];
 
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
-      <?php if ($es_personal || $es_coord) {  ?>
-        <li class="nav-item ">
-          <a class="nav-link" href="../expediente/">Productividad</a>
-        </li>
+      <?php if ($es_personal || $es_coord || $es_director ||$es_alumn) {  ?>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Jornadas
@@ -56,6 +64,12 @@ $agente = $_SESSION['agente'];
             <a class="dropdown-item" href="../jornada/mesa.php">Jornada de Mesa</a>
           </div>
         </li>
+      <?php } ?>
+      <?php if ($es_personal || $es_coord) {  ?>
+        <li class="nav-item ">
+          <a class="nav-link" href="../expediente/">Productividad</a>
+        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Expedientes

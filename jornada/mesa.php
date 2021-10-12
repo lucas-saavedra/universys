@@ -1,5 +1,9 @@
 <?php include("navbar.php");
-if (!isset($_SESSION['agente_personal']) || $_SESSION['agente_personal'] <> 'true') {
+
+if (
+    !$es_coord && !$es_admin &&
+    !$es_alumn && !$es_director && !$es_personal
+) {
     header("Location: ../index.php ");
 }
 ?>
