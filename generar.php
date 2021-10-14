@@ -14,7 +14,6 @@ $array_letras=['A','B','C','D','E','F','G'];
 
 while($rows = mysqli_fetch_assoc($dias_result ) ){
 $sheet->setCellValue($array_letras[$rows['id']].'1', $rows['nombre']);
-
 }
 
 

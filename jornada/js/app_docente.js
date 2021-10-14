@@ -513,9 +513,10 @@ $(document).ready(function () {
             filtroTipoJornadaId: $('#filtroTipoJornadaId').val(),
             filtroCarreraId: $('#filtroCarreraId').val(),
             filtroAreaId: $('#filtroAreaId').val(),
+            filtroAnioId: $('#filtroAnioId').val(),
             tipo_agente: tipo_agente
         };
-
+        console.log(filtros);
         listar_jornadas(filtros)
     })
 
@@ -543,7 +544,7 @@ $(document).ready(function () {
                             if (tipo_agente == 'docente') {
                                 template += `
                                 <td>  ${jornada.docente} </td>
-                                <td>  <p class="h6"> ${jornada.carrera} </p> <p class="mb-0"> ${jornada.catedra} </p>  </td>
+                                <td>  <p class="h6"> ${jornada.carrera} - ${jornada.anio_plan} Año</p> <p class="mb-0"> ${jornada.catedra} </p>   </td>
                                 `;
                             } else {
                                 template += `

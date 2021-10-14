@@ -1,5 +1,12 @@
 <?PHP
 include('db.php');
+function get_anios($conexion)
+{
+  $sql = "SELECT * FROM `anio_plan`";
+  $result = mysqli_query($conexion, $sql);
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 /* function get_agentes($conexion, $tipo_agente)
 {
   $sql = "SELECT $tipo_agente.id,nombre FROM $tipo_agente left join persona on $tipo_agente.id = persona.id";
