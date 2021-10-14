@@ -7,7 +7,7 @@
 
         <form action="" method="POST" id="filtroJornada">
 
-            <div class="form-row">
+            <div class="form-row col-md-12 d-flex justify-content-center">
                 <div class="form-group col-md-3">
                     <label for="fecha_inicio">Inicio</label>
                     <input required type="date" class="form-control" id="filtroFechaInicio">
@@ -25,6 +25,17 @@
                             <?php foreach (get_carreras($conexion) as $e) : ?>
                                 <option value="<?= $e['id'] ?>">
                                     <?= "{$e['nombre']}" ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="">Año académico</label>
+                        <select class="form-control" id="filtroAnioId">
+                            <option selected value="">Todos</option>
+                            <?php foreach (get_anios($conexion) as $anio) : ?>
+                                <option value="<?= $anio['id'] ?>">
+                                    <?= "{$anio['nombre']}" ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -58,15 +69,22 @@
                     </select>
                 </div>
 
-                <div class="form-group col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
+
+                <div class="form-row col-md-12 d-flex justify-content-center">
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="reset" class="filtro_reset btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="./backend/exportar_horarios.php" class=" btn btn-success  btn-block">
+                             <i class="fas fa-download"></i> Descargar horarios
+                        </a>
+                    </div>
                 </div>
-                <div class="form-group col-md-1 d-flex align-items-end">
-                    <button type="reset" class="filtro_reset btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
-                </div>
-                <div class="form-group col-md-4 mx-auto d-flex align-items-end">
-                    <button type="reset" class="filtro_reset btn btn-success  btn-block"><i class="fas fa-download"></i> Descargar horarios</button>
-                </div>
+
+
             </div>
 
         </form>
