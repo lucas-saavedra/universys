@@ -3,7 +3,7 @@ require '../includes/db.php';
 include("../jornada/navbar.php");
 
 $Object = new DateTime();
-$time  = $Object->format("h:i:s a");
+$time  = $Object->format("H:i:s");
 $fecha = date("Y-n-j");
 
 $usuario_id = $_SESSION['agente_id'];

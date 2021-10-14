@@ -3,7 +3,7 @@ require '../includes/db.php';
 include("../jornada/navbar.php");
 
 $Object = new DateTime();
-$time  = $Object->format("h:i:s a");
+$time  = $Object->format("H:i:s");
 $fecha = date("Y-n-j");
 
 $usuario_id = $_SESSION['agente_id'];
@@ -136,6 +136,7 @@ if ($last_id == 0) {
                         $query_detalle_jornada = "SELECT *from detalle_jornada WHERE jornada_id = '$jornada' AND dia='$fecha_dia' AND '$time' >= ADDTIME(hora_inicio, '-00:20:00') AND '$time' <= ADDTIME(hora_inicio, '00:30:00')";
                         $result_detalle_jornada = mysqli_query($conexion, $query_detalle_jornada);
                         if (mysqli_num_rows($result_detalle_jornada) == 0) {
+                                echo ($time);
                         } 
                         else {
                                 $sin_det_jornada = false;
