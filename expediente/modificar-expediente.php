@@ -78,7 +78,7 @@ function modificar_expdte($bd, $expdte){
                 $ant_update_string = implode(', ', $ant_modifs);
                 $dia = date("Y-m-d H:i:s");
                 $cambios= $expdte['cambios'];
-                $modif = $cambios . '\n'.'Modificación del '. date("Y-m-d"). ' (';
+                $modif = $cambios . '\n'.'Modificación del '. date("Y-m-d"). '\n(';
                 $largo = strlen($ant_update_string);
                 for ($x=0; $x <  $largo; $x++) {
                     if ($ant_update_string[$x]== "'"){
@@ -89,16 +89,26 @@ function modificar_expdte($bd, $expdte){
                 }
             }
             $modif = $modif .').';
-
-
-
             $sql_update_expdte = "UPDATE expediente SET {$update_string}, cambios='$modif', ult_cambio='$dia' WHERE id={$expdte['id']}";
-           
+            
             if (!$result = mysqli_query($bd, $sql_update_expdte)){
                 $error = mysqli_error($bd);
                 throw new Exception("Error al modificar expediente: {$error}");
             }
-           
+        
+        }
+
+        // Actualizacion de las hs a descontar
+        $hs_desc_actual = get_hs_a_desc_expdte($bd, $expdte);
+        $hs_desc_modificadas = isset($_POST['hs_descontadas']) && $hs_desc_actual != $_POST['hs_descontadas'];
+        
+        if ($hs_desc_modificadas){
+            update_hs_descontar($bd, $expdte, $_POST['hs_descontadas']);
+            $hs_modif_string = "\nModificacion del ". date("Y-m-d"). " (hs_descontadas={$hs_desc_actual})";
+            mysqli_query(
+                $bd, 
+                "UPDATE expediente SET cambios=CONCAT(IFNULL(cambios, ''), '{$hs_modif_string}') WHERE id={$expdte['id']}"
+            );
         }
         
         $modificacion_fechas_expdte = isset($modifs_en_expdte['fecha_inicio']) || isset($modifs_en_expdte['fecha_fin']);
@@ -133,6 +143,19 @@ function modificar_expdte($bd, $expdte){
 
 }
 
+function update_hs_descontar($bd, $expdte, $valor){
+
+    if (!empty($expdte['expdte_docente_id'])){
+        mysqli_query($bd, "UPDATE expediente_planilla_docente SET hs_descontadas={$valor} 
+        WHERE expediente_docente_id={$expdte['expdte_docente_id']}");
+    }
+
+    if (!empty($expdte['expdte_no_docente_id'])){
+        mysqli_query($bd, "UPDATE expediente_planilla_no_docente SET hs_descontadas={$valor} 
+        WHERE expediente_no_docente_id={$expdte['expdte_no_docente_id']}");
+    }
+}
+
 function on_update_fechas_expdte($bd, $id_expdte){
     asignar_expdte_a_planillas_prod($bd, $id_expdte);
 }
@@ -153,7 +176,18 @@ $codigos = get_codigos_inasis($conexion, implode(' AND ', $filtros));
 $cod_sin_aviso = get_codigos_inasis($conexion, "id={$ID_COD_SIN_AVISO}")[0];
 
 // En los expedientes con el codigo sin aviso hay campos q no se pueden modificar
-$expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly = '';
+
+if ($expdte['codigo_id'] == $cod_sin_aviso['id']){
+    $cod_del_expdte = $cod_sin_aviso;
+    $readonly = 'readonly';
+}
+else{
+    $idx_cod_expdte = array_search($expdte['codigo_id'], array_column($codigos, 'id'));
+    $cod_del_expdte = $codigos[$idx_cod_expdte];
+    $readonly = '';
+}
+
+
 ?>
 
 <div class="container">
@@ -169,6 +203,9 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
                 <?php endif; ?>
                 <?php if ($expdte['expdte_no_docente_id']): ?>
                     <span class="badge badge-secondary">No docente</span>
+                <?php endif; ?>
+                <?php if ($expdte['cupo_superado']): ?>
+                    <span class="badge badge-warning">Cupo superado</span>
                 <?php endif; ?>
             </h3>
         </div>
@@ -295,6 +332,15 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
                     <div class="col" id="info-cupo"></div>
                 </div>
 
+                <?php if ($cod_del_expdte['con_descuento'] || $expdte['cupo_superado']):?>
+                    <div class="row mb-3">
+                        <label for="input-hs" class="col-sm-2 form-label">Hs. desc.</label>
+                        <div class="col-auto">
+                            <input class="form-control" type="number" name="hs_descontadas" id="input-hs" placeholder="Hs a descontar" value=<?=get_hs_a_desc_expdte($conexion, $expdte)?>>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="mb-3 row">
                     <div class="col text-center">
                         <button type="submit" class="btn btn-primary btn-lg">Modificar</button>
@@ -324,7 +370,7 @@ $expdte['codigo_id'] == $cod_sin_aviso['id'] ? $readonly = 'readonly': $readonly
                 </div> 
                 <div class="card border-primary mb-3">
                     <div class="card-header">Modificaciones</div>
-                            <textarea rows="7" cols="40"><?php echo $expdte['cambios']?></textarea>
+                            <textarea rows="18" cols="40" readonly><?php echo $expdte['cambios']?></textarea>
                     </div> 
             </div>                    
         </div>

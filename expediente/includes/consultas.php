@@ -202,5 +202,18 @@
         return mysqli_fetch_all($result, MYSQLI_ASSOC);
     }
 
+    function get_hs_a_desc_expdte($bd, $expdte){
+        if (!empty($expdte['expdte_docente_id'])){
+            $sql = "SELECT hs_descontadas FROM expediente_planilla_docente where expediente_docente_id={$expdte['expdte_docente_id']} LIMIT 1 ";
+        }
+        else if (!empty($expdte['expdte_no_docente_id'])){
+            $sql = "SELECT hs_descontadas FROM expediente_planilla_no_docente where expediente_no_docente_id={$expdte['expdte_no_docente_id']} LIMIT 1";
+        }
+
+        $result = mysqli_fetch_row(mysqli_query($bd, $sql));
+
+        return $result ? $result[0] : 0;
+    }
+
     
 ?>
