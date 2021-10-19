@@ -16,11 +16,11 @@
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="fecha_inicio">Incio de la jornada</label>
-                            <input required type="date" value='2021-07-01' class="form-control" id="filtroFechaInicio">
+                            <input required type="date" class="form-control" id="filtroFechaInicio">
                         </div>
                         <div class="form-group col-md-3">
                             <label for="fecha_fin">Fin de la jornada</label>
-                            <input required type="date" value='2021-07-30' class="form-control " id="filtroFechaFin">
+                            <input required type="date" class="form-control " id="filtroFechaFin">
                         </div>
 
                         <div class="form-group col-md-2">
