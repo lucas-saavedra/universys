@@ -38,8 +38,8 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
 
   if ($tipo_agente == 'docente') {
     ?>
-<p>Las inasistencias de un mismo diá se agrupan en un solo expediente, este dice la cantidad de 
-  inasistencias que contiene y la cantidad de horas que se ausento el docente ese diá<p>
+<p>Las inasistencias de un mismo día se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencias que contiene y la cantidad de horas que se ausento el docente ese día<p>
 <?php
     $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
     $result_fecha = mysqli_query($conexion, $query_fecha);
@@ -176,8 +176,8 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
     <?php
   } else {
     ?>
-<p>Las inasistencias de un mismo dia se agrupan en un solo expediente, este dice la cantidad de 
-  inasistencais que contiene y la cantidad de horas que se ausento el no docente ese dia<p>
+<p>Las inasistencias de un mismo día se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencais que contiene y la cantidad de horas que se ausento el no docente ese día<p>
 <?php
     $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente";
     $result_fecha = mysqli_query($conexion, $query_fecha);
