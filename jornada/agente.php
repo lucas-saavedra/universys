@@ -82,7 +82,7 @@ $agente = $_SESSION['agente'];
   <div class="modal-dialog modal-xl modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-center" id="modal_jornadas">Jornada Agente</h5>
+        <h5 class="modal-title text-center" id="modal_jornadas">Jornada Agente <?php echo $tipo_agente== 'docente' ?'Docente':'No Docente' ?> </h5>
 
       </div>
       <div class="modal-body">

@@ -50,10 +50,16 @@ function get_jornada_docentes($conexion)
 }
 function get_dia($conexion)
 {
-  $sql = "SELECT * FROM dia ";
+  $sql = "SELECT * FROM dia WHERE id <> '6'";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+/* function get_dia_sin_domingo($conexion)
+{
+  $sql = "SELECT * FROM dia WHERE id <> '6'";
+  $result = mysqli_query($conexion, $sql);
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
+} */
 
 function get_dia_string($conexion, $dia_id)
 {

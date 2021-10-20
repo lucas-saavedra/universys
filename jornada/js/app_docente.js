@@ -188,7 +188,7 @@ $(document).ready(function () {
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
 
         $.post(url, jornadaAgente, function (response) {
-            
+
             listar_jornadas(filtros);
             const msg = JSON.parse(response);
             notif(msg);
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 $('#modal_jornadas').modal('hide');
                 editar = false;
                 $("#fechaInicio").removeAttr("disabled", "");
-                $("#fechaFin").removeAttr("disabled", "");
+                /*   $("#fechaFin").removeAttr("disabled", ""); */
                 $("#search-agente").removeAttr("disabled", "");
             }
 
@@ -220,7 +220,7 @@ $(document).ready(function () {
             });
             if (bool) {
                 $("#fechaInicio").attr("disabled", "");
-                $("#fechaFin").attr("disabled", "");
+                /* $("#fechaFin").attr("disabled", ""); */
                 $("#search-agente").attr("disabled", "");
             }
 
@@ -371,12 +371,12 @@ $(document).ready(function () {
             hora_fin: $('#hora_fin').val(),
             dia_id: $('#dia_id').val()
         };
-      
+
 
         $.post('../jornada/backend/upd-horario.php',
             horarioAgenteOne,
             function (response) {
-               
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 listar_jornadas(filtros)
@@ -415,7 +415,7 @@ $(document).ready(function () {
             descripcion: $('#descripcion_horario').val(),
             dias_horas: array_dias,
         };
-        
+
         let url2 = editar === false ? '../jornada/backend/insertar-horario.php' : '../jornada/backend/upd-horario.php';
         $.post(url2,
             horarioAgente,
@@ -451,7 +451,7 @@ $(document).ready(function () {
         $('#id_agente').val('');
         $('#catedraIdInput').val('');
         $("#fechaInicio").removeAttr("disabled", "");
-        $("#fechaFin").removeAttr("disabled", "");
+        /* $("#fechaFin").removeAttr("disabled", ""); */
         $("#search-agente").removeAttr("disabled", "");
     }
 
@@ -516,7 +516,7 @@ $(document).ready(function () {
             filtroAnioId: $('#filtroAnioId').val(),
             tipo_agente: tipo_agente
         };
-        console.log(filtros);
+
         listar_jornadas(filtros)
     })
 
@@ -655,12 +655,12 @@ $(document).ready(function () {
             mesa_id: $('#mesa_id').val(),
             docentes_mesa_id: selected_agente
         }
-     
+
         $.post(
             '../jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
-                
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -686,8 +686,20 @@ $(document).ready(function () {
         $('#upd_mesa_dia_id').val($(element).attr('dia_id'));
         $('#upd_mesa_id').val($(element).attr('mesa_id'));
 
-        const horario_id = $(element).attr('horario_id');
 
+
+
+
+        $('#descripcion_dia_mesa_updt').val($(element).attr('descripcion_dia'));
+
+
+        const horario_id = $(element).attr('horario_id');
+        $.post('../jornada/backend/consulta_descripcion_horario.php', {
+            horario_id
+        }, function (response) {
+            let res = JSON.parse(response);
+            $('#descripcion_dia_mesa_updt').val(res.descripcion)
+        })
         $.post('../jornada/backend/consulta_mesa_horario.php', {
             horario_id
         }, function (response) {
@@ -696,9 +708,7 @@ $(document).ready(function () {
                 $("#mesa_horario_inicio").attr("disabled", "");
                 $("#mesa_horario_fin").attr("disabled", "");
             }
-
         })
-
     })
 
     $('#upd_mesa_horario').submit(function (e) {
@@ -709,13 +719,14 @@ $(document).ready(function () {
             hora_fin: $('#mesa_horario_fin').val(),
             dia_id: $('#upd_mesa_dia_id').val(),
             mesa_id: $('#upd_mesa_id').val(),
+            descripcion_dia: $('#descripcion_dia_mesa_updt').val()
         }
-        
+
         e.preventDefault();
         $.post('../jornada/backend/upd-horario.php',
             data,
             function (response) {
-               
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -875,7 +886,7 @@ $(document).ready(function () {
 
     $('#jornada_mesa').submit(function (e) {
         e.preventDefault();
-        var selected_dias = [0, 1, 2, 3, 4, 5, 6];
+        var selected_dias = [0, 1, 2, 3, 4, 5];
         const jornada_mesa = {
             fechaInicioMesa: $('#fechaInicioMesa').val(),
             fechaFinMesa: $('#fechaFinMesa').val(),
@@ -929,13 +940,14 @@ $(document).ready(function () {
                     </tr>
                     <tr>
                             <td colspan="6">
-                                <table class="table mb-0">
+                                <table class="table mb-0 table-responsive-md">
                                     <thead class="table-borderless">
                                         <tr>
                                             <th scope="col">Dia</th>
                                             <th scope="col">Hora Inicio</th>
                                             <th scope="col">Hora Fin</th>
-                                            <th scope="col">Docentes</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col-3">Docentes</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
                                     </thead>
@@ -951,6 +963,7 @@ $(document).ready(function () {
                                 <td>${horarios.nombre} </td>
                                 <td>${horarios.hora_inicio}</td>
                                 <td>${horarios.hora_fin}</td>
+                                <td>${ horarios.descripcion_dia==null? 'No contiene descripción': horarios.descripcion_dia}</td>
                                 <td class="align-middle">
                                 `;
                             horarios.docentes.forEach(agente => {
