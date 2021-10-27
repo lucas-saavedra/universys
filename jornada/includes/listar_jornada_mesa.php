@@ -51,9 +51,7 @@
                         <div class="form-group col-md-1 d-flex align-items-end">
                             <button type="reset" class="filtro_reset_mesa btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
                         </div>
-                        <div class="form-group col-md-4 mx-auto d-flex align-items-end">
-                            <button type="submit" formaction="../jornada/backend/exportar_horarios_mesa.php" method="POST" class=" btn btn-success  btn-block"><i class="fas fa-download"></i> Descargar horarios</button>
-                        </div>
+
                     </div>
                 </form>
             </div>
@@ -72,7 +70,7 @@
                         <th scope="col">Carrera</th>
                         <th scope="col">Llamado</th>
                         <th scope="col">Fecha</th>
-                        
+
                         <th scope="col">Descripcion</th>
                         <th scope="col">Acciones</th>
                     </tr>
