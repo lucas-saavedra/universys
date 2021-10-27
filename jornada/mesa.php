@@ -245,7 +245,7 @@ if (
                         <div class="form-group col-md-12">
                             <label for="">Descripcion del dia de la mesa</label>
                             <div class="form-floating">
-                                <textarea id='descripcion_dia_mesa_updt' required name="detalle_dia_mesa" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 100px"></textarea>
+                                <textarea id='descripcion_dia_mesa_updt' required name="detalle_dia_mesa" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 200px"></textarea>
                             </div>
                         </div>
 

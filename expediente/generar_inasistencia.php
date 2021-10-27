@@ -5,7 +5,19 @@
 <?php
 
 //                                          JORNADA DOCENTE
+function generar_rango_fechas($fecha_inicio, $fecha_fin)
+{
+    $format = 'Y-n-j';
+    $result = [];
+    $fecha_inicio = new DateTime($fecha_inicio);
+    $fecha_fin = new DateTime($fecha_fin);
+    $result[] = $fecha_inicio->format($format);
+    while ($fecha_inicio < $fecha_fin) {
+        $result[] = $fecha_inicio->modify('+1 day')->format($format);
+    };
 
+    return $result;
+}
 function generar_fechas_a_procesar($fecha_ref)
 {
 
@@ -26,7 +38,7 @@ function generar_fechas_a_procesar($fecha_ref)
 $hoy = new DateTimeImmutable('NOW');
 // el  $query_jornada_docente lo traigo desde jornadas/includes/consultas.php
 
-foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
+foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
 
     $result_fecha_dia = mysqli_query($conexion, "select weekday ('$fecha_anterior')");
     while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
@@ -45,7 +57,7 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
 
     $result_jornada_mesa = mysqli_query($conexion, $query_jornada_mesa_i);
     $result_jornada_docente = mysqli_query($conexion, $query_jornada_docente_i);
-    
+
     if (mysqli_num_rows($result_jornada_mesa) !== 0) {
 
         while ($jdm = mysqli_fetch_array($result_jornada_mesa)) {
@@ -54,12 +66,12 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
                 $hora_fin = $jdm['hora_fin'];
                 $agente_id = $jdm['agente_id'];
                 $jornada_id = $jdm['jornada_id'];
-                foreach (get_jornada($conexion,$jornada_id)as $get_jornada):
+                foreach (get_jornada($conexion, $jornada_id) as $get_jornada) :
                     $tipo_jornada_id = $get_jornada['tipo_jornada_id'];
-                  endforeach;
-                  foreach (get_tipo_jornada($conexion,$tipo_jornada_id)as $get_tipo_jornada):
+                endforeach;
+                foreach (get_tipo_jornada($conexion, $tipo_jornada_id) as $get_tipo_jornada) :
                     $tipo_jornada = $get_tipo_jornada['nombre'];
-                  endforeach;
+                endforeach;
 
                 if (get_asistencias_num_rows($conexion, $jdm['det_jornada_id'], $fecha_anterior,  $agente_id, 'docente')) {
                     if (get_exp_num_rows($conexion, $jdm['persona_id'], $fecha_anterior)) {
@@ -82,12 +94,12 @@ foreach (generar_fechas_a_procesar($hoy) as $fecha_anterior) {
             $catedra = $jd['catedra_id'];
             $jornada = $jd['jornada_id'];
 
-            foreach (get_jornada($conexion,$jornada)as $get_jornada):
+            foreach (get_jornada($conexion, $jornada) as $get_jornada) :
                 $tipo_jornada_id = $get_jornada['tipo_jornada_id'];
-              endforeach;
-              foreach (get_tipo_jornada($conexion,$tipo_jornada_id)as $get_tipo_jornada):
+            endforeach;
+            foreach (get_tipo_jornada($conexion, $tipo_jornada_id) as $get_tipo_jornada) :
                 $tipo_jornada = $get_tipo_jornada['nombre'];
-              endforeach;
+            endforeach;
 
             if (get_asistencias_num_rows($conexion, $jd['detalle_id'], $fecha_anterior, $jd['agente_id'], 'docente')) {
 

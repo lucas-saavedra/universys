@@ -44,7 +44,7 @@ if ($tipo_agente == 'docente') {
     LEFT OUTER JOIN v_jornada as j on jornada_agente.jornada_id=j.id";
 }
 
-if (isset($_POST['filtroFechaInicio']) && isset($_POST['filtroFechaFin'])) {
+/* if (isset($_POST['filtroFechaInicio']) && isset($_POST['filtroFechaFin'])) {
 
   $filtroFechaInicio = $_POST['filtroFechaInicio'];
   $filtroFechaFin = $_POST['filtroFechaFin'];
@@ -60,9 +60,9 @@ if (isset($_POST['filtroFechaInicio']) && isset($_POST['filtroFechaFin'])) {
 } else {
   $query = $query . " WHERE 1";
 }
+ */
 
-
-if (isset($_POST['filtroTipoJornadaId'])) {
+/* if (isset($_POST['filtroTipoJornadaId'])) {
   if (($_POST['filtroTipoJornadaId']) <> null) {
     $tipoJornadaId = $_POST['filtroTipoJornadaId'];
     $query = $query . " and j.tipo_jornada_id='$tipoJornadaId' ";
@@ -78,7 +78,7 @@ if (isset($_POST['filtroCarreraId'])) {
 if (isset($_POST['filtroAnioId'])) {
   if (($_POST['filtroAnioId']) <> null) {
     $filtroAnioId = $_POST['filtroAnioId'];
-    $query = $query . " and c.anio_plan_id ='$filtroAnioId'";
+    $query = $query . " and c.anio_plan_id = '1'='$filtroAnioId'";
   }
 }
 
@@ -88,7 +88,7 @@ if (isset($_POST['filtroAreaId'])) {
     $query = $query . " and area_id='$filtroAreaId' ";
   }
 }
-
+ */
 if (isset($_POST['jornada_agente_id']) && isset($_POST['agente_id'])) {
   $jd_id = $_POST['jornada_agente_id'];
   $agente_id = $_POST['agente_id'];
@@ -100,7 +100,7 @@ if (isset($_POST['jornada_agente_id']) && isset($_POST['agente_id'])) {
 } else {
   if (isset($_POST['jornada_agente_id'])) {
     $jd_id = $_POST['jornada_agente_id'];
-    $query = $query . " where jornada_agente.id =$jd_id";
+    $query = $query . " WHERE jornada_agente.id ='$jd_id'";
   } else if (isset($_POST['agente_id'])) {
     $agente_id = $_POST['agente_id'];
 

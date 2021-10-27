@@ -210,7 +210,7 @@ $(document).ready(function () {
         let jornada_agente_id = $(element).attr('jornada_agente_id');
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
 
-        $.post('../jornada/backend/listar_jornada.php', {
+        $.post('../jornada/backend/listar_jornada_agente.php', {
             jornada_agente_id,
             tipo_agente
         }, function (response) {
@@ -309,7 +309,7 @@ $(document).ready(function () {
 
     function obtener_jornada(jornada_agente_id, tipo_agente) {
         tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        $.post('../jornada/backend/listar_jornada.php', {
+        $.post('../jornada/backend/listar_jornada_agente.php', {
             jornada_agente_id,
             tipo_agente
         }, function (response) {
@@ -458,7 +458,7 @@ $(document).ready(function () {
     function listar_jornadas_agente(agente_id, jornada_agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
-            '../jornada/backend/listar_jornada.php', {
+            '../jornada/backend/listar_jornada_agente.php', {
                 tipo_agente,
                 agente_id,
                 jornada_agente_id
@@ -504,7 +504,7 @@ $(document).ready(function () {
     }
 
 
-    $('#filtroJornada').submit(function (e) {
+    $('#filtroJornada').click(function (e) {
         e.preventDefault();
 
         let filtros = {
@@ -930,12 +930,13 @@ $(document).ready(function () {
                         <tr jornada_id="${mesa.jornada_id}" mesa_id="${mesa.id}" class="table-secondary">
                         <td>  ${mesa.jornada_id     }</td>
                         <td>  ${mesa.carrera_nombre }</td>
-                        <td>  ${mesa.llamado_nombre }</td>
-                        <td>  ${mesa.fecha_inicio   }</td>
-                        <td>  ${mesa.fecha_fin      }</td>
+                        <td>  ${mesa.llamado_nombre } </td>
+                        <td > Inicio: ${mesa.fecha_inicio}
+                        <br> Fin: ${mesa.fecha_fin      }</td>
                         <td>  ${mesa.descripcion    }</td>
-                        <td> <button class="jornada_item_mesa btn btn-info" type="button" data-toggle="modal" data-target="#upd_jornada_mesa"><i class="fas fa-pen"></i></button>
-                            <button class="jornada_mesa_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <td colspan="6"> <button class="jornada_item_mesa btn btn-info" type="button" data-toggle="modal" data-target="#upd_jornada_mesa"><i class="fas fa-pen"></i></button>
+                        <button class="jornada_mesa_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <a type="button" class="btn btn-success" href="./backend/exportar_horarios_mesa.php?mesa_id=${mesa.id}" ><i class="fas fa-download"></i></a>
                         </td>
                     </tr>
                     <tr>
@@ -978,6 +979,7 @@ $(document).ready(function () {
                                  </td>
                                     <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}"dia_id="${horarios.dia_id}" dia="${horarios.nombre}">
                                         <button type="button" class="horario_mesa_i btn" data-bs-toggle="modal"><i class=" fas fa-pen"></i></button>
+                                        
                                         <button type="button" class="horario_mesa_i_add_agente btn" data-toggle="modal" data-target="#add_agente"><i class="fas fa-user-plus"></i> </button>
                                 </td>
                             </tr>
@@ -1003,7 +1005,7 @@ $(document).ready(function () {
         )
     }
 
-    $('#filtroJornadaMesa').submit(function (e) {
+    $('#filtroJornadaMesa').click(function (e) {
         e.preventDefault();
         let filtrosMesa = {
             filtroFechaFin: $('#filtroFechaFin').val(),

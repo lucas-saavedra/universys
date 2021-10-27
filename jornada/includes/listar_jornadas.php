@@ -5,22 +5,22 @@
     </div>
     <div class="card-body">
 
-        <form action="" method="POST" id="filtroJornada">
+        <form action="" method="POST" id="">
 
             <div class="form-row col-md-12 d-flex justify-content-center">
                 <div class="form-group col-md-3">
                     <label for="fecha_inicio">Inicio</label>
-                    <input required type="date" class="form-control" id="filtroFechaInicio">
+                    <input required type="date" class="form-control" id="filtroFechaInicio" name='filtroFechaInicio'>
                 </div>
                 <div class="form-group col-md-3">
                     <label for="fecha_fin">Fin</label>
-                    <input required type="date" class="form-control " id="filtroFechaFin">
+                    <input required type="date" class="form-control " id="filtroFechaFin" name="filtroFechaFin">
                 </div>
 
                 <?php if ($tipo_agente == 'docente') { ?>
                     <div class="form-group col-md-2">
                         <label class="mx-2" for="">Carerra</label>
-                        <select class="form-control" id="filtroCarreraId">
+                        <select required class="form-control" id="filtroCarreraId" name="filtroCarreraId">
                             <option selected value="">Todas</option>
                             <?php foreach (get_carreras($conexion) as $e) : ?>
                                 <option value="<?= $e['id'] ?>">
@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group col-md-2">
                         <label for="">Año académico</label>
-                        <select class="form-control" id="filtroAnioId">
+                        <select class="form-control" id="filtroAnioId" name="filtroAnioId">
                             <option selected value="">Todos</option>
                             <?php foreach (get_anios($conexion) as $anio) : ?>
                                 <option value="<?= $anio['id'] ?>">
@@ -44,7 +44,7 @@
 
                     <div class="form-group col-md-2">
                         <label for="">Area</label>
-                        <select class="form-control" id="filtroAreaId" required>
+                        <select class="form-control" id="filtroAreaId" name="filtroAreaId">
                             <option selected value="">Todas</option>
                             <?php foreach (get_areas($conexion) as $areas) : ?>
                                 <option value="<?= $areas['id'] ?>">
@@ -59,7 +59,7 @@
 
                 <div class="form-group col-md-2">
                     <label for="">Tipo de jornada</label>
-                    <select class="form-control" id="filtroTipoJornadaId">
+                    <select class="form-control"  id="filtroTipoJornadaId" <?= $tipo_agente=='docente' ? 'required' : '' ?>  name="filtroTipoJornadaId">
                         <option selected value="">Todos</option>
                         <?php foreach (get_tipo_jornadas($conexion, $tipo_agente) as $tipo_jornadas) : ?>
                             <option value="<?= $tipo_jornadas['id'] ?>">
@@ -68,19 +68,19 @@
                         <?php endforeach; ?>
                     </select>
                 </div>
-
+                <input type="text" id='tipo_agente' name='tipo_agente' hidden value='<?php echo $tipo_agente ?>'>
 
                 <div class="form-row col-md-12 d-flex justify-content-center">
                     <div class="col-md-1">
-                        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
+                        <button type="button" id="filtroJornada" class="btn btn-primary btn-block"><i class="fas fa-search"></i></button>
                     </div>
                     <div class="col-md-1">
                         <button type="reset" class="filtro_reset btn btn-secondary  btn-block"><i class="fas fa-sync-alt"></i></button>
                     </div>
                     <div class="col-md-4">
-                        <a href="./backend/exportar_horarios.php" class=" btn btn-success  btn-block">
-                             <i class="fas fa-download"></i> Descargar horarios
-                        </a>
+                        <button type="submit" formaction="../jornada/backend/exportar_horarios.php" method="POST" class=" btn btn-success  btn-block">
+                            <i class="fas fa-download"></i> Descargar horarios
+                        </button>
                     </div>
                 </div>
 

@@ -85,7 +85,7 @@ create table detalle_jornada (
     hora_inicio TIME,
     hora_fin TIME,
     dia int,
-    descripcion varchar(200),
+    descripcion varchar(256),
     PRIMARY key (id),
     FOREIGN KEY (jornada_id) REFERENCES jornada(id)  ON DELETE CASCADE
 );
