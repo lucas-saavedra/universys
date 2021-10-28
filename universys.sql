@@ -541,11 +541,24 @@ INSERT INTO `codigo` (`nombre`, `descripcion`, `referencia`, `es_docente`, `es_n
 ('Falta S/Aviso', 'Falta sin aviso', '5','1','1','3', '1', '0','0'),
 ('Inasis. Docente Injustificada', 'Inasistencia docente injustificada', '6','1','0','3', '1', '1','0'),
 ('Imprevisto', 'Falta imprevista', 'I','0','1','3', '0', '1','0'),
+('Suspensión', 'Suspensión', '3', '1', '1', '3', '1', '0', '0'), 
 -- Licencia
 ('Lic. Extraordinaria', 'Licencia Extraordinaria', '2','1','1','1', '0', '1','1'),
 ('Maternidad', 'Licencia por Maternidad', '12','1','1','1', '0', '1','1'),
+('Lic. Enfermedad S/S', 'Licencia por enfermedad (Sin sueldo)', '1', '1', '1', '1', '1', '1', '1'), 
+('Lic. Anual Ordinaria', 'Licencia Anual Ordinaria', '7', '1', '1', '1', '0', '1', '1'), 
+('Lic. por Enfermedad C/S', 'Licencia por Enfermedad (Con sueldo)', '8', '1', '1', '1', '0', '1', '1'), ('Duelo', 'Duelo', '10', '1', '1', '1', '0', '1', '1'), 
+('Estudios', 'Estudios', '11', '1', '1', '2', '0', '1', '1'), 
+('Matrimonio', 'Matrimonio', '13', '1', '1', '1', '0', '1', '1'), 
+('Casamiento Hijos', 'Casamiento Hijos', '14', '1', '1', '1', '0', '1', '1'), 
+('Nac. Hijos', 'Nacimiento Hijos', '15', '1', '1', '1', '0', '1', '1'), 
+('Cuidado Familiar Enfermo', 'Cuidado Familiar Enfermo', '16', '1', '1', '1', '0', '1', '1'), 
+('Perfeccionamento', 'Perfeccionamento', '20', '1', '0', '1','0','1','1'),
 -- Justificación
-('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1');
+('Inasis. Docente Justificada', 'Inasistencia docente justificada', '18','1','0','2', '0', '1','1'),
+('Franco Compensatorio', 'Franco Compensatorio', '17', '1', '1', '2', '0', '1', '1'), 
+('Paro', 'Paro', '19', '1', '0', '2', '1', '1', '1');
+
 
 -- Falta C/Aviso: ejemplo de cupo
 INSERT INTO `cupo` (`id`, `codigo_id`, `longitud`, `tipo`, `cantidad_max_dias`) VALUES (NULL, '1', '1', 'Mes', '2'), (NULL, '1', '1', 'Año', '6');
