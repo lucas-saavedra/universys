@@ -188,7 +188,7 @@ $(document).ready(function () {
         let url = editar === false ? '../jornada/backend/insertar-jornada-docente.php' : '../jornada/backend/upd-jornada.php';
 
         $.post(url, jornadaAgente, function (response) {
-            
+
             listar_jornadas(filtros);
             const msg = JSON.parse(response);
             notif(msg);
@@ -197,7 +197,7 @@ $(document).ready(function () {
                 $('#modal_jornadas').modal('hide');
                 editar = false;
                 $("#fechaInicio").removeAttr("disabled", "");
-                $("#fechaFin").removeAttr("disabled", "");
+                /*   $("#fechaFin").removeAttr("disabled", ""); */
                 $("#search-agente").removeAttr("disabled", "");
             }
 
@@ -210,7 +210,7 @@ $(document).ready(function () {
         let jornada_agente_id = $(element).attr('jornada_agente_id');
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
 
-        $.post('../jornada/backend/listar_jornada.php', {
+        $.post('../jornada/backend/listar_jornada_agente.php', {
             jornada_agente_id,
             tipo_agente
         }, function (response) {
@@ -220,7 +220,7 @@ $(document).ready(function () {
             });
             if (bool) {
                 $("#fechaInicio").attr("disabled", "");
-                $("#fechaFin").attr("disabled", "");
+                /* $("#fechaFin").attr("disabled", ""); */
                 $("#search-agente").attr("disabled", "");
             }
 
@@ -309,7 +309,7 @@ $(document).ready(function () {
 
     function obtener_jornada(jornada_agente_id, tipo_agente) {
         tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        $.post('../jornada/backend/listar_jornada.php', {
+        $.post('../jornada/backend/listar_jornada_agente.php', {
             jornada_agente_id,
             tipo_agente
         }, function (response) {
@@ -371,12 +371,12 @@ $(document).ready(function () {
             hora_fin: $('#hora_fin').val(),
             dia_id: $('#dia_id').val()
         };
-      
+
 
         $.post('../jornada/backend/upd-horario.php',
             horarioAgenteOne,
             function (response) {
-               
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 listar_jornadas(filtros)
@@ -415,7 +415,7 @@ $(document).ready(function () {
             descripcion: $('#descripcion_horario').val(),
             dias_horas: array_dias,
         };
-        
+
         let url2 = editar === false ? '../jornada/backend/insertar-horario.php' : '../jornada/backend/upd-horario.php';
         $.post(url2,
             horarioAgente,
@@ -451,14 +451,14 @@ $(document).ready(function () {
         $('#id_agente').val('');
         $('#catedraIdInput').val('');
         $("#fechaInicio").removeAttr("disabled", "");
-        $("#fechaFin").removeAttr("disabled", "");
+        /* $("#fechaFin").removeAttr("disabled", ""); */
         $("#search-agente").removeAttr("disabled", "");
     }
 
     function listar_jornadas_agente(agente_id, jornada_agente_id) {
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
         $.post(
-            '../jornada/backend/listar_jornada.php', {
+            '../jornada/backend/listar_jornada_agente.php', {
                 tipo_agente,
                 agente_id,
                 jornada_agente_id
@@ -504,7 +504,7 @@ $(document).ready(function () {
     }
 
 
-    $('#filtroJornada').submit(function (e) {
+    $('#filtroJornada').click(function (e) {
         e.preventDefault();
 
         let filtros = {
@@ -516,7 +516,7 @@ $(document).ready(function () {
             filtroAnioId: $('#filtroAnioId').val(),
             tipo_agente: tipo_agente
         };
-        console.log(filtros);
+
         listar_jornadas(filtros)
     })
 
@@ -655,12 +655,12 @@ $(document).ready(function () {
             mesa_id: $('#mesa_id').val(),
             docentes_mesa_id: selected_agente
         }
-     
+
         $.post(
             '../jornada/backend/insertar-jornada-docente-mesa.php',
             agentes,
             function (response) {
-                
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -686,8 +686,20 @@ $(document).ready(function () {
         $('#upd_mesa_dia_id').val($(element).attr('dia_id'));
         $('#upd_mesa_id').val($(element).attr('mesa_id'));
 
-        const horario_id = $(element).attr('horario_id');
 
+
+
+
+        $('#descripcion_dia_mesa_updt').val($(element).attr('descripcion_dia'));
+
+
+        const horario_id = $(element).attr('horario_id');
+        $.post('../jornada/backend/consulta_descripcion_horario.php', {
+            horario_id
+        }, function (response) {
+            let res = JSON.parse(response);
+            $('#descripcion_dia_mesa_updt').val(res.descripcion)
+        })
         $.post('../jornada/backend/consulta_mesa_horario.php', {
             horario_id
         }, function (response) {
@@ -696,9 +708,7 @@ $(document).ready(function () {
                 $("#mesa_horario_inicio").attr("disabled", "");
                 $("#mesa_horario_fin").attr("disabled", "");
             }
-
         })
-
     })
 
     $('#upd_mesa_horario').submit(function (e) {
@@ -709,13 +719,14 @@ $(document).ready(function () {
             hora_fin: $('#mesa_horario_fin').val(),
             dia_id: $('#upd_mesa_dia_id').val(),
             mesa_id: $('#upd_mesa_id').val(),
+            descripcion_dia: $('#descripcion_dia_mesa_updt').val()
         }
-        
+
         e.preventDefault();
         $.post('../jornada/backend/upd-horario.php',
             data,
             function (response) {
-               
+
                 const msg = JSON.parse(response);
                 notif(msg);
                 if (msg.success === true) {
@@ -875,7 +886,7 @@ $(document).ready(function () {
 
     $('#jornada_mesa').submit(function (e) {
         e.preventDefault();
-        var selected_dias = [0, 1, 2, 3, 4, 5, 6];
+        var selected_dias = [0, 1, 2, 3, 4, 5];
         const jornada_mesa = {
             fechaInicioMesa: $('#fechaInicioMesa').val(),
             fechaFinMesa: $('#fechaFinMesa').val(),
@@ -919,23 +930,25 @@ $(document).ready(function () {
                         <tr jornada_id="${mesa.jornada_id}" mesa_id="${mesa.id}" class="table-secondary">
                         <td>  ${mesa.jornada_id     }</td>
                         <td>  ${mesa.carrera_nombre }</td>
-                        <td>  ${mesa.llamado_nombre }</td>
-                        <td>  ${mesa.fecha_inicio   }</td>
-                        <td>  ${mesa.fecha_fin      }</td>
+                        <td>  ${mesa.llamado_nombre } </td>
+                        <td > Inicio: ${mesa.fecha_inicio}
+                        <br> Fin: ${mesa.fecha_fin      }</td>
                         <td>  ${mesa.descripcion    }</td>
-                        <td> <button class="jornada_item_mesa btn btn-info" type="button" data-toggle="modal" data-target="#upd_jornada_mesa"><i class="fas fa-pen"></i></button>
-                            <button class="jornada_mesa_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <td colspan="6"> <button class="jornada_item_mesa btn btn-info" type="button" data-toggle="modal" data-target="#upd_jornada_mesa"><i class="fas fa-pen"></i></button>
+                        <button class="jornada_mesa_borrar btn btn-danger"><i class="fas fa-trash"></i></button>
+                        <a type="button" class="btn btn-success" href="./backend/exportar_horarios_mesa.php?mesa_id=${mesa.id}" ><i class="fas fa-download"></i></a>
                         </td>
                     </tr>
                     <tr>
                             <td colspan="6">
-                                <table class="table mb-0">
+                                <table class="table mb-0 table-responsive-md">
                                     <thead class="table-borderless">
                                         <tr>
                                             <th scope="col">Dia</th>
                                             <th scope="col">Hora Inicio</th>
                                             <th scope="col">Hora Fin</th>
-                                            <th scope="col">Docentes</th>
+                                            <th scope="col">Descripción</th>
+                                            <th scope="col-3">Docentes</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
                                     </thead>
@@ -951,6 +964,7 @@ $(document).ready(function () {
                                 <td>${horarios.nombre} </td>
                                 <td>${horarios.hora_inicio}</td>
                                 <td>${horarios.hora_fin}</td>
+                                <td>${ horarios.descripcion_dia==null? 'No contiene descripción': horarios.descripcion_dia}</td>
                                 <td class="align-middle">
                                 `;
                             horarios.docentes.forEach(agente => {
@@ -965,6 +979,7 @@ $(document).ready(function () {
                                  </td>
                                     <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}"dia_id="${horarios.dia_id}" dia="${horarios.nombre}">
                                         <button type="button" class="horario_mesa_i btn" data-bs-toggle="modal"><i class=" fas fa-pen"></i></button>
+                                        
                                         <button type="button" class="horario_mesa_i_add_agente btn" data-toggle="modal" data-target="#add_agente"><i class="fas fa-user-plus"></i> </button>
                                 </td>
                             </tr>
@@ -990,7 +1005,7 @@ $(document).ready(function () {
         )
     }
 
-    $('#filtroJornadaMesa').submit(function (e) {
+    $('#filtroJornadaMesa').click(function (e) {
         e.preventDefault();
         let filtrosMesa = {
             filtroFechaFin: $('#filtroFechaFin').val(),

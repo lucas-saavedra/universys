@@ -50,10 +50,16 @@ function get_jornada_docentes($conexion)
 }
 function get_dia($conexion)
 {
-  $sql = "SELECT * FROM dia ";
+  $sql = "SELECT * FROM dia WHERE id <> '6'";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+/* function get_dia_sin_domingo($conexion)
+{
+  $sql = "SELECT * FROM dia WHERE id <> '6'";
+  $result = mysqli_query($conexion, $sql);
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
+} */
 
 function get_dia_string($conexion, $dia_id)
 {
@@ -97,7 +103,7 @@ function obtener_jornadas($conexion, $fecha_inicio, $fecha_fin, $tipo_jornada_id
 }
 function get_carreras($conexion)
 {
-  $sql = "SELECT * FROM carrera ";
+  $sql = "SELECT * FROM carrera";
   $result = mysqli_query($conexion, $sql);
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
@@ -271,7 +277,7 @@ LEFT JOIN docente_nombre ON jdm.docente_id = docente_nombre.id
 LEFT JOIN dia ON detalle_jornada.dia = dia.id
 LEFT JOIN jornada ON mesa_examen_jornada.jornada_id = jornada.id";
 
-
+//pensar una solucion sin usar el  id de detalle de jornada 
 
 function get_asistencias_num_rows($conexion, $id_detalle, $fecha_anterior, $agente_id, $tipo_agente)
 {

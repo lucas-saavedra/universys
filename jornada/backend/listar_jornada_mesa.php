@@ -61,6 +61,7 @@ foreach (get_jornadas_mesa($conexion) as $mesa) :
       'nombre' => $horarios['nombre'],
       'hora_inicio' => $horarios['hora_inicio'],
       'dia_id' => $horarios['dia_id'],
+      'descripcion_dia' => $horarios['descripcion'],
       'hora_fin' => $horarios['hora_fin'],
       'det_jorn_id' => $horarios['det_jorn_id'],
       'docentes' => $json_agente_dia_mesa

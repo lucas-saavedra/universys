@@ -188,7 +188,7 @@ if (
                         </div>
                         <div class="form-group col-md-6">
                             <label for="fecha_fin">Fecha de fin de la jornada</label>
-                            <input required type="date" disabled class="form-control" id="fechaFinMesaUpdt">
+                            <input required type="date" class="form-control" id="fechaFinMesaUpdt">
                         </div>
 
 
@@ -240,6 +240,16 @@ if (
                             <label>Fin</label>
                             <input type="time" id="mesa_horario_fin" class="form-control timepicker" step="1800">
                         </div>
+
+
+                        <div class="form-group col-md-12">
+                            <label for="">Descripcion del dia de la mesa</label>
+                            <div class="form-floating">
+                                <textarea id='descripcion_dia_mesa_updt' required name="detalle_dia_mesa" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 200px"></textarea>
+                            </div>
+                        </div>
+
+
                     </div>
                     <input type="text" hidden id="upd_mesa_horario_dia">
                     <input type="text" hidden id="upd_mesa_id">

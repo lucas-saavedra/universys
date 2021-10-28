@@ -26,7 +26,9 @@ INSERT INTO rol (nombre) VALUES
 ('admin'),
 ('personal'),
 ('mesa_entrada'),
-('coordinacion');
+('coordinacion'),
+('alumnado'),
+('director_de_carrera');
 /* Volcado de datos para la tabla persona_rol */
 
 create table docente (
@@ -83,7 +85,7 @@ create table detalle_jornada (
     hora_inicio TIME,
     hora_fin TIME,
     dia int,
-    descripcion varchar(100),
+    descripcion varchar(256),
     PRIMARY key (id),
     FOREIGN KEY (jornada_id) REFERENCES jornada(id)  ON DELETE CASCADE
 );
@@ -510,10 +512,13 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 
 /* Volcado de datos para la tabla persona_rol */
 INSERT INTO persona_rol (rol_id,persona_id) VALUES
-(1,1),
-(4,8), /*pilar*/
-(3,7), /*enriqueta*/
-(2,3); /* roman*/
+( 1, 1),
+( 4, 6),
+( 3, 5),
+( 2, 7),
+( 6, 8),
+( 5, 3),
+( 2, 10);
 
 INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
 INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');

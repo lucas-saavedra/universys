@@ -38,6 +38,7 @@ function crear_p_prod($bd, $anio, $mes, $tipo){
 function asignar_expdte_a_planillas_prod($bd, $id_expdte){
 
     $expdte = get_expdte($bd, $id_expdte);
+    $hs_desc = get_hs_a_desc_expdte($bd, $expdte);
     $meses = get_meses_entre_fechas($expdte['fecha_inicio'], $expdte['fecha_fin']);
 
     if (!empty($expdte['expdte_docente_id'])){
@@ -58,7 +59,7 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
             }
             else{
                 $sql_insert = "INSERT INTO expediente_planilla_docente (planilla_productividad_docente_id, expediente_docente_id, hs_descontadas)
-                VALUES ({$id_planilla}, {$expdte['expdte_docente_id']}, 0)";
+                VALUES ({$id_planilla}, {$expdte['expdte_docente_id']}, {$hs_desc})";
     
                 if (!$result = mysqli_query($bd, $sql_insert)){
                     $error = mysqli_error($bd);
@@ -93,7 +94,7 @@ function asignar_expdte_a_planillas_prod($bd, $id_expdte){
             else{
                 $sql_insert = "INSERT INTO expediente_planilla_no_docente 
                 (planilla_productividad_no_docente_id, expediente_no_docente_id, hs_descontadas)
-                VALUES ({$id_planilla}, {$expdte['expdte_no_docente_id']}, 0)";
+                VALUES ({$id_planilla}, {$expdte['expdte_no_docente_id']}, {$hs_desc})";
     
                 if (!$result = mysqli_query($bd, $sql_insert)){
                     $error = mysqli_error($bd);
