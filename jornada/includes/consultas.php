@@ -438,3 +438,12 @@ function get_tipo_jornada($bd, $tipo_jornada)
 
   return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
+
+function es_no_docente($bd, $persona_id)
+{
+  $query_no_docente = "SELECT *FROM no_docente WHERE persona_id='$persona_id'";
+  $result = mysqli_query($bd, $query_no_docente);
+
+  return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
