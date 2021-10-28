@@ -5,8 +5,6 @@ include('../includes/consultas.php');
 $json = array();
 
 
-
-
 try {
 
   if (isset($_POST['mesa_id'])) {
@@ -14,9 +12,10 @@ try {
     $hora_inicio = $_POST['hora_inicio'];
     $hora_fin = $_POST['hora_fin'];
     $dia_id = $_POST['dia_id'];
+    $descripcion_dia = $_POST['descripcion_dia'];
 
     $query1 = "UPDATE detalle_jornada SET  hora_inicio =  '$hora_inicio',
-    `hora_fin` = '$hora_fin', dia='$dia_id' WHERE `detalle_jornada`.`id` = '$horario_id'";
+    `hora_fin` = '$hora_fin', dia='$dia_id', descripcion=' $descripcion_dia' WHERE `detalle_jornada`.`id` = '$horario_id'";
 
     if (strtotime($hora_inicio) > strtotime($hora_fin)) {
       throw new Exception('La hora de inicio no puede ser mayor a la hora de fin');
