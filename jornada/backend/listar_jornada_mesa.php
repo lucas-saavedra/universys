@@ -71,6 +71,7 @@ foreach (get_jornadas_mesa($conexion) as $mesa) :
   $json_mesa[] = array(
     'id' => $mesa['id'],
     'carrera_nombre' =>  $mesa['carrera_nombre'],
+    'carrera_id' =>  $mesa['carreraId'],
     'llamado_nombre' =>  $mesa['llamado_nombre'],
     'jornada_id' =>  $mesa['jornada_id'],
     'fecha_inicio' => $mesa['fecha_inicio'],

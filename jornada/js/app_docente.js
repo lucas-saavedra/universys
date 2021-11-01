@@ -392,11 +392,12 @@ $(document).ready(function () {
     $('#horario').submit(function (e) {
         e.preventDefault();
         let tipo_agente = $('#tipo_agente').attr('tipo_agente');
-        var selected_dias = [];
-        var array_dias = [];
+
         let dia;
         let inicio = document.getElementsByName('inicio_horarios[]');
         let fin = document.getElementsByName('fin_horarios[]');
+        let selected_dias = [];
+        let array_dias = [];
         $('.checkbox_dias_horarios input:checked').each(function () {
             selected_dias.push(Number($(this).val()));
         });
@@ -616,7 +617,51 @@ $(document).ready(function () {
 
     }
 
+    $('.btnAddCatedra').click(() => {
+        let selected_catedras = [];
+        let descripcion = document.getElementById('descripcion_dia_mesa_updt');
 
+        $('.checkbox_catedras input:checked').each(function () {
+            let re = new RegExp($(this).val(),'g','i');
+            if (!re.test(descripcion.value)) {
+                selected_catedras.push($(this).val());
+            }
+        });
+
+        if (selected_catedras != '') {
+            descripcion.value != '' ? descripcion.value += `,${selected_catedras}` : descripcion.value = selected_catedras
+
+        }
+    })
+
+
+    $("#filtroCatAnioId").change(function () {
+        let carrera_id = $('#carreraFiltroId').val();
+
+        listar_catedra(carrera_id, $(this).val())
+    });
+    const listar_catedra = (carrera_id, anio_plan_id) => {
+        let template = '';
+        $.post(
+            '../jornada/backend/listar_catedras.php', {
+                carrera_id,
+                anio_plan_id
+            },
+            function (response) {
+
+                let catedras = JSON.parse(response);
+                for (c of catedras) {
+                    template += `
+                    <div required class="checkbox_catedras" >
+                        <label><input type="checkbox" name="catedras" value="${c.catedra}">
+                        ${c.catedra}
+                        </label>
+                    </div>`;
+                }
+                $('#divAddCatedra').html(template);
+
+            })
+    }
     $(document).on('click', '.horario_mesa_i_add_agente', function () {
         let element = $(this)[0].parentElement;
         $('#horario_id').val($(element).attr('horario_id'));
@@ -677,6 +722,10 @@ $(document).ready(function () {
     $(document).on('click', '.horario_mesa_i', function () {
         $('#upd_detalle_mesa').modal('show');
         let element = $(this)[0].parentElement;
+        let carrera_id = $(element).attr('carrera_id');
+        $('#carreraFiltroId').val($(element).attr('carrera_id'));
+        let anio_plan_id = 1;
+        listar_catedra(carrera_id, anio_plan_id)
         $('#upd_mesa_horario_dia').val($(element).attr('horario_id'));
         $('#mesa_horario_inicio').val($(element).attr('hora_inicio'));
         $('#mesa_horario_fin').val($(element).attr('hora_fin'));
@@ -685,13 +734,7 @@ $(document).ready(function () {
         $('#upd_mesa_dia').val($(element).attr('dia'));
         $('#upd_mesa_dia_id').val($(element).attr('dia_id'));
         $('#upd_mesa_id').val($(element).attr('mesa_id'));
-
-
-
-
-
         $('#descripcion_dia_mesa_updt').val($(element).attr('descripcion_dia'));
-
 
         const horario_id = $(element).attr('horario_id');
         $.post('../jornada/backend/consulta_descripcion_horario.php', {
@@ -964,7 +1007,7 @@ $(document).ready(function () {
                                 <td>${horarios.nombre} </td>
                                 <td>${horarios.hora_inicio}</td>
                                 <td>${horarios.hora_fin}</td>
-                                <td>${ horarios.descripcion_dia==null? 'No contiene descripción': horarios.descripcion_dia}</td>
+                                <td>${horarios.descripcion_dia==null? 'Agregue una descripción': horarios.descripcion_dia}</td>
                                 <td class="align-middle">
                                 `;
                             horarios.docentes.forEach(agente => {
@@ -977,9 +1020,8 @@ $(document).ready(function () {
                             })
                             template += `
                                  </td>
-                                    <td horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}"dia_id="${horarios.dia_id}" dia="${horarios.nombre}">
+                                    <td carrera_id="${mesa.carrera_id}" horario_id="${horarios.det_jorn_id}" mesa_id="${mesa['id']}" hora_inicio="${horarios.hora_inicio}" hora_fin="${horarios.hora_fin}"dia_id="${horarios.dia_id}" dia="${horarios.nombre}">
                                         <button type="button" class="horario_mesa_i btn" data-bs-toggle="modal"><i class=" fas fa-pen"></i></button>
-                                        
                                         <button type="button" class="horario_mesa_i_add_agente btn" data-toggle="modal" data-target="#add_agente"><i class="fas fa-user-plus"></i> </button>
                                 </td>
                             </tr>
