@@ -1,8 +1,30 @@
-<?php include("../includes/header.php"); ?>
+<?php include("../includes/db.php"); ?>
 <?php include('../jornada/includes/consultas.php'); ?>
 <?php include('includes/consultas.php'); ?>
 
 <?php
+$hoy = new DateTimeImmutable('NOW');
+
+$get_f_inicio = new DateTime($_GET['f_inicio']);
+$get_f_fin = new DateTime($_GET['f_fin']);
+
+session_start();
+$_SESSION['inasis_rango'] = ['inicio' => $_GET['f_inicio'], 'fin' => $_GET['f_fin']];
+
+if ($get_f_inicio > $get_f_fin){
+    $_SESSION['inasis_msg'] = ['content' => 'Rango incorrecto', 'type'=> 'danger'];
+    header("Location: crear-expediente-sin-aviso.php");
+    exit();
+}
+
+if ($get_f_fin > $hoy->modify('-1 day')){
+    $_SESSION['inasis_msg'] = [
+        'content' => 'No puede generar inasistencias que sean del dia de hoy ni de dias que aun no han transcurrido', 'type'=> 'danger'
+    ];
+    header("Location: crear-expediente-sin-aviso.php");
+    exit();
+}
+
 
 //                                          JORNADA DOCENTE
 function generar_rango_fechas($fecha_inicio, $fecha_fin)
@@ -18,27 +40,10 @@ function generar_rango_fechas($fecha_inicio, $fecha_fin)
 
     return $result;
 }
-function generar_fechas_a_procesar($fecha_ref)
-{
 
-    $format = 'Y-n-j';
-
-    $result = [];
-    $result[] = $fecha_ref->modify('-1 day')->format($format);
-    $result[] = $fecha_ref->modify('-2 day')->format($format);
-    $result[] = $fecha_ref->modify('-3 day')->format($format);
-    $result[] = $fecha_ref->modify('-4 day')->format($format);
-    $result[] = $fecha_ref->modify('-5 day')->format($format);
-
-    return $result;
-}
-
-
-
-$hoy = new DateTimeImmutable('NOW');
 // el  $query_jornada_docente lo traigo desde jornadas/includes/consultas.php
 
-foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
+foreach (generar_rango_fechas($_GET['f_inicio'], $_GET['f_fin']) as $fecha_anterior) {
 
     $result_fecha_dia = mysqli_query($conexion, "select weekday ('$fecha_anterior')");
     while ($row_fecha_dia = mysqli_fetch_array($result_fecha_dia)) {
@@ -152,7 +157,10 @@ foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
 
 
 
-
+$_SESSION['inasis_msg'] = [
+    'content' => 'Las inasistencias dentro del rango elegido han sido generadas', 
+    'type' => 'success'
+];
 
 header("Location: crear-expediente-sin-aviso.php");
 ?>
