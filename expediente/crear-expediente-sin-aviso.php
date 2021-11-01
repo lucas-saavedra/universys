@@ -1,47 +1,94 @@
 <?php
 ob_start();
 ?>
-<?php include("../jornada/navbar.php");
+<?php
+
+$hoy = new DateTimeImmutable('NOW');
+session_start();
+
+if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
+  $_tipo_agente = "docente";
+
+  if (isset($_SESSION['inasis_rango'])){
+    $f_inicio = $_SESSION['inasis_rango']['inicio'];
+    $f_fin = $_SESSION['inasis_rango']['fin'];
+    unset( $_SESSION['inasis_rango']);
+  }
+  else{
+    $f_inicio = $hoy->modify('-5 day')->format('Y-n-j');
+    $f_fin = $hoy->modify('-1 day')->format('Y-n-j');
+  }
+} else {
+  $_tipo_agente = $_POST['select'];
+  $f_inicio = $_POST['fecha_inicio'];
+  $f_fin = $_POST['fecha_fin'];
+
+  if (isset($_POST['generar_inasis'])){
+    header("Location: generar_inasistencia.php?f_inicio={$f_inicio}&f_fin={$f_fin}");
+    exit();
+  }
+}
+
+if (isset($_SESSION['inasis_msg'])){
+  $msg = $_SESSION['inasis_msg'];
+  unset($_SESSION['inasis_msg']);
+}
+
+
+include("../jornada/navbar.php");
 include ("./includes/consultas.php");
 include "../includes/db.php";
 
-
-
-
-if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
-  $tipo_agente = "docente";
-} else {
-  $tipo_agente = $_POST['select'];
-}
-
 ?>
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-5 m-auto">
+  <div class="row jumbotron p-1 mb-2">
+    <div class="col-lg-7 m-auto">
       <form action="" method="post">
-        <div class="form-group text-center">
-          <h2 class="col-md-12 text-center">Inasistencias</h2>
-          <div class=" row m-auto col">
-            <select name="select" class="form-control mr-sm-2 col-3" required>
-              <option value="docente" <?= $tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
-              <option value="no_docente" <?= $tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
-            </select>
-            <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit">BUSCAR.</button>
+        <div class="form-group">
+          <h2 class="col-md-12 text-center my-3">Inasistencias</h2>
+          <div class="row no-gutters justify-content-center" style="gap:1rem;">
+            <div class="col-lg-auto">
+              <select name="select" class="form-control" required>
+                <option value="docente" <?= $_tipo_agente == 'docente' ? 'selected' : '' ?>>Docente</option>
+                <option value="no_docente" <?= $_tipo_agente == 'no_docente' ? 'selected' : '' ?>>No docente</option>
+              </select>
+            </div>
+            <div class="col-md-auto">            
+              <input class="form-control" type="date" name="fecha_inicio" placeholder="Fecha de inicio" 
+                value=<?=$f_inicio?> required>
+            </div>
+            <div class="col-md-auto">            
+              <input class="form-control" type="date" name="fecha_fin" placeholder="Fecha de fin" 
+              value=<?=$f_fin?>  required>
+            </div>
+            <div class="col-md-auto">            
+              <button class="btn btn-outline-success my-2 my-sm-0 col" type="submit">BUSCAR</button>
+            </div>
+            <div class="col-md-auto">            
+              <button name="generar_inasis" class="btn btn-outline-success my-2 my-sm-0 col" type="submit">
+                Generar
+              </button>
+            </div>
           </div>
         </div>
       </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <?php include './includes/msg-box.php' ?>
     </div>
   </div>
   <?php
 
 
 
-  if ($tipo_agente == 'docente') {
+  if ($_tipo_agente == 'docente') {
     ?>
-<p>Las inasistencias de un mismo diá se agrupan en un solo expediente, este dice la cantidad de 
-  inasistencias que contiene y la cantidad de horas que se ausento el docente ese diá<p>
+<p>Las inasistencias de un mismo día se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencias que contiene y la cantidad de horas que se ausento el docente ese día<p>
 <?php
-    $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente";
+    $query_fecha = "SELECT DISTINCT fecha, docente_id, expediente_docente_id from inasistencia_sin_aviso_docente WHERE fecha >= '$f_inicio' AND fecha <= '$f_fin' ";
     $result_fecha = mysqli_query($conexion, $query_fecha);
 
     while ($row_fecha = mysqli_fetch_array($result_fecha)) {
@@ -105,7 +152,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                   }
               ?>
               <tr>
-                <table class="table ml-3 table-sm ">
+                <table class="table table-sm">
                   <thead>
                     <tr>
                       <th scop="col">ID</th>
@@ -176,10 +223,10 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
     <?php
   } else {
     ?>
-<p>Las inasistencias de un mismo dia se agrupan en un solo expediente, este dice la cantidad de 
-  inasistencais que contiene y la cantidad de horas que se ausento el no docente ese dia<p>
+<p>Las inasistencias de un mismo día se agrupan en un solo expediente, este dice la cantidad de 
+  inasistencias que contiene y la cantidad de horas que se ausento el no docente ese día<p>
 <?php
-    $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente";
+    $query_fecha = "SELECT DISTINCT fecha, no_docente_id, expediente_no_docente_id from inasistencia_sin_aviso_no_docente WHERE fecha >= '$f_inicio' AND fecha <= '$f_fin'";
     $result_fecha = mysqli_query($conexion, $query_fecha);
     while ($row_fecha = mysqli_fetch_array($result_fecha)) {
       if ($row_fecha['expediente_no_docente_id'] == Null) {
@@ -196,7 +243,7 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
             $no_docente_id = $row_no_docente['id'];
             $days = array('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo');
     ?>
-            <table class="table table-striped table-dark">
+            <table class="table table-striped table-dark table-sm">
               <!--    <thead>
                 <tr>
                   <th scope="col">Agente</th>
@@ -233,10 +280,10 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
                 </tr>
               <?php } ?>
               <tr>
-                <table class="table ml-3 table-sm ">
+                <table class="table table-sm ">
                   <thead>
                     <tr>
-                      <th scop="col">id</ht>
+                      <th scop="col">ID</ht>
                       <th scope="col">Area</th>
                       <th scope="col">Hora de ingreso</th>
                       <th scope="col">Horas fin</th>

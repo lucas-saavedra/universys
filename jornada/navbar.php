@@ -80,7 +80,7 @@ $agente = $_SESSION['agente'];
           </div>
         </li>
         <li class="nav-item ">
-          <a class="nav-link" href="../expediente/generar_inasistencia.php">Inasistencias</a>
+          <a class="nav-link" href="../expediente/crear-expediente-sin-aviso.php">Inasistencias</a>
         </li>
       <?php } ?>
       <?php if ($es_mesa) { ?>
