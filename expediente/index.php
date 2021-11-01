@@ -14,6 +14,7 @@ else {
     $_tipo_agente = $_POST['select'];
     if (isset($_POST['desc-excel'])){
         header("Location: desc_excel.php?mes={$mes}&anio={$anio}&tipo={$_tipo_agente}");
+        exit();
     }
 }
 
