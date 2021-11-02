@@ -130,34 +130,84 @@ foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
             and fecha_fin >= '$fecha_anterior'";
         $result_jornada_no_docente = mysqli_query($conexion, $query_jornada_no_docente_i);
 
-        /*if (mysqli_num_rows($result_jornada_mesa) !== 0) {
+        if (mysqli_num_rows($result_jornada_mesa) !== 0) {
             
             while ($jdm = mysqli_fetch_array($result_jornada_mesa)) {
                 // si es docente y no docente
-                $persona_id = $jdm['persona_id'];
+              /*  $persona_id = $jdm['persona_id'];
                 if (es_no_docente($conexion,$persona_id)){
                     while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
                         $hora_inicio_nd = $jnd['hora_inicio'];
                         $hora_fin_nd = $jnd['hora_fin'];
                         $dia_nd = $jnd['dia'];
-                        if ($jdm['dia_id'] == $dia) {
+                        if (($jdm['dia_id'] == $dia) AND ($dia_nd == $dia)){
                             $hora_inicio_m = $jdm['hora_inicio'];
                             $hora_fin_m = $jdm['hora_fin'];
-                            if ($hora_inicio_m <= $hora_inicio_nd){
+                            if (($hora_inicio_m >= $hora_inicio_nd) AND ($hora_fin_m <= $hora_inicio_nd)){
 
-
+                            }else{
+                                while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
+                                    $hora_inicio = $jnd['hora_inicio'];
+                                    $hora_fin = $jnd['hora_fin'];
+                                    $area = $jnd['area'];
+                        
+                                    if (get_asistencias_num_rows($conexion, $jnd['detalle_id'], $fecha_anterior, $jnd['agente_id'], 'no_docente')) {
+                        
+                                        if (get_exp_num_rows($conexion, $jnd['persona_id'], $fecha_anterior, 'no_docente')) {
+                        
+                                            if (get_inasistencias_num_rows($conexion, $jnd['agente_id'], $hora_inicio, $fecha_anterior, $hora_fin, 'no_docente')) {
+                                                $insert_falta = "INSERT INTO inasistencia_sin_aviso_no_docente (no_docente_id,fecha,hora_inicio,hora_fin,dia,area) 
+                                                            VALUES('{$jnd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$area')";
+                                                if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
+                                                    die(mysqli_error($conexion));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                        }*/
-
-                        // no le quiero generar la inasistencia de mesa, lo que busco es 
-                        // que si tiene solapados un horario no docente con el de la mesa 
-                        //que no le ponga inasistencia no docente pero que si no se solapan
-                        // le ponga la inasistencia
-
-                   /* }
-                
-
-
+                        }else{
+                            while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
+                                $hora_inicio = $jnd['hora_inicio'];
+                                $hora_fin = $jnd['hora_fin'];
+                                $area = $jnd['area'];
+                    
+                                if (get_asistencias_num_rows($conexion, $jnd['detalle_id'], $fecha_anterior, $jnd['agente_id'], 'no_docente')) {
+                    
+                                    if (get_exp_num_rows($conexion, $jnd['persona_id'], $fecha_anterior, 'no_docente')) {
+                    
+                                        if (get_inasistencias_num_rows($conexion, $jnd['agente_id'], $hora_inicio, $fecha_anterior, $hora_fin, 'no_docente')) {
+                                            $insert_falta = "INSERT INTO inasistencia_sin_aviso_no_docente (no_docente_id,fecha,hora_inicio,hora_fin,dia,area) 
+                                                        VALUES('{$jnd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$area')";
+                                            if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
+                                                die(mysqli_error($conexion));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }else{
+                    while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
+                        $hora_inicio = $jnd['hora_inicio'];
+                        $hora_fin = $jnd['hora_fin'];
+                        $area = $jnd['area'];
+            
+                        if (get_asistencias_num_rows($conexion, $jnd['detalle_id'], $fecha_anterior, $jnd['agente_id'], 'no_docente')) {
+            
+                            if (get_exp_num_rows($conexion, $jnd['persona_id'], $fecha_anterior, 'no_docente')) {
+            
+                                if (get_inasistencias_num_rows($conexion, $jnd['agente_id'], $hora_inicio, $fecha_anterior, $hora_fin, 'no_docente')) {
+                                    $insert_falta = "INSERT INTO inasistencia_sin_aviso_no_docente (no_docente_id,fecha,hora_inicio,hora_fin,dia,area) 
+                                                VALUES('{$jnd['agente_id']}','$fecha_anterior','$hora_inicio','$hora_fin','$fecha_dia','$area')";
+                                    if (($result_insert_falta = mysqli_query($conexion, $insert_falta)) === false) {
+                                        die(mysqli_error($conexion));
+                                    }
+                                }
+                            }
+                        }
+                    } */
 
                 if ($jdm['dia_id'] == $fecha_dia) {
                     $hora_inicio = $jdm['hora_inicio'];
@@ -184,7 +234,9 @@ foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
                     }
                 }
             }
-        } else {*/
+
+        
+        } else {
         while ($jnd = mysqli_fetch_array($result_jornada_no_docente)) {
             $hora_inicio = $jnd['hora_inicio'];
             $hora_fin = $jnd['hora_fin'];
@@ -205,7 +257,7 @@ foreach (generar_rango_fechas('2021-11-1','2021-11-10') as $fecha_anterior) {
             }
         }
     }
-
+}
 
 
 
