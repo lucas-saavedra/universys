@@ -239,15 +239,15 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
 
                                 <?php foreach (range(0, 5) as $d) : ?>
 
-                                    <th style="text-align:center"><?php foreach ($jornadas as $j) {
+                                    <td style="text-align:center"><?php foreach ($jornadas as $j) {
                                                                         $horario_ini = date("H", strtotime($j['hora_inicio']));
                                                                         $horario_fin = date("H", strtotime($j['hora_fin']));
 
                                                                         if ($j['dia_id'] == $d &&  ($h >= $horario_ini &&  $h <= $horario_fin) && $j['anio_plan'] == $anio_plan) {
-                                                                            echo $j['nombre_agente'] . '<br>' . $j['catedra'] . '<br>';
+                                                                            echo $j['nombre_agente'] . '<br>' . $j['catedra'] . '<br><br>';
                                                                         }
                                                                     }  ?>
-                                    </th>
+                                    </td>
                                 <?php endforeach ?>
 
                             </tr>

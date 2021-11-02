@@ -143,7 +143,6 @@ if (
 
 
 
-
 <!-- Modal actualizar mesa -->
 <div class="modal fade" id="upd_jornada_mesa" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -217,7 +216,7 @@ if (
 <!-- MODAL PARA ACTUALIZAR EL DETALLE DE MESA -->
 
 <div class="modal fade" id="upd_detalle_mesa" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Modificacion del horario</h5>
@@ -227,42 +226,90 @@ if (
             </div>
             <div class="modal-body">
                 <form action="" id="upd_mesa_horario">
-                    <div class="form-row py-3">
-                        <div class="form-group col-md-4">
-                            <label>Dia </label>
-                            <input type="text" class="form-control " disabled id="upd_mesa_dia">
-                        </div>
-                        <div class="form-group   col-md-4">
-                            <label>Inicio </label>
-                            <input type="time" id="mesa_horario_inicio" class="form-control timepicker" step="1800">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label>Fin</label>
-                            <input type="time" id="mesa_horario_fin" class="form-control timepicker" step="1800">
-                        </div>
+                    <div class="card-deck">
 
+                        <div class="card ">
 
-                        <div class="form-group col-md-12">
-                            <label for="">Descripcion del dia de la mesa</label>
-                            <div class="form-floating">
-                                <textarea id='descripcion_dia_mesa_updt' required name="detalle_dia_mesa" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 200px"></textarea>
+                            <div class="card-header">
+                                <h6 class="text-center ">Modifique el horario</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Dia </label>
+                                    <input type="text" class="form-control " disabled id="upd_mesa_dia">
+                                </div>
+                                <div class="form-group">
+                                    <label>Inicio </label>
+                                    <input type="time" id="mesa_horario_inicio" class="form-control timepicker" step="1800">
+                                </div>
+                                <div class="form-group">
+                                    <label>Fin</label>
+                                    <input type="time" id="mesa_horario_fin" class="form-control timepicker" step="1800">
+                                </div>
                             </div>
                         </div>
 
 
-                    </div>
-                    <input type="text" hidden id="upd_mesa_horario_dia">
-                    <input type="text" hidden id="upd_mesa_id">
-                    <input type="text" hidden id="upd_mesa_dia_id">
 
-                    <div class="form-row justify-content-center">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="card-title text-center">Agregue las cátedras correspondientes</h6>
+                            </div>
+
+                            <div class="card-body">
+                                <div class="form-group  col-md-12">
+                                    <label for="">Año académico</label>
+                                    <select class="form-control" id="filtroCatAnioId" name="filtroCatAnioId">
+                                        <?php foreach (get_anios($conexion) as $anio) : ?>
+                                            <option value="<?= $anio['id'] ?>">
+                                                <?= "{$anio['nombre']}" ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                </div>
+                                <input type="text" hidden id="carreraFiltroId">
+                                <div class="card-body" id="divAddCatedra">
+
+                                </div>
+
+                                <div class="form-group col-md-12 mx-auto">
+
+                                    <button type="button" class="btnAddCatedra btn btn-primary btn-block ">Agregar</button>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+
+
+                        <div class="form-group col-md-12 py-3">
+                            <div class="card ">
+
+                                <div class="card-header">
+                                    <h6 class="text-center">Descripcion del dia de la mesa</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-floating">
+                                        <textarea id='descripcion_dia_mesa_updt' required name="detalle_dia_mesa" class="form-control" placeholder="Ingrese aqui la descripcion" style="height: 200px"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="text" hidden id="upd_mesa_horario_dia">
+                        <input type="text" hidden id="upd_mesa_id">
+                        <input type="text" hidden id="upd_mesa_dia_id">
+
                         <div class="form-group col-md-6">
                             <button type="submit" class="btn btn-primary  btn-block">Aceptar</button>
                         </div>
                         <div class="form-group col-md-6">
                             <button type="reset" data-dismiss="modal" class="btn btn-secondary  btn-block reset ">Cancelar</button>
                         </div>
-                    </div>
+
                 </form>
             </div>
         </div>

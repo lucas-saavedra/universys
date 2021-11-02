@@ -7,7 +7,10 @@ include "includes/consultas.php";
 $planilla = get_p_prod($conexion, $_GET['anio'], $_GET['mes'], $_GET['tipo']);
 
 
-if (!isset($planilla['id'])) header('Location: index.php');
+if (!isset($planilla['id'])){
+  header('Location: index.php');
+  exit();
+} 
 
 $expdtes = get_expdtes_por_agente($conexion, $planilla['id'], $_GET['tipo']);
 

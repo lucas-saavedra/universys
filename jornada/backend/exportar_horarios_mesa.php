@@ -23,14 +23,6 @@ if (!$result) {
 if (mysqli_num_rows($result) != 0) {
     $jornadas_mesa = mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
-/*
-header('Content-type: application/vnd.ms-excel');
-$carrera = get_carreras($conexion);
-$archivo =  $tipo_agente == 'docente' ?  $carrera[$_POST['filtroCarreraId'] - 1]['nombre'] . '-' . date("d-m-Y", strtotime($_POST['filtroFechaInicio'])) . '-' . date("d-m-Y", strtotime($_POST['filtroFechaFin'])) . ' - ' . $jornadas_mesa[0]['tipo_jornada'] : 'No Docente - ' .  date("d-m-Y", strtotime($_POST['filtroFechaInicio'])) . ' a ' .  date("d-m-Y", strtotime($_POST['filtroFechaFin']));
-header("Content-Disposition: attachment; filename=$archivo.xls");
-header("Pragma: no-cache");
-header("Expires: 0");
-*/
 if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
 
     $ini = [];
@@ -60,27 +52,28 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
     $fin = date("Y", strtotime($jornadas_mesa[0]['fecha_fin']));
     $fin_mes = date("m", strtotime($jornadas_mesa[0]['fecha_fin']));
 
-
+    /*  header('Content-type: application/vnd.ms-excel'); */
+    $carrera = get_carreras($conexion);
+    $archivo = "Mesa Examen_Turno-" . $meses[$fin_mes] . "_Llamado-" . $jornadas_mesa[0]['llamado_id'] . '_' . $fin . '_' . $jornadas_mesa[0]['carrera'];
+    /* header("Content-Disposition: attachment; filename=$archivo.xls");
+    header("Pragma: no-cache");
+    header("Expires: 0"); */
 ?>
     <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
-
-
-
+    <?php ob_start(); ?>
     <table class="table" border="1" style="border-collapse: collapse; ">
         <thead>
             <tr>
-                <th colspan="7">
-
+                <th colspan="5">
                     Mesa Examen - Turno <?= $meses[$fin_mes] . ' - Llamado: ' . $jornadas_mesa[0]['llamado_id'] . ' - ' ?><?= $fin . ' - ' ?> <?= $jornadas_mesa[0]['carrera'] ?>
                 </th>
             </tr>
             <tr>
                 <th>Fecha</th>
                 <th>Dia</th>
-                <td>Catedras</td>
-                <td>Docentes</td>
-
-                <td>Horario</td>
+                <th>Catedras</th>
+                <th>Docentes</th>
+                <th>Horario</th>
             </tr>
 
         </thead>
@@ -93,7 +86,6 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
                     <td style="text-align: center;">
                         <?php echo $fecha_lunes->format('d-m-Y') . ' ';
                         $fecha_lunes->modify('+1 day'); ?>
-                        </th>
                     <td><?= $dias[$d]['nombre'] ?> </td>
                     <?php
 
@@ -101,8 +93,14 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
                     foreach ($jornadas_mesa as $j) {
                         if ($j['dia_id'] == $d) {
                             $elements = explode(",", $j['descripcion_dia_mesa']);
+                            $par = 0;
                             foreach ($elements as $e) {
-                                echo $e . '<br>';
+                                if ($par % 2 == 0) {
+                                    echo $e . '<br>';
+                                } else {
+                                    echo $e . ' - ';
+                                }
+                                $par++;
                             }
                             break;
                         }
@@ -124,15 +122,14 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
                             }
                         } ?>
                     </td>
-
-
                 </tr>
 
             <?php endforeach ?>
 
         </tbody>
     </table>
-    <br>
+
+<?php
 
 
-<?php  }  ?>
+} ?>
