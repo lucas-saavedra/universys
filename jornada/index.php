@@ -44,7 +44,10 @@ $hoy = new DateTime();
                     <div class="card-header text-center">Docente<form action="../backend/registrar-asistencia.php" method="POST" class="py-3">
                             <button class="btn btn-primary geoButton" type="submit">Registrar asistencia</button>
                             <div class="alert alert-warning geoWarning my-3" hidden role="alert">
-                                ¡No puede registrar la asistencia si se encuentra fuera de la facultad!
+                                <i class="fas fa-map-marker-alt fa-2x"></i>
+                                <div id="geoWarning">
+                                    ¡No puede registrar la asistencia si se encuentra fuera de la facultad!
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -168,7 +171,10 @@ if (mysqli_num_rows($result_no_docente) !== 0) {
             <div class="card-header text-center">No docente <form action="../expediente/registrar-asistencia_no_docente.php" method="POST" class="py-3">
                     <button class="btn btn-primary geoButton" type="submit">Registrar asistencia</button>
                     <div class="alert alert-warning geoWarning my-3" hidden role="alert">
-                        ¡No puede registrar la asistencia si se encuentra fuera de la facultad!
+                        <i class="fas fa-map-marker-alt fa-2x"></i>
+                        <div id="geoWarning">
+                            ¡No puede registrar la asistencia si se encuentra fuera de la facultad!
+                        </div>
                     </div>
                 </form>
             </div>
