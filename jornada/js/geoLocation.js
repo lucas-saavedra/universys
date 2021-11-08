@@ -9,9 +9,15 @@ $(document).ready(function () {
     }
 
     const showPosition = (position) => {
+
+
         let x = Math.abs(position.coords.latitude);
         let y = Math.abs(position.coords.longitude);
-        if (!(x <= Math.abs(-30.7340) && x >= Math.abs(-30.7390) && y >= Math.abs(-57.9740) && y <= Math.abs(-57.9780))) {
+        /*
+        let x = Math.abs(-30.73635400523235)//position.coords.latitude;
+        let y = Math.abs(-57.97728736258838)//position.coords.longitude;
+        */
+        if (!(x >= Math.abs(-30.7340) && x <= Math.abs(-30.7390) && y >= Math.abs(-57.9740) && y <= Math.abs(-57.9780))) {
             $(".geoWarning").removeAttr("hidden", "");
             $(".geoButton").attr("disabled", "");
         };
