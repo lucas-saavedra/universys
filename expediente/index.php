@@ -95,7 +95,7 @@ $planilla = get_p_prod($conexion, $anio, $mes, $_tipo_agente);
                             Hs descontadas: 
                             <?=array_reduce($_expdtes, function($carry, $item){ return $carry+$item['hs_descontadas'];}, 0)?>
                         </td>
-                        <td><?="Total hs: {$_expdtes[0]['agente_antiguedad']}"?></td>
+                        <td><?="Total hs: {$_expdtes[0]['agente_hs']}"?></td>
                     </tr>
                     <tr>
                         <table class="table table-striped ml-4 table-sm">

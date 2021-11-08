@@ -135,8 +135,8 @@
     }
 
     function get_expdtes_por_agente($bd, $id_planilla, $tipo){
-        $sql = "SELECT e.*, et.id as expdte_{$tipo}_id, p.nombre as agente_nombre, p.dni as agente_dni, 
-                ta.antiguedad as agente_antiguedad, c.referencia as cod, ti.nombre as cod_tipo, c.descripcion as cod_desc, 
+        $sql = "SELECT e.*, et.id as expdte_{$tipo}_id, p.nombre as agente_nombre, p.cuil as agente_dni, 
+                ta.total_horas as agente_hs, c.referencia as cod, ti.nombre as cod_tipo, c.descripcion as cod_desc, 
                 c.con_descuento, epa.hs_descontadas
                 FROM expediente as e 
                 INNER JOIN expediente_{$tipo} as et ON e.id=et.expediente_id

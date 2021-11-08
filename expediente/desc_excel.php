@@ -71,7 +71,7 @@ header("Content-Disposition: attachment; filename=Planilla Productividad [{$peri
                 </td>
 
                 <td>
-                  <?=$_expdtes[0]['agente_antiguedad']?>
+                  <?=$_expdtes[0]['agente_hs']?>
                 </td>
               </tr>
             <?php endforeach; ?>
