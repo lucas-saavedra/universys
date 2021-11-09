@@ -1,74 +1,82 @@
 <title>Crear agente</title>
-<?php 
-include ("../jornada/navbar.php");
-include ("./includes/consultas.php");
+<?php
+include("../jornada/navbar.php");
+include("./includes/consultas.php");
 ?>
 
-<?php 
+<?php
 
-    function crear_agente($data, $bd){
+function crear_agente($data, $bd)
+{
 
-        mysqli_query($bd, 'START TRANSACTION');
-        
-        try{
-            $insert_persona = "INSERT INTO persona (nombre, email, contrasenia, cuil, sexo, direccion, telefono) 
+    mysqli_query($bd, 'START TRANSACTION');
+
+    try {
+
+        $sql = "SELECT * FROM persona WHERE cuil = '{$data['cuil']}'";
+        if (mysqli_num_rows(mysqli_query($bd, $sql)) != 0) {
+            throw new Exception('Ese CUIL ya está registrado');
+        }
+
+        $insert_persona = "INSERT INTO persona (nombre, email, contrasenia, cuil, sexo, direccion, telefono) 
                 VALUES ('{$data['nombre']}', '{$data['email']}', '{$data['pass']}', '{$data['cuil']}', '{$data['sexo']}', '{$data['direccion']}', '{$data['tel']}')";
 
-            if (!$result= mysqli_query($bd, $insert_persona)){
+        if (!$result = mysqli_query($bd, $insert_persona)) {
+            throw new Exception(mysqli_error($bd));
+        }
+
+        $id_persona = mysqli_insert_id($bd);
+
+        if ($is_docente = isset($data['docente'])) {
+            $insert_docente = "INSERT INTO docente (persona_id, total_horas) 
+                    VALUES ({$id_persona}, {$data['hs_docente']})";
+
+            if (!$result = mysqli_query($bd, $insert_docente)) {
                 throw new Exception(mysqli_error($bd));
             }
+        }
 
-            $id_persona = mysqli_insert_id($bd);
-
-            if ($is_docente = isset($data['docente'])){
-                $insert_docente = "INSERT INTO docente (persona_id, total_horas) 
-                    VALUES ({$id_persona}, {$data['hs_docente']})";
-                
-                if (!$result= mysqli_query($bd, $insert_docente)){
-                    throw new Exception(mysqli_error($bd));
-                }
-
-            }
-
-            if ($is_no_docente = isset($data['no-docente'])){
-                $insert_docente = "INSERT INTO no_docente (persona_id, total_horas) 
+        if ($is_no_docente = isset($data['no-docente'])) {
+            $insert_docente = "INSERT INTO no_docente (persona_id, total_horas) 
                     VALUES ({$id_persona}, {$data['hs_no_docente']})";
-                
-                if (!$result= mysqli_query($bd, $insert_docente)){
-                    throw new Exception(mysqli_error($bd));
-                }
-            }
 
-            if (!$is_docente && !$is_no_docente){
-                throw new Exception('Debe seleccionar al menos un tipo de agente (Docente o No Docente)');
+            if (!$result = mysqli_query($bd, $insert_docente)) {
+                throw new Exception(mysqli_error($bd));
             }
-
-            if (isset($data['roles'])){
-                crear_roles($bd, $id_persona, $data['roles']);
-            }
-
-            mysqli_commit($bd);
         }
 
-        catch (Exception $e){
-            mysqli_rollback($bd);
-            return [
-                'content' => $e->getMessage(),
-                'type' => 'danger'
-            ];
+        if (!$is_docente && !$is_no_docente) {
+            throw new Exception('Debe seleccionar al menos un tipo de agente (Docente o No Docente)');
         }
 
+        if (isset($data['roles'])) {
+            crear_roles($bd, $id_persona, $data['roles']);
+        }
+        mysqli_commit($bd);
+    } catch (Exception $e) {
+        mysqli_rollback($bd);
+        $pattern = "/duplicate/i";
+        if (preg_match($pattern, $e) == 1) {
+            $msg = 'El email ya está registrado';
+        } else {
+            $msg = $e->getMessage();
+        }
         return [
-            'content' => 'Agente creado!',
-            'type' => 'success',
+            'content' => $msg,
+            'type' => 'danger'
         ];
-
     }
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-        $msg = crear_agente($_POST, $conexion);
-    }
- ?>
+    return [
+        'content' => 'Agente creado!',
+        'type' => 'success',
+    ];
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $msg = crear_agente($_POST, $conexion);
+}
+?>
 
 
 <div class="container">
@@ -167,7 +175,7 @@ include ("./includes/consultas.php");
                                             <label class="form-check-label" for="checkNoDoc">
                                                 No Docente
                                             </label>
-                                        </div> 
+                                        </div>
                                     </th>
                                     <td>
                                         <input class="form-control" name="hs_no_docente" type="number" placeholder="Hs" disabled>
