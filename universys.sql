@@ -3,10 +3,12 @@ create table persona (
 	nombre varchar(100),
     email varchar(50),
     contrasenia varchar(20),
-    dni varchar(8),
-    direccion varchar(30),
+    cuil varchar(11),
+    direccion varchar(40),
     telefono varchar(20),
-    PRIMARY key (id) 
+    sexo varchar(10),
+    UNIQUE(email),
+    PRIMARY key (id)
 );
 create table rol (
 	id int AUTO_INCREMENT,
@@ -34,7 +36,7 @@ INSERT INTO rol (nombre) VALUES
 create table docente (
 	id int AUTO_INCREMENT,
     persona_id int,
-    antiguedad int,
+    total_horas int,
     PRIMARY key (id),
     FOREIGN KEY (persona_id) REFERENCES persona(id)
 );
@@ -42,7 +44,7 @@ create table docente (
 create table no_docente (
 	id int AUTO_INCREMENT,
     persona_id int,
-    antiguedad int,
+    total_horas int,
     PRIMARY key (id),
     FOREIGN KEY (persona_id) REFERENCES persona(id)
 );

@@ -66,6 +66,9 @@ $agente = $_SESSION['agente'];
         </li>
       <?php } ?>
       <?php if ($es_personal || $es_coord) {  ?>
+        <li class="nav-item">
+          <a class="nav-link" href="../agentes/">Agentes</a>
+        </li>
         <li class="nav-item ">
           <a class="nav-link" href="../expediente/">Productividad</a>
         </li>

@@ -15,8 +15,8 @@ if (($_SERVER['REQUEST_METHOD'] !== 'POST') || (!isset($_POST['select']))) {
     unset( $_SESSION['inasis_rango']);
   }
   else{
-    $f_inicio = $hoy->modify('-5 day')->format('Y-n-j');
-    $f_fin = $hoy->modify('-1 day')->format('Y-n-j');
+    $f_inicio = $hoy->modify('-5 day')->format('Y-m-d');
+    $f_fin = $hoy->modify('-1 day')->format('Y-m-d');
   }
 } else {
   $_tipo_agente = $_POST['select'];
