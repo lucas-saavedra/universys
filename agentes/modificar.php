@@ -55,10 +55,13 @@ function modificar_agente($bd, $agente, $data)
     } catch (Exception $e) {
         mysqli_rollback($bd);
 
-        $pattern = "/duplicate/i";
+        $pattern_d = "/duplicate/i";
+        $pattern_f = "/Cannot delete or update a parent row/i";
 
-        if (preg_match($pattern, $e) == 1) {
-            $msg = 'El email ya está registrado';
+        if (preg_match($pattern_d, $e) == 1) {
+            $msg = 'El email ya está registrado.';
+        } else if (preg_match($pattern_f, $e) == 1) {
+            $msg = 'El agente tiene jornadas asociadas, no puede eliminar este tipo de agente.';
         } else {
             $msg = $e->getMessage();
         }
