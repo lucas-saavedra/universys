@@ -29,7 +29,7 @@ if ($get_f_fin > $hoy->modify('-1 day')){
 //                                          JORNADA DOCENTE
 function generar_rango_fechas($fecha_inicio, $fecha_fin)
 {
-    $format = 'Y-n-j';
+    $format = 'Y-n-d';
     $result = [];
     $fecha_inicio = new DateTime($fecha_inicio);
     $fecha_fin = new DateTime($fecha_fin);
