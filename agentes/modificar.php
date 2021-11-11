@@ -20,7 +20,8 @@ function modificar_agente($bd, $agente, $data){
         }
         else{
             $sql_upd = "UPDATE persona 
-                SET email='{$data['email']}',sexo='{$data['sexo']}', direccion='{$data['direccion']}', telefono='{$data['tel']}' 
+                SET nombre='{$data['nombre']}', email='{$data['email']}',sexo='{$data['sexo']}', 
+                    direccion='{$data['direccion']}', telefono='{$data['tel']}'
                 WHERE id={$agente['id']}";
 
             if (!$result = mysqli_query($bd, $sql_upd)){
@@ -106,6 +107,13 @@ $agente_roles = _get_agente_roles($conexion, $agente['id']);
     <div class="row mt-4">
         <div class="col">
             <form action="" method="POST">
+                <div class="form-group row">
+                    <label for="inputNombre" class="col-sm-2 col-form-label">Nombre y apellido</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="nombre" class="form-control" id="inputNombre" 
+                            value="<?=$agente['nombre']?>" required>
+                    </div>
+                </div>
                 <div class="form-group row">
                     <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
                     <div class="col-sm-10">
