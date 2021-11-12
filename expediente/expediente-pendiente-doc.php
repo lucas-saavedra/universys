@@ -6,7 +6,7 @@
         <div class="col-md-5 m-auto">
             <form action="" method="post">
                 <div class="form-group text-center">
-                    <h3 class="mb-3">Lista de expedietes. Con y sin documentación</h3>
+                    <h3 class="mb-3">Lista de expedientes sin documentación</h3>
                     <div class="row m-auto col">
                         <select name="select" class="form-control mr-sm-2 col">
                             <option value="Docente">Docente </option>
