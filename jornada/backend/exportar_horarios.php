@@ -177,11 +177,11 @@ $fin = date("Y", strtotime($_POST['filtroFechaFin']));
 $fecha = $ini == $fin ? $ini : $ini . '=>' . $fin;
 $carrera = get_carreras($conexion);
 
-/* header('Content-type: application/vnd.ms-excel');
-$archivo =  $tipo_agente == 'docente' ?  $carrera[$_POST['filtroCarreraId'] - 1]['nombre'] . '-' . $fecha . ' - ' . $jornadas[0]['tipo_jornada'] : 'No Docente - ' .  date("d-m-Y", strtotime($_POST['filtroFechaInicio'])) . ' a ' .  date("d-m-Y", strtotime($_POST['filtroFechaFin']));
+ header('Content-type: application/vnd.ms-excel');
+$archivo =  $tipo_agente == 'docente' ?  $carrera[$_POST['filtroCarreraId'] - 1]['nombre'] . '-' . $fecha : 'No Docente - ' .  date("d-m-Y", strtotime($_POST['filtroFechaInicio'])) . ' a ' .  date("d-m-Y", strtotime($_POST['filtroFechaFin']));
 header("Content-Disposition: attachment; filename=$archivo.xls");
 header("Pragma: no-cache");
-header("Expires: 0"); */
+header("Expires: 0"); 
 ?>
 <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
 <?php

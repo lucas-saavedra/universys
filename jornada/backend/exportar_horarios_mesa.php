@@ -52,12 +52,12 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
     $fin = date("Y", strtotime($jornadas_mesa[0]['fecha_fin']));
     $fin_mes = date("m", strtotime($jornadas_mesa[0]['fecha_fin']));
 
-    /*  header('Content-type: application/vnd.ms-excel'); */
+    header('Content-type: application/vnd.ms-excel');
     $carrera = get_carreras($conexion);
     $archivo = "Mesa Examen_Turno-" . $meses[$fin_mes] . "_Llamado-" . $jornadas_mesa[0]['llamado_id'] . '_' . $fin . '_' . $jornadas_mesa[0]['carrera'];
-    /* header("Content-Disposition: attachment; filename=$archivo.xls");
+    header("Content-Disposition: attachment; filename=$archivo.xls");
     header("Pragma: no-cache");
-    header("Expires: 0"); */
+    header("Expires: 0");
 ?>
     <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
     <?php ob_start(); ?>
