@@ -1,0 +1,3 @@
+Para ingresar al sistema, la cuenta admin es
+usuario: admin@gmail.com
+contraseña: root

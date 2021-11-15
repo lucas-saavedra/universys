@@ -490,9 +490,8 @@ INSERT INTO `catedra` (`nombre`, `carrera_id`, `anio_plan_id`, `periodo_id`) VAL
 ( 'Cultivo Extensivo', '2', '3', '1');
 
 
-INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES 
-('Admin','admin@gmail.com','root'),
-('Nayra Asensio','nayra@gmail.com','1234'),
+INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES ('Admin','admin@gmail.com','root');
+/* ('Nayra Asensio','nayra@gmail.com','1234'),
 ('Roman Morano','roman@gmail.com','1234'),
 ('Ion Machado','ion@gmail.com','1234'),
 ('Andoni Roig','andoni@gmail.com','1234'),
@@ -513,18 +512,16 @@ INSERT INTO persona( `nombre`, `email`, `contrasenia`) VALUES
 */
 
 /* Volcado de datos para la tabla persona_rol */
-INSERT INTO persona_rol (rol_id,persona_id) VALUES
-( 1, 1),
-( 4, 6),
+INSERT INTO persona_rol (rol_id,persona_id) VALUES ( 1, 1);
+/*  ( 4, 6),
 ( 3, 5),
 ( 2, 7),
 ( 6, 8),
 ( 5, 3),
-( 2, 10);
+( 2, 10); */
 
-INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
-INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11');
-
+/* INSERT INTO `docente`(`persona_id`) VALUES ('2'),('3'),('6'),('7'),('8'),('9');
+INSERT INTO `no_docente`(`persona_id`) VALUES ('4'),('5'),('6'),('7'),('8'),('10'),('11'); */
 
 INSERT INTO tipo_justificacion (descripcion) VALUES 
 ('LIS'), 
