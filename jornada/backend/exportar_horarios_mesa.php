@@ -35,7 +35,7 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
     $date1 = new DateTime($j['fecha_inicio']);
     $date2 = new DateTime($j['fecha_fin']);
     while ($date1 <= $date2) {
-        /* echo $date1->format('Y-m-d') . ' '; */
+       
         $dia = $date1;
         if ($dia->format('w') == 1) {
             $fecha_lunes = $date1;
@@ -58,6 +58,7 @@ if (mysqli_num_rows(mysqli_query($conexion, $query)) != 0) {
     header("Content-Disposition: attachment; filename=$archivo.xls");
     header("Pragma: no-cache");
     header("Expires: 0");
+    
 ?>
     <meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
     <?php ob_start(); ?>
